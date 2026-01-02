@@ -159,12 +159,37 @@
             <flux:navbar.item icon="bell" href="#" label="Notifications" />
         </flux:navbar>
 
-        <flux:dropdown position="top" align="start">
+        <flux:dropdown position="bottom" align="end">
             <flux:profile class="cursor-pointer"
                 :avatar="auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : null"
                 initials="{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}" />
 
-            <flux:menu>
+            <flux:menu class="w-64!">
+                <div class="px-5 py-4 flex items-center gap-4">
+                    <!-- Premium Avatar Layout -->
+                    <div class="shrink-0">
+                        @if(auth()->user()->avatar)
+                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" class="h-12 w-12 rounded-2xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-700 shadow-sm">
+                        @else
+                            <div class="h-12 w-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-sm font-bold text-white uppercase shadow-sm">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            </div>
+                        @endif
+                    </div>
+                    
+                    <!-- Text Info (Left Aligned) -->
+                    <div class="flex flex-col text-left leading-none">
+                        <span class="text-base font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                            {{ auth()->user()->name }}
+                        </span>
+                        <span class="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 mt-1.5 uppercase tracking-wider">
+                            <flux:badge size="sm" color="emerald" icon="shield-check">{{ auth()->user()->role?->name ?? 'No Role' }}</flux:badge>
+                        </span>
+                    </div>
+                </div>
+
+                <flux:separator />
+
                 <flux:menu.item icon="user-circle" href="{{ route('profile') }}">Profile</flux:menu.item>
                 <flux:menu.item icon="key" href="{{ route('password.change') }}">Change Password</flux:menu.item>
 
