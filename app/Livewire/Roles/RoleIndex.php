@@ -23,6 +23,9 @@ class RoleIndex extends Component implements HasForms
     #[Url]
     public $search = '';
 
+    #[Url]
+    public $perPage = 10;
+
     public ?array $data = [];
 
     public ?Role $record = null;
@@ -92,13 +95,18 @@ class RoleIndex extends Component implements HasForms
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         return view('livewire.roles.index', [
             'roles' => Role::withCount('users')
                 ->where('name', 'like', '%'.$this->search.'%')
                 ->orWhere('slug', 'like', '%'.$this->search.'%')
-                ->paginate(10),
+                ->paginate($this->perPage),
         ]);
     }
 }

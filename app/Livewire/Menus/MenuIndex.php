@@ -23,6 +23,9 @@ class MenuIndex extends Component implements HasForms
     #[Url]
     public $search = '';
 
+    #[Url]
+    public $perPage = 50;
+
     public ?array $data = [];
 
     public ?Menu $record = null;
@@ -109,6 +112,11 @@ class MenuIndex extends Component implements HasForms
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         return view('livewire.menus.index', [
@@ -118,7 +126,7 @@ class MenuIndex extends Component implements HasForms
                         ->orWhere('slug', 'like', '%'.$this->search.'%');
                 })
                 ->orderByRaw('COALESCE(parent_id, id), parent_id IS NOT NULL, `order`')
-                ->paginate(50), // Increase for drag & drop
+                ->paginate($this->perPage), // Support custom page size
         ]);
     }
 }

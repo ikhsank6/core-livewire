@@ -23,6 +23,9 @@ class UserIndex extends Component implements HasForms
     #[Url]
     public $search = '';
 
+    #[Url]
+    public $perPage = 10;
+
     public ?array $data = [];
 
     public ?User $record = null;
@@ -112,6 +115,11 @@ class UserIndex extends Component implements HasForms
         $this->resetPage();
     }
 
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+    }
+
     public function render()
     {
         return view('livewire.users.index', [
@@ -119,7 +127,7 @@ class UserIndex extends Component implements HasForms
                 ->where('name', 'like', '%'.$this->search.'%')
                 ->orWhere('email', 'like', '%'.$this->search.'%')
                 ->latest()
-                ->paginate(10),
+                ->paginate($this->perPage),
         ]);
     }
 }

@@ -1,4 +1,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+{{-- Immediate theme application to prevent FOUC (Flash of Unstyled Content) --}}
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+</script>
 
 <head>
     <meta charset="utf-8">
@@ -16,11 +25,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script data-navigate-once>
+        // Apply theme immediately on every navigation (before Alpine loads)
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.classList.toggle('dark', theme === 'dark');
+        })();
+
         document.addEventListener('alpine:init', () => {
             Alpine.store('theme', {
                 value: localStorage.getItem('theme') || 'light',
-                
+
                 init() {
+                    // Ensure dark class is set on init
+                    document.documentElement.classList.toggle('dark', this.value === 'dark');
+
                     Alpine.effect(() => {
                         const isDark = this.value === 'dark';
                         document.documentElement.classList.toggle('dark', isDark);
@@ -28,7 +46,14 @@
                         localStorage.setItem('theme', this.value);
                     });
 
+                    // Re-apply on Livewire navigation
+                    document.addEventListener('livewire:navigating', () => {
+                        // Set immediately before navigation starts
+                        document.documentElement.classList.toggle('dark', this.value === 'dark');
+                    });
+
                     document.addEventListener('livewire:navigated', () => {
+                        // Ensure it's still applied after navigation completes
                         document.documentElement.classList.toggle('dark', this.value === 'dark');
                     });
                 },
@@ -36,7 +61,7 @@
                 get isDark() {
                     return this.value === 'dark';
                 },
-                
+
                 toggle() {
                     this.value = this.isDark ? 'light' : 'dark';
                 }
@@ -48,7 +73,12 @@
 <body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white" x-data x-init="
     Alpine.store('sidebarState', { open: true, toggle() { this.open = !this.open } });
 ">
-    <flux:sidebar sticky stashable class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white transition-all duration-300" x-show="$store.sidebarState.open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
+    <flux:sidebar sticky stashable
+        class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white transition-all duration-300"
+        x-show="$store.sidebarState.open" x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <div class="h-16 flex items-center px-6 shrink-0">
@@ -67,13 +97,18 @@
 
             @foreach($menuTree as $menu)
                 @if(empty($menu['children']))
-                    <flux:navlist.item :icon="$menu['icon'] ?? 'square-2-stack'" :href="$menu['route'] ? route($menu['route']) : '#'" :current="request()->routeIs($menu['route'] ?? '')">
+                    <flux:navlist.item :icon="$menu['icon'] ?? 'square-2-stack'"
+                        :href="$menu['route'] ? route($menu['route']) : '#'"
+                        :current="request()->routeIs($menu['route'] ?? '')">
                         {{ $menu['name'] }}
                     </flux:navlist.item>
                 @else
-                    <flux:navlist.group :heading="$menu['name']" :icon="$menu['icon'] ?? 'square-2-plus'" expandable :expanded="collect($menu['children'])->contains('route', request()->route()?->getName())">
+                    <flux:navlist.group :heading="$menu['name']" :icon="$menu['icon'] ?? 'square-2-plus'" expandable
+                        :expanded="collect($menu['children'])->contains('route', request()->route()?->getName())">
                         @foreach($menu['children'] as $child)
-                            <flux:navlist.item :icon="$child['icon'] ?? 'minus'" :href="$child['route'] ? route($child['route']) : '#'" :current="request()->routeIs($child['route'] ?? '')">
+                            <flux:navlist.item :icon="$child['icon'] ?? 'minus'"
+                                :href="$child['route'] ? route($child['route']) : '#'"
+                                :current="request()->routeIs($child['route'] ?? '')">
                                 {{ $child['name'] }}
                             </flux:navlist.item>
                         @endforeach
@@ -94,9 +129,8 @@
         <flux:sidebar.toggle class="lg:hidden" icon="bars-3" inset="left" />
 
         <div class="flex items-center max-lg:hidden">
-            <button type="button" 
-                    @click="$store.sidebarState.toggle()"
-                    class="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+            <button type="button" @click="$store.sidebarState.toggle()"
+                class="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
                 <template x-if="$store.sidebarState.open">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -126,7 +160,7 @@
         </flux:navbar>
 
         <flux:dropdown position="top" align="start">
-            <flux:profile class="cursor-pointer" 
+            <flux:profile class="cursor-pointer"
                 :avatar="auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : null"
                 initials="{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}" />
 
@@ -138,7 +172,8 @@
 
                 <flux:menu.submenu icon="shield-check" heading="Switch Role">
                     @foreach(auth()->user()->roles as $role)
-                        <flux:menu.item href="{{ route('roles.switch', $role->id) }}" :icon="auth()->user()->role_id == $role->id ? 'check' : ''">
+                        <flux:menu.item href="{{ route('roles.switch', $role->id) }}"
+                            :icon="auth()->user()->role_id == $role->id ? 'check' : ''">
                             {{ $role->name }}
                         </flux:menu.item>
                     @endforeach
@@ -155,10 +190,12 @@
                         <div x-show="$store.theme.isDark" class="flex items-center" x-cloak>
                             <flux:icon name="moon" size="sm" class="text-zinc-400" />
                         </div>
-                        <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400" x-text="$store.theme.isDark ? 'Dark Mode' : 'Light Mode'"></span>
+                        <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400"
+                            x-text="$store.theme.isDark ? 'Dark Mode' : 'Light Mode'"></span>
                     </div>
 
-                    <flux:switch x-on:click.prevent.stop="$store.theme.toggle()" x-model="$store.theme.isDark" size="sm" />
+                    <flux:switch x-on:click.prevent.stop="$store.theme.toggle()" x-model="$store.theme.isDark"
+                        size="sm" />
                 </div>
 
                 <flux:separator />
@@ -233,7 +270,8 @@
     <!-- Logout Confirmation Modal -->
     <flux:modal name="logout-modal" class="max-w-md z-100">
         <div class="text-center">
-            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 mb-4">
+            <div
+                class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 mb-4">
                 <flux:icon name="arrow-right-start-on-rectangle" class="h-7 w-7 text-red-600 dark:text-red-400" />
             </div>
 
