@@ -86,7 +86,7 @@ class RoleIndex extends Component implements HasForms
             $role->delete();
             $this->dispatch('notify', text: 'Role deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error deleting role: '.$e->getMessage(), variant: 'danger');
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 

@@ -723,3 +723,19 @@ body, main, aside, button, input, select, textarea, a, [data-flux-menu] {
     border-color: #dc2626 !important;
 }
 
+/* ============================================
+   NOTIFICATION TOAST ANIMATIONS
+   ============================================ */
+
+@keyframes shrink-width {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+.animate-shrink-width {
+    animation: shrink-width linear forwards;
+}

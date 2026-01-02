@@ -148,6 +148,9 @@ class Profile extends Component
             // Sync with new default
             $user->syncRoles($roleIds, $roleId);
 
+            // Refresh the user instance relationship to update the UI
+            $user->load('roles');
+
             $this->dispatch('notify', text: 'Default role updated successfully.', variant: 'success');
         } catch (\Exception $e) {
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');

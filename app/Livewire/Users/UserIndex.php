@@ -106,7 +106,7 @@ class UserIndex extends Component implements HasForms
             $user->delete();
             $this->dispatch('notify', text: 'User deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error deleting user: '.$e->getMessage(), variant: 'danger');
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 

@@ -2,37 +2,36 @@
     <flux:breadcrumbs.item>User Profile</flux:breadcrumbs.item>
 </x-slot>
 
-<div class="max-w-4xl mx-auto py-6">
+<div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-2xl font-light text-metronic-light-text dark:text-white">User Profile</h1>
-        <p class="text-sm text-metronic-light-text-muted dark:text-metronic-dark-text-muted">Central Hub for Personal
-            Customization</p>
+        <h1 class="text-2xl font-light text-zinc-900 dark:text-white">User Profile</h1>
+        <p class="text-sm text-zinc-500 dark:text-zinc-400">Central Hub for Personal Customization</p>
     </div>
 
     <!-- Personal Info Card -->
-    <div class="bg-white dark:bg-[#1e1e2d] rounded-xl border border-[#e8e8e8] dark:border-[#2d2d3a] overflow-hidden">
+    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         <!-- Card Header -->
-        <div class="px-6 py-4 border-b border-[#e8e8e8] dark:border-[#2d2d3a]">
-            <h2 class="text-lg font-semibold text-[#1b1c22] dark:text-white">Personal Info</h2>
+        <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
+            <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Personal Info</h2>
         </div>
 
         <!-- Photo Row -->
-        <div class="px-6 py-5 border-b border-[#e8e8e8] dark:border-[#2d2d3a] flex items-center justify-between">
+        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
             <div class="flex items-center gap-8">
-                <span class="text-sm font-medium text-[#99a1b7] dark:text-[#6d6d80] w-32">Photo</span>
-                <span class="text-sm text-[#4b5675] dark:text-[#a1a5b7]">150×150px JPEG, PNG Image</span>
+                <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400 w-32">Photo</span>
+                <span class="text-sm text-zinc-600 dark:text-zinc-300">150×150px JPEG, PNG Image</span>
             </div>
 
             <!-- Clickable Avatar -->
             <label class="relative cursor-pointer group">
                 @if($currentAvatar)
                     <img src="{{ Storage::url($currentAvatar) }}"
-                        class="h-14 w-14 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[#1b84ff] transition-all"
+                        class="h-14 w-14 rounded-full object-cover ring-2 ring-transparent group-hover:ring-indigo-500 transition-all"
                         alt="Profile photo">
                 @else
                     <div
-                        class="h-14 w-14 rounded-full bg-[#1b84ff] flex items-center justify-center text-lg font-bold text-white ring-2 ring-transparent group-hover:ring-[#0070f0] transition-all">
+                        class="h-14 w-14 rounded-full bg-indigo-500 flex items-center justify-center text-lg font-bold text-white ring-2 ring-transparent group-hover:ring-indigo-400 transition-all">
                         {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                     </div>
                 @endif
@@ -72,14 +71,14 @@
         @enderror
 
         <!-- Name Row -->
-        <div class="px-6 py-5 border-b border-[#e8e8e8] dark:border-[#2d2d3a] flex items-center justify-between">
+        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
             <div class="flex items-center gap-8 flex-1">
-                <span class="text-sm font-medium text-[#99a1b7] dark:text-[#6d6d80] w-32">Name</span>
+                <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400 w-32">Name</span>
                 <input type="text" wire:model.blur="name" wire:change="updateName"
-                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-[#e8e8e8] dark:hover:border-[#2d2d3a] focus:border-[#1b84ff] dark:focus:border-[#1b84ff] text-[#1b1c22] dark:text-white focus:ring-0 transition-colors"
+                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors"
                     placeholder="Enter your name">
             </div>
-            <div wire:loading wire:target="updateName" class="text-[#1b84ff]">
+            <div wire:loading wire:target="updateName" class="text-indigo-500">
                 <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor"
@@ -95,14 +94,14 @@
         @enderror
 
         <!-- Email Row -->
-        <div class="px-6 py-5 border-b border-[#e8e8e8] dark:border-[#2d2d3a] flex items-center justify-between">
+        <div class="px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-8 flex-1">
-                <span class="text-sm font-medium text-[#99a1b7] dark:text-[#6d6d80] w-32">Email</span>
+                <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400 w-32">Email</span>
                 <input type="email" wire:model.blur="email" wire:change="updateEmail"
-                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-[#e8e8e8] dark:hover:border-[#2d2d3a] focus:border-[#1b84ff] dark:focus:border-[#1b84ff] text-[#1b1c22] dark:text-white focus:ring-0 transition-colors"
+                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors"
                     placeholder="Enter your email">
             </div>
-            <div wire:loading wire:target="updateEmail" class="text-[#1b84ff]">
+            <div wire:loading wire:target="updateEmail" class="text-indigo-500">
                 <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor"
@@ -118,38 +117,21 @@
         @enderror
     </div>
 
-    <!-- Active Role Switch & Default Role Section (Rollback to previous cleaner version) -->
-    <div
-        class="mt-10 bg-white dark:bg-[#1e1e2d] rounded-xl border border-[#e8e8e8] dark:border-[#2d2d3a] overflow-hidden">
-        <div class="px-6 py-4 border-b border-[#e8e8e8] dark:border-[#2d2d3a]">
-            <h2 class="text-lg font-semibold text-[#1b1c22] dark:text-white">Roles Configuration</h2>
+    <!-- Roles Configuration Card -->
+    <div class="mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
+            <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Roles Configuration</h2>
         </div>
 
-        <div class="p-6 space-y-8">
-            <!-- Active Role Switch -->
-            <div>
-                <h3 class="text-sm font-medium text-[#99a1b7] dark:text-[#6d6d80] mb-4">Switch Active Role</h3>
-                <div class="flex flex-wrap gap-3">
-                    @foreach(auth()->user()->roles as $r)
-                        <button type="button" wire:click="switchRole({{ $r->id }})"
-                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ auth()->user()->role_id == $r->id ? 'bg-[#1b84ff] text-white shadow-lg shadow-blue-500/20' : 'bg-[#f1f1f4] dark:bg-[#252532] text-[#4b5675] dark:text-[#a1a5b7] hover:bg-[#e8e8e8] dark:hover:bg-[#2d2d3a]' }}">
-                            {{ $r->name }}
-                            @if(auth()->user()->role_id == $r->id)
-                                <span class="ml-2 text-[10px] uppercase font-bold text-white/70 underline">Active</span>
-                            @endif
-                        </button>
-                    @endforeach
-                </div>
-            </div>
-
+        <div class="p-6">
             <!-- Set Default Role Section -->
             <div>
-                <h3 class="text-sm font-medium text-[#99a1b7] dark:text-[#6d6d80] mb-4">Set Default Role (at Login)</h3>
+                <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-4">Set Default Role (at Login)</h3>
                 <div class="flex flex-wrap gap-3">
                     @foreach(auth()->user()->roles as $r)
                         @php $isDefault = $r->pivot->is_default; @endphp
                         <button type="button" wire:click="setDefaultRole({{ $r->id }})"
-                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ $isDefault ? 'bg-[#f6c000] text-white shadow-lg' : 'bg-[#f1f1f4] dark:bg-[#252532] text-[#4b5675] dark:text-[#a1a5b7] hover:bg-[#e8e8e8] dark:hover:bg-[#2d2d3a] border border-dashed border-[#d8d8d8] dark:border-[#3a3a4a]' }}">
+                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ $isDefault ? 'bg-amber-500 text-white shadow-lg' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-dashed border-zinc-300 dark:border-zinc-600' }}">
                             <div class="flex items-center gap-2">
                                 @if($isDefault)
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -163,8 +145,7 @@
                         </button>
                     @endforeach
                 </div>
-                <p class="mt-3 text-xs text-zinc-500 italic">This role will be automatically selected the next time you
-                    login.</p>
+                <p class="mt-3 text-xs text-zinc-500 dark:text-zinc-400 italic">This role will be automatically selected the next time you login.</p>
             </div>
         </div>
     </div>

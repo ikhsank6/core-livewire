@@ -88,7 +88,7 @@ class MenuIndex extends Component implements HasForms
             $menu->delete();
             $this->dispatch('notify', text: 'Menu deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error deleting menu: '.$e->getMessage(), variant: 'danger');
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
@@ -103,7 +103,7 @@ class MenuIndex extends Component implements HasForms
             }
             $this->dispatch('notify', text: 'Menu order updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error updating order: '.$e->getMessage(), variant: 'danger');
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 

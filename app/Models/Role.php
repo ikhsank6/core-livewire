@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
@@ -15,11 +14,12 @@ class Role extends Model
     ];
 
     /**
-     * Get the users that belong to this role.
+     * Get all users that belong to this role (many-to-many).
      */
-    public function users(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'role_user')
+            ->withTimestamps();
     }
 
     /**
