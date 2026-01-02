@@ -23,7 +23,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
-Route::middleware(['auth', 'menu.access'])->group(function () {
+// Routes that need auth but NOT menu.access restriction
+Route::middleware(['auth'])->group(function () {
     Route::get('/logout', function () {
         Auth::logout();
         session()->invalidate();
@@ -35,13 +36,24 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/password/change', ChangePassword::class)->name('password.change');
 
+    // Switch role - accessible to all authenticated users regardless of menu access
     Route::get('/roles/switch/{role}', function (\App\Models\Role $role) {
-        auth()->user()->setActiveRole($role);
+        $user = auth()->user();
+
+        // Verify user has this role
+        if (! $user->roles->contains('id', $role->id)) {
+            return back()->with('error', 'Unauthorized role switch.');
+        }
+
+        $user->setActiveRole($role);
         app(\App\Services\MenuService::class)->clearMenuCache($role->id);
 
-        return back()->with('success', "Switched to active role: {$role->name}");
+        return redirect()->route('dashboard')->with('success', "Switched to active role: {$role->name}");
     })->name('roles.switch');
+});
 
+// Routes that need both auth AND menu.access restriction
+Route::middleware(['auth', 'menu.access'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     // Master Data
