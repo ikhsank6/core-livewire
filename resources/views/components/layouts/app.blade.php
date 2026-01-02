@@ -45,8 +45,10 @@
     </script>
 </head>
 
-<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white">
-    <flux:sidebar sticky stashable class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white">
+<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white" x-data x-init="
+    Alpine.store('sidebarState', { open: true, toggle() { this.open = !this.open } });
+">
+    <flux:sidebar sticky stashable class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white transition-all duration-300" x-show="$store.sidebarState.open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <div class="h-16 flex items-center px-6 shrink-0">
@@ -91,16 +93,16 @@
     <flux:header class="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-3" inset="left" />
 
-        <div class="flex items-center max-lg:hidden" x-data="{ sidebarOpen: true }">
+        <div class="flex items-center max-lg:hidden">
             <button type="button" 
-                    @click="$dispatch('flux-stash-sidebar'); sidebarOpen = !sidebarOpen"
+                    @click="$store.sidebarState.toggle()"
                     class="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
-                <template x-if="sidebarOpen">
+                <template x-if="$store.sidebarState.open">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </template>
-                <template x-if="!sidebarOpen">
+                <template x-if="!$store.sidebarState.open">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
