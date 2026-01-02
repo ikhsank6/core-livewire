@@ -91,13 +91,24 @@
     <flux:header class="bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-3" inset="left" />
 
-        <div class="flex items-center -ml-2 max-lg:hidden">
-            <flux:sidebar.toggle icon="bars-3" variant="ghost">
-                <span class="ml-2 font-medium text-zinc-500 dark:text-zinc-400">Toggle sidebar</span>
-            </flux:sidebar.toggle>
+        <div class="flex items-center max-lg:hidden" x-data="{ sidebarOpen: true }">
+            <button type="button" 
+                    @click="$dispatch('flux-stash-sidebar'); sidebarOpen = !sidebarOpen"
+                    class="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+                <template x-if="sidebarOpen">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </template>
+                <template x-if="!sidebarOpen">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </template>
+            </button>
 
             @isset($breadcrumbs)
-                <flux:separator vertical variant="subtle" class="mx-4 h-4" />
+                <flux:separator vertical variant="subtle" class="mx-6 h-5" />
 
                 <flux:breadcrumbs>
                     {{ $breadcrumbs }}
@@ -113,7 +124,9 @@
         </flux:navbar>
 
         <flux:dropdown position="top" align="start">
-            <flux:profile class="cursor-pointer" initials="{{ substr(auth()->user()->name, 0, 2) }}" />
+            <flux:profile class="cursor-pointer" 
+                :avatar="auth()->user()->avatar ? Storage::url(auth()->user()->avatar) : null"
+                initials="{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}" />
 
             <flux:menu>
                 <flux:menu.item icon="user-circle" href="{{ route('profile') }}">Profile</flux:menu.item>
