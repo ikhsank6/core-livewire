@@ -71,20 +71,47 @@
         @enderror
 
         <!-- Name Row -->
-        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
+        <div class="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between" x-data="{ editing: false }">
             <div class="flex items-center gap-8 flex-1">
                 <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400 w-32">Name</span>
-                <input type="text" wire:model.blur="name" wire:change="updateName"
-                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors"
-                    placeholder="Enter your name">
+                
+                <!-- View Mode -->
+                <template x-if="!editing">
+                    <span class="text-sm text-zinc-900 dark:text-white">{{ $name }}</span>
+                </template>
+                
+                <!-- Edit Mode -->
+                <template x-if="editing">
+                    <input type="text" wire:model="name" x-ref="nameInput"
+                        class="flex-1 max-w-sm px-3 py-2 text-sm bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors outline-none"
+                        placeholder="Enter your name">
+                </template>
             </div>
-            <div wire:loading wire:target="updateName" class="text-indigo-500">
-                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
+            
+            <!-- Edit/Save Button -->
+            <div class="flex items-center gap-2">
+                <div wire:loading wire:target="updateName" class="text-indigo-500">
+                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                
+                <!-- Edit Icon -->
+                <button x-show="!editing" @click="editing = true; $nextTick(() => $refs.nameInput?.focus())" type="button"
+                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Save Icon -->
+                <button x-show="editing" x-cloak @click="$wire.updateName(); editing = false" type="button"
+                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
             </div>
         </div>
         @error('name')
@@ -94,20 +121,47 @@
         @enderror
 
         <!-- Email Row -->
-        <div class="px-6 py-5 flex items-center justify-between">
+        <div class="px-6 py-5 flex items-center justify-between" x-data="{ editing: false }">
             <div class="flex items-center gap-8 flex-1">
                 <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400 w-32">Email</span>
-                <input type="email" wire:model.blur="email" wire:change="updateEmail"
-                    class="flex-1 max-w-sm px-3 py-2 text-sm bg-transparent border-0 border-b border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors"
-                    placeholder="Enter your email">
+                
+                <!-- View Mode -->
+                <template x-if="!editing">
+                    <span class="text-sm text-zinc-900 dark:text-white">{{ $email }}</span>
+                </template>
+                
+                <!-- Edit Mode -->
+                <template x-if="editing">
+                    <input type="email" wire:model="email" x-ref="emailInput"
+                        class="flex-1 max-w-sm px-3 py-2 text-sm bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:border-indigo-500 dark:focus:border-indigo-500 text-zinc-900 dark:text-white focus:ring-0 transition-colors outline-none"
+                        placeholder="Enter your email">
+                </template>
             </div>
-            <div wire:loading wire:target="updateEmail" class="text-indigo-500">
-                <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
+            
+            <!-- Edit/Save Button -->
+            <div class="flex items-center gap-2">
+                <div wire:loading wire:target="updateEmail" class="text-indigo-500">
+                    <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                
+                <!-- Edit Icon -->
+                <button x-show="!editing" @click="editing = true; $nextTick(() => $refs.emailInput?.focus())" type="button"
+                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Save Icon -->
+                <button x-show="editing" x-cloak @click="$wire.updateEmail(); editing = false" type="button"
+                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
             </div>
         </div>
         @error('email')
