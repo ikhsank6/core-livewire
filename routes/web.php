@@ -6,6 +6,7 @@ use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Profile;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Dashboard;
 use App\Livewire\Layout\NotificationIndex;
 use App\Livewire\Menus\MenuIndex;
@@ -23,6 +24,11 @@ Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
     Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
 });
+
+// Email verification route (accessible without auth for clicking from email)
+Route::get('/auth/verify-email/{id}/{hash}', VerifyEmail::class)
+    ->middleware(['throttle:6,1'])
+    ->name('verification.verify');
 
 // Routes that need auth but NOT menu.access restriction
 Route::middleware(['auth'])->group(function () {

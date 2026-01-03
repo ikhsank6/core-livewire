@@ -66,19 +66,24 @@
                     this.value = this.isDark ? 'light' : 'dark';
                 }
             });
+
+            // Sidebar state store
+            Alpine.store('sidebarState', {
+                open: true,
+                toggle() {
+                    this.open = !this.open;
+                }
+            });
         });
     </script>
 </head>
 
-<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white" x-data x-init="
-    Alpine.store('sidebarState', { open: true, toggle() { this.open = !this.open } });
-">
-    <flux:sidebar sticky stashable
-        class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white transition-all duration-300"
-        x-show="$store.sidebarState.open" x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="-translate-x-full">
+<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white" x-data>
+    <flux:sidebar sticky stashable x-show="$store.sidebarState.open"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+        class="w-[300px] bg-zinc-900 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 text-white">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <div class="h-16 flex items-center px-6 shrink-0">
@@ -186,7 +191,8 @@
                         <span
                             class="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 mt-1.5 uppercase tracking-wider">
                             <flux:badge size="sm" color="emerald" icon="shield-check">
-                                {{ auth()->user()->role?->name ?? 'No Role' }}</flux:badge>
+                                {{ auth()->user()->role?->name ?? 'No Role' }}
+                            </flux:badge>
                         </span>
                     </div>
                 </div>

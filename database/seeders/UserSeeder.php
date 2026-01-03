@@ -23,6 +23,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role_id' => $superAdminRole?->id,
                 'is_active' => true,
+                'email_verified_at' => now(),
             ]
         );
     }

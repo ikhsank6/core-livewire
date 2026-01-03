@@ -34,6 +34,15 @@ class Login extends Component
 
             $user = Auth::user();
 
+            // Check if email is verified
+            if (! $user->hasVerifiedEmail()) {
+                Auth::logout();
+                $this->addError('email', 'Please verify your email address before logging in. Check your inbox for the verification link.');
+                $this->dispatch('notify', text: 'Email not verified. Please check your inbox.', variant: 'warning');
+
+                return;
+            }
+
             if (! $user->is_active) {
                 Auth::logout();
                 $this->addError('email', 'Your account has been deactivated.');
