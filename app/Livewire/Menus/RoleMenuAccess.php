@@ -22,6 +22,9 @@ class RoleMenuAccess extends Component
 
     public array $selectedMenus = [];
 
+    // Store previous state to detect changes
+    public array $oldSelectedMenus = [];
+
     public function selectRole(int $roleId): void
     {
         $this->selectedRoleId = $roleId;
@@ -29,25 +32,38 @@ class RoleMenuAccess extends Component
         // Load current menu access for this role
         $role = Role::with('menus')->find($roleId);
         $this->selectedMenus = $role->menus->pluck('id')->toArray();
+        $this->oldSelectedMenus = $this->selectedMenus;
     }
 
-    public function toggleMenu(int $menuId): void
+    public function updatedSelectedMenus()
     {
-        if (in_array($menuId, $this->selectedMenus)) {
-            $this->selectedMenus = array_values(array_diff($this->selectedMenus, [$menuId]));
+        // Detect what was added or removed
+        $added = array_diff($this->selectedMenus, $this->oldSelectedMenus);
+        $removed = array_diff($this->oldSelectedMenus, $this->selectedMenus);
 
-            // Also uncheck children if parent is unchecked
-            $children = Menu::where('parent_id', $menuId)->pluck('id')->toArray();
-            $this->selectedMenus = array_values(array_diff($this->selectedMenus, $children));
-        } else {
-            $this->selectedMenus[] = $menuId;
-
-            // Also check parent if child is checked
-            $menu = Menu::find($menuId);
-            if ($menu->parent_id && ! in_array($menu->parent_id, $this->selectedMenus)) {
-                $this->selectedMenus[] = $menu->parent_id;
+        if (! empty($added)) {
+            foreach ($added as $menuId) {
+                // If a child is checked, check the parent
+                $menu = Menu::find($menuId);
+                if ($menu && $menu->parent_id && ! in_array($menu->parent_id, $this->selectedMenus)) {
+                    $this->selectedMenus[] = $menu->parent_id;
+                }
             }
         }
+
+        if (! empty($removed)) {
+            foreach ($removed as $menuId) {
+                // If a parent is unchecked, uncheck all children
+                $childrenIds = Menu::where('parent_id', $menuId)->pluck('id')->toArray();
+                if (! empty($childrenIds)) {
+                    $this->selectedMenus = array_values(array_diff($this->selectedMenus, $childrenIds));
+                }
+            }
+        }
+
+        // Update old state
+        $this->selectedMenus = array_values(array_unique($this->selectedMenus));
+        $this->oldSelectedMenus = $this->selectedMenus;
     }
 
     public function saveMenuAccess(): void

@@ -12,7 +12,7 @@
                 <div class="sm:flex sm:items-center justify-between">
                     <div class="flex items-center gap-4">
                         <button wire:click="backToRoles"
-                            class="p-2 text-zinc-400 hover:text-[#1b84ff] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
+                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -20,7 +20,8 @@
                         </button>
                         <div>
                             <h1 class="text-xl font-bold text-zinc-900 dark:text-white">Menu Access:
-                                {{ $selectedRole->name }}</h1>
+                                {{ $selectedRole->name }}
+                            </h1>
                             <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                                 Configure which menus this role can access.
                             </p>
@@ -28,7 +29,7 @@
                     </div>
                     <div class="mt-4 sm:mt-0 sm:flex-none">
                         <button type="button" wire:click="saveMenuAccess"
-                            class="flex items-center gap-2 rounded-lg bg-[#17c653] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#14a847] transition-colors">
+                            class="flex items-center gap-2 rounded-lg bg-metronic-success px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                                 </path>
@@ -41,54 +42,49 @@
 
             <!-- Card Body - Menu Tree Checkboxes -->
             <div class="p-6">
-                <div class="space-y-3">
+                <div class="space-y-1">
                     @forelse($menus as $parentMenu)
-                        <div
-                            class="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden bg-zinc-50 dark:bg-zinc-800/50">
+                        <div wire:key="menu-{{ $parentMenu->id }}" class="mb-4">
                             <!-- Parent Menu -->
-                            <div class="flex items-center gap-4 px-4 py-3.5 bg-zinc-100 dark:bg-zinc-800">
-                                <label class="flex items-center gap-3 cursor-pointer flex-1">
-                                    <input type="checkbox" wire:click="toggleMenu({{ $parentMenu->id }})"
-                                        @checked(in_array($parentMenu->id, $selectedMenus))
-                                        class="w-5 h-5 rounded border-zinc-300 dark:border-zinc-600 text-[#1b84ff] focus:ring-[#1b84ff] focus:ring-offset-0 cursor-pointer">
-                                    <div class="flex items-center gap-2">
-                                        @if($parentMenu->icon)
-                                            <span class="text-zinc-400">{{ $parentMenu->icon }}</span>
-                                        @endif
-                                        <span class="font-bold text-zinc-900 dark:text-white">{{ $parentMenu->name }}</span>
-                                        <code
-                                            class="text-xs bg-white dark:bg-zinc-900 px-1.5 py-0.5 rounded text-[#1b84ff] border border-zinc-200 dark:border-zinc-700">{{ $parentMenu->slug }}</code>
-                                    </div>
+                            <div class="flex items-center gap-3 py-2.5 px-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border border-zinc-200 dark:border-zinc-800">
+                                <input type="checkbox" 
+                                    wire:model.live="selectedMenus" 
+                                    value="{{ $parentMenu->id }}"
+                                    id="menu-{{ $parentMenu->id }}"
+                                    class="w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-950">
+                                <label for="menu-{{ $parentMenu->id }}" class="flex items-center gap-3 cursor-pointer flex-1 group/label">
+                                    @if($parentMenu->icon)
+                                        <flux:icon name="{{ $parentMenu->icon }}" class="w-5 h-5 text-indigo-600 dark:text-indigo-400 group-hover/label:scale-110 transition-transform" />
+                                    @else
+                                        <flux:icon name="folder" class="w-5 h-5 text-zinc-400" />
+                                    @endif
+                                    <span class="font-bold text-zinc-900 dark:text-white transition-colors">{{ $parentMenu->name }}</span>
+                                    <span class="text-[10px] text-zinc-500 dark:text-zinc-400 font-mono bg-zinc-200/50 dark:bg-zinc-800 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-700 ml-2 uppercase tracking-tight">{{ $parentMenu->slug }}</span>
                                 </label>
-                                @if($parentMenu->route)
-                                    <span
-                                        class="text-xs text-zinc-500 dark:text-zinc-400 hidden sm:block">{{ $parentMenu->route }}</span>
-                                @endif
                             </div>
 
                             <!-- Child Menus -->
                             @if($parentMenu->children->count() > 0)
-                                <div class="divide-y divide-zinc-200 dark:divide-zinc-700 bg-white dark:bg-zinc-900">
+                                <div class="mt-1 ml-12 pl-6 border-l-2 border-indigo-100 dark:border-zinc-700 space-y-1 relative">
                                     @foreach($parentMenu->children as $childMenu)
-                                        <div
-                                            class="flex items-center gap-4 px-4 py-3 pl-12 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
-                                            <label class="flex items-center gap-3 cursor-pointer flex-1">
-                                                <input type="checkbox" wire:click="toggleMenu({{ $childMenu->id }})"
-                                                    @checked(in_array($childMenu->id, $selectedMenus))
-                                                    class="w-5 h-5 rounded border-zinc-300 dark:border-zinc-600 text-[#1b84ff] focus:ring-[#1b84ff] focus:ring-offset-0 cursor-pointer">
-                                                <div class="flex items-center gap-2">
-                                                    @if($childMenu->icon)
-                                                        <span class="text-zinc-400">{{ $childMenu->icon }}</span>
-                                                    @endif
-                                                    <span class="text-zinc-600 dark:text-zinc-300">{{ $childMenu->name }}</span>
-                                                    <code
-                                                        class="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[#1b84ff] border border-zinc-200 dark:border-zinc-700">{{ $childMenu->slug }}</code>
-                                                </div>
+                                        <div class="flex items-center gap-3 py-1.5 px-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors relative" wire:key="menu-{{ $childMenu->id }}">
+                                            {{-- Horizontal Line Connector --}}
+                                            <div class="absolute -left-6 top-1/2 w-6 h-0.5 bg-zinc-200 dark:bg-zinc-800"></div>
+                                            
+                                            <input type="checkbox" 
+                                                wire:model.live="selectedMenus" 
+                                                value="{{ $childMenu->id }}"
+                                                id="menu-{{ $childMenu->id }}"
+                                                class="w-4 h-4 rounded border-zinc-400 dark:border-zinc-600 text-indigo-600 focus:ring-indigo-500 dark:bg-zinc-950">
+                                            <label for="menu-{{ $childMenu->id }}" class="flex items-center gap-3 cursor-pointer flex-1 group/child">
+                                                @if($childMenu->icon)
+                                                    <flux:icon name="{{ $childMenu->icon }}" class="w-4 h-4 text-zinc-500 dark:text-zinc-400 group-hover/child:scale-110 transition-transform" />
+                                                @else
+                                                    <flux:icon name="document" class="w-4 h-4 text-zinc-400" />
+                                                @endif
+                                                <span class="text-sm font-medium text-zinc-700 dark:text-zinc-200 group-hover/child:text-indigo-600 dark:group-hover/child:text-indigo-400 transition-colors">{{ $childMenu->name }}</span>
+                                                <span class="text-[10px] text-zinc-500 dark:text-zinc-500 font-mono tracking-widest">{{ $childMenu->slug }}</span>
                                             </label>
-                                            @if($childMenu->route)
-                                                <span
-                                                    class="text-xs text-zinc-500 dark:text-zinc-400 hidden sm:block">{{ $childMenu->route }}</span>
-                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -96,10 +92,7 @@
                         </div>
                     @empty
                         <div class="flex flex-col items-center justify-center py-12 text-zinc-400">
-                            <svg class="w-12 h-12 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h7"></path>
-                            </svg>
+                            <flux:icon.squares-plus class="w-12 h-12 mb-3 opacity-20" />
                             <p class="text-base font-medium">No menus available</p>
                             <p class="text-sm">Please create menus first in the Menus section.</p>
                         </div>
