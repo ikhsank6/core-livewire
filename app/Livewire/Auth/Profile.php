@@ -106,6 +106,28 @@ class Profile extends Component
     }
 
     /**
+     * Delete current avatar
+     */
+    public function deleteAvatar(): void
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::user();
+
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $user->update(['avatar' => null]);
+            $this->currentAvatar = null;
+
+            $this->dispatch('notify', text: 'Photo removed successfully.', variant: 'success');
+        } catch (\Exception $e) {
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+        }
+    }
+
+    /**
      * Switch currently active role
      */
     public function switchRole($roleId): void
