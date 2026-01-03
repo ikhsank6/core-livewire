@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
-    Route::get('/login', Login::class)->name('login');
-    Route::get('/register', Register::class)->name('register');
-    Route::get('/forgot-password', ForgotPassword::class)->name('forgot-password');
-    Route::get('/reset-password/{token}', ResetPassword::class)->name('reset-password');
+Route::middleware('guest')->prefix('auth')->group(function () {
+    Route::get('/login', Login::class)->name('auth.login');
+    Route::get('/register', Register::class)->name('auth.register');
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
 // Email verification route (accessible without auth for clicking from email)
