@@ -5,7 +5,7 @@
         </h2>
         <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
             Or
-            <a href="{{ route('register') }}" wire:navigate
+            <a href="{{ route('auth.register') }}" wire:navigate
                 class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
                 register for a new account
             </a>
@@ -24,7 +24,7 @@
         <flux:field>
             <div class="flex items-center justify-between">
                 <flux:label>Password</flux:label>
-                <flux:link href="{{ route('password.request') }}" wire:navigate variant="subtle"
+                <flux:link href="{{ route('auth.forgot-password') }}" wire:navigate variant="subtle"
                     class="text-sm font-medium">
                     Forgot password?
                 </flux:link>

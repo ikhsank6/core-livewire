@@ -42,7 +42,7 @@
         </flux:button>
 
         <div class="text-sm text-center">
-            <a href="{{ route('login') }}" wire:navigate
+            <a href="{{ route('auth.login') }}" wire:navigate
                 class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
                 Back to login
             </a>

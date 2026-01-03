@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\MenuService;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckMenuAccess
@@ -21,13 +22,13 @@ class CheckMenuAccess
         $user = $request->user();
 
         if (! $user) {
-            return redirect()->route('login');
+            return redirect()->route('auth.login');
         }
 
         if (! $user->is_active) {
-            auth()->logout();
+            Auth::logout();
 
-            return redirect()->route('login')
+            return redirect()->route('auth.login')
                 ->with('error', 'Your account has been deactivated.');
         }
 

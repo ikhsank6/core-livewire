@@ -56,7 +56,7 @@ class ResetPassword extends Component
 
         if ($status === Password::PASSWORD_RESET) {
             session()->flash('status', __($status));
-            $this->redirect(route('login'), navigate: true);
+            $this->redirect(route('auth.login'), navigate: true);
         } else {
             $this->addError('email', __($status));
         }
