@@ -4,6 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -43,13 +44,18 @@ class Profile extends Component
             'name' => 'required|string|max:255',
         ]);
 
+        DB::beginTransaction();
+
         try {
             /** @var User $user */
             $user = Auth::user();
             $user->update(['name' => $this->name]);
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Name updated successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -63,13 +69,18 @@ class Profile extends Component
             'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
         ]);
 
+        DB::beginTransaction();
+
         try {
             /** @var User $user */
             $user = Auth::user();
             $user->update(['email' => $this->email]);
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Email updated successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -82,6 +93,8 @@ class Profile extends Component
         $this->validate([
             'avatar' => 'image|max:2048',
         ]);
+
+        DB::beginTransaction();
 
         try {
             /** @var User $user */
@@ -99,8 +112,11 @@ class Profile extends Component
 
             $this->reset('avatar');
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Photo updated successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -110,6 +126,8 @@ class Profile extends Component
      */
     public function deleteAvatar(): void
     {
+        DB::beginTransaction();
+
         try {
             /** @var User $user */
             $user = Auth::user();
@@ -121,8 +139,11 @@ class Profile extends Component
             $user->update(['avatar' => null]);
             $this->currentAvatar = null;
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Photo removed successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -132,6 +153,8 @@ class Profile extends Component
      */
     public function switchRole($roleId): void
     {
+        DB::beginTransaction();
+
         try {
             /** @var User $user */
             $user = Auth::user();
@@ -141,12 +164,16 @@ class Profile extends Component
                 // Clear menu cache to reflect new role
                 app(\App\Services\MenuService::class)->clearMenuCache($roleId);
 
+                DB::commit();
+
                 $this->dispatch('notify', text: 'Switched to '.$role->name.' role.', variant: 'success');
                 $this->js('window.location.reload()');
             } else {
+                DB::rollBack();
                 $this->dispatch('notify', text: 'Unauthorized role switch.', variant: 'danger');
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -156,6 +183,8 @@ class Profile extends Component
      */
     public function setDefaultRole($roleId): void
     {
+        DB::beginTransaction();
+
         try {
             /** @var User $user */
             $user = Auth::user();
@@ -173,8 +202,11 @@ class Profile extends Component
             // Refresh the user instance relationship to update the UI
             $user->load('roles');
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Default role updated successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

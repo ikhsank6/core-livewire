@@ -5,6 +5,7 @@ namespace App\Livewire\Auth;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -28,6 +29,8 @@ class Register extends Component
 
     public function register(): void
     {
+        DB::beginTransaction();
+
         try {
             $this->validate();
 
@@ -44,11 +47,14 @@ class Register extends Component
 
             Auth::login($user);
 
+            DB::commit();
+
             session()->regenerate();
             $this->dispatch('notify', text: 'Account created successfully!', variant: 'success');
 
             $this->redirect(route('dashboard'), navigate: true);
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

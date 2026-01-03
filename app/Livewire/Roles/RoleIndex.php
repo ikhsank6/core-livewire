@@ -7,6 +7,7 @@ use App\Models\Role;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -62,6 +63,8 @@ class RoleIndex extends Component implements HasForms
 
     public function save(): void
     {
+        DB::beginTransaction();
+
         try {
             $data = $this->form->getState();
 
@@ -73,19 +76,28 @@ class RoleIndex extends Component implements HasForms
                 $this->dispatch('notify', text: 'Role created successfully.', variant: 'success');
             }
 
+            DB::commit();
+
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(Role $role): void
     {
+        DB::beginTransaction();
+
         try {
             $role->delete();
+
+            DB::commit();
+
             $this->dispatch('notify', text: 'Role deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

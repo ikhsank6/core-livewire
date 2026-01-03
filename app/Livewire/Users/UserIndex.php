@@ -3,10 +3,14 @@
 namespace App\Livewire\Users;
 
 use App\Forms\UserForm;
+use App\Models\Notification;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -70,6 +74,8 @@ class UserIndex extends Component implements HasForms
 
     public function save(): void
     {
+        DB::beginTransaction();
+
         try {
             $data = $this->form->getState();
             $roleIds = $data['roles'] ?? [];
@@ -90,22 +96,48 @@ class UserIndex extends Component implements HasForms
             } else {
                 $user = User::create($data);
                 $user->syncRoles($roleIds, $defaultRoleId);
+
+                // Send notification to Super Admin
+                $superAdminRole = Role::where('slug', 'super-admin')
+                    ->orWhere('name', 'Super Admin')
+                    ->first();
+
+                if ($superAdminRole) {
+                    Notification::create([
+                        'from_role_id' => Auth::user()->role_id,
+                        'to_role_id' => $superAdminRole->id,
+                        'message' => 'New user "'.$user->name.'" has been created by '.Auth::user()->name.'.',
+                        'url' => null, // Or detail page if exists
+                        'id_reference' => $user->id,
+                        'read' => false,
+                    ]);
+                }
+
                 $this->dispatch('notify', text: 'User created successfully.', variant: 'success');
             }
+
+            DB::commit();
 
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(User $user): void
     {
+        DB::beginTransaction();
+
         try {
             $user->delete();
+
+            DB::commit();
+
             $this->dispatch('notify', text: 'User deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

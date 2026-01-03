@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
@@ -23,6 +24,8 @@ class ChangePassword extends Component
 
     public function changePassword(): void
     {
+        DB::beginTransaction();
+
         try {
             $this->validate();
 
@@ -32,10 +35,13 @@ class ChangePassword extends Component
                 'password' => Hash::make($this->password),
             ]);
 
+            DB::commit();
+
             $this->reset(['current_password', 'password', 'password_confirmation']);
 
             $this->dispatch('notify', text: 'Password changed successfully.', variant: 'success');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

@@ -154,9 +154,8 @@
 
         <flux:spacer />
 
-        <flux:navbar class="mr-4">
-            <flux:navbar.item icon="magnifying-glass" href="#" label="Search" />
-            <flux:navbar.item icon="bell" href="#" label="Notifications" />
+        <flux:navbar class="mr-2">
+            <livewire:layout.notification-bell />
         </flux:navbar>
 
         <flux:dropdown position="bottom" align="end">
@@ -169,21 +168,25 @@
                     <!-- Premium Avatar Layout -->
                     <div class="shrink-0">
                         @if(auth()->user()->avatar)
-                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar" class="h-12 w-12 rounded-2xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-700 shadow-sm">
+                            <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar"
+                                class="h-12 w-12 rounded-2xl object-cover ring-1 ring-zinc-200 dark:ring-zinc-700 shadow-sm">
                         @else
-                            <div class="h-12 w-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-sm font-bold text-white uppercase shadow-sm">
+                            <div
+                                class="h-12 w-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-sm font-bold text-white uppercase shadow-sm">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                             </div>
                         @endif
                     </div>
-                    
+
                     <!-- Text Info (Left Aligned) -->
                     <div class="flex flex-col text-left leading-none">
                         <span class="text-base font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
                             {{ auth()->user()->name }}
                         </span>
-                        <span class="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 mt-1.5 uppercase tracking-wider">
-                            <flux:badge size="sm" color="emerald" icon="shield-check">{{ auth()->user()->role?->name ?? 'No Role' }}</flux:badge>
+                        <span
+                            class="text-[10px] font-medium text-zinc-500 dark:text-zinc-400 mt-1.5 uppercase tracking-wider">
+                            <flux:badge size="sm" color="emerald" icon="shield-check">
+                                {{ auth()->user()->role?->name ?? 'No Role' }}</flux:badge>
                         </span>
                     </div>
                 </div>

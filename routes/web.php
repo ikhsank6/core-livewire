@@ -7,6 +7,7 @@ use App\Livewire\Auth\Profile;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Dashboard;
+use App\Livewire\Layout\NotificationIndex;
 use App\Livewire\Menus\MenuIndex;
 use App\Livewire\Menus\RoleMenuAccess;
 use App\Livewire\Roles\RoleIndex;
@@ -35,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/password/change', ChangePassword::class)->name('password.change');
+    Route::get('/notifications', NotificationIndex::class)->name('notifications.index');
 
     // Switch role - accessible to all authenticated users regardless of menu access
     Route::get('/roles/switch/{role}', function (\App\Models\Role $role) {

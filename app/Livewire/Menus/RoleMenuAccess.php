@@ -5,6 +5,7 @@ namespace App\Livewire\Menus;
 use App\Models\Menu;
 use App\Models\Role;
 use App\Services\MenuService;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -57,6 +58,8 @@ class RoleMenuAccess extends Component
             return;
         }
 
+        DB::beginTransaction();
+
         try {
             $role = Role::findOrFail($this->selectedRoleId);
             $role->menus()->sync($this->selectedMenus);
@@ -65,11 +68,14 @@ class RoleMenuAccess extends Component
             $menuService = app(MenuService::class);
             $menuService->clearMenuCache($this->selectedRoleId);
 
+            DB::commit();
+
             $this->dispatch('notify', text: 'Menu access updated successfully for '.$role->name, variant: 'success');
 
             // Refresh the page to update sidebar (layout uses MenuService directly)
             $this->js('setTimeout(() => window.location.reload(), 1000)');
         } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
