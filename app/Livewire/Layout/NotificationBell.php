@@ -12,6 +12,7 @@ class NotificationBell extends Component
     public function getNotificationsProperty()
     {
         return Notification::where('to_role_id', Auth::user()->role_id)
+            ->where('read', false)
             ->latest()
             ->take(5)
             ->get();

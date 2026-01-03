@@ -102,9 +102,12 @@
                         </div>
                     </div>
                 @empty
-                    <div class="px-4 py-8 text-center">
-                        <flux:icon.bell class="size-8 mx-auto text-zinc-300 dark:text-zinc-600 mb-3" />
-                        <p class="text-sm text-zinc-500 dark:text-zinc-400">No notifications yet</p>
+                    <div class="px-4 py-8 text-center bg-zinc-50 dark:bg-zinc-800/50">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 mb-3">
+                            <flux:icon.bell-slash class="size-6 text-zinc-400 dark:text-zinc-500" />
+                        </div>
+                        <p class="text-sm font-medium text-zinc-900 dark:text-white mb-1">No unread notifications</p>
+                        <p class="text-xs text-zinc-500 dark:text-zinc-400">You're all caught up! Check back later.</p>
                     </div>
                 @endforelse
             </div>
