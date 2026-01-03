@@ -24,6 +24,14 @@
     @filamentStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <style>
+        /* Global Modal Backdrop Blur */
+        [data-flux-modal-backdrop] {
+            backdrop-filter: blur(8px) !important;
+            background-color: rgba(27, 28, 34, 0.8) !important;
+        }
+    </style>
+
     <script data-navigate-once>
         // Apply theme immediately on every navigation (before Alpine loads)
         (function () {
@@ -242,11 +250,11 @@
 
                 <flux:separator />
 
-                <flux:modal.trigger name="logout-modal">
+                <div x-on:click="$dispatch('open-modal', { name: 'logout-modal' })">
                     <flux:menu.item icon="arrow-right-start-on-rectangle" variant="danger">
                         Logout
                     </flux:menu.item>
-                </flux:modal.trigger>
+                </div>
             </flux:menu>
         </flux:dropdown>
     </flux:header>
@@ -336,24 +344,27 @@
     </div>
 
     <!-- Logout Confirmation Modal -->
-    <flux:modal name="logout-modal" class="max-w-md z-100">
-        <div class="text-center">
+    <x-ui.modal name="logout-modal" title="Konfirmasi Logout" maxWidth="md">
+        <div class="text-center py-4">
             <div
-                class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 mb-4">
-                <flux:icon name="arrow-right-start-on-rectangle" class="h-7 w-7 text-red-600 dark:text-red-400" />
+                class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 mb-6">
+                <flux:icon name="arrow-right-start-on-rectangle" class="h-8 w-8 text-red-600 dark:text-red-400" />
             </div>
 
-            <flux:heading size="lg">Konfirmasi Logout</flux:heading>
-            <flux:subheading>Apakah Anda yakin ingin keluar dari aplikasi?</flux:subheading>
+            <p class="text-zinc-600 dark:text-zinc-400 text-base">Apakah Anda yakin ingin keluar dari aplikasi?</p>
         </div>
 
-        <div class="flex gap-3 mt-6">
-            <flux:modal.close>
-                <flux:button variant="ghost" class="flex-1">Batal</flux:button>
-            </flux:modal.close>
-            <flux:button href="{{ route('logout') }}" variant="danger" class="flex-1">Ya, Logout</flux:button>
-        </div>
-    </flux:modal>
+        <x-slot name="footer">
+            <button type="button" x-on:click="show = false"
+                class="flex-1 inline-flex justify-center rounded-lg px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                Batal
+            </button>
+            <a href="{{ route('logout') }}"
+                class="flex-1 inline-flex justify-center items-center rounded-lg px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
+                Ya, Logout
+            </a>
+        </x-slot>
+    </x-ui.modal>
 
     @fluxScripts
     @filamentScripts

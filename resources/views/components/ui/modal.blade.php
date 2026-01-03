@@ -22,9 +22,12 @@ $maxWidthClass = [
 @endphp
 
 <div
-    x-data="{ show: @entangle($attributes->wire('model')) }"
+    x-data="{ 
+        show: @if($attributes->wire('model')->value()) @entangle($attributes->wire('model')) @else false @endif 
+    }"
+    x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
+    x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
     x-show="show"
-    x-on:keydown.escape.window="show = false"
     class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     style="display: none;"
 >
@@ -37,8 +40,7 @@ $maxWidthClass = [
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        x-on:click="show = false"
-        class="fixed inset-0 bg-[#1b1c22]/80 backdrop-blur-sm transition-opacity"
+        class="fixed inset-0 bg-[#1b1c22]/80 backdrop-blur-md transition-opacity"
         aria-hidden="true"
     ></div>
 
