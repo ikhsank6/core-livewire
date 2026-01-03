@@ -76,12 +76,6 @@
             }" x-init="
                 @if(session('success')) add({ text: '{{ session('success') }}', variant: 'success' }); @endif
                 @if(session('error')) add({ text: '{{ session('error') }}', variant: 'danger' }); @endif
-                
-                document.addEventListener('livewire:initialized', () => {
-                    Livewire.on('notify', (data) => {
-                        add(Array.isArray(data) ? data[0] : data);
-                    });
-                });
             " @notify.window="add($event.detail)" class="flex flex-col gap-3 items-end">
         <template x-for="toast in toasts" :key="toast.id">
             <div x-transition:enter="transition ease-out duration-300 transform"

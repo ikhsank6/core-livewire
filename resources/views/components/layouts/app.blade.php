@@ -83,11 +83,39 @@
                 }
             });
         });
+
+        // Ensure stores exist after Livewire navigation
+        document.addEventListener('livewire:navigated', () => {
+            // Re-initialize stores if they don't exist
+            if (!Alpine.store('theme')) {
+                Alpine.store('theme', {
+                    value: localStorage.getItem('theme') || 'light',
+                    get isDark() {
+                        return this.value === 'dark';
+                    },
+                    toggle() {
+                        this.value = this.isDark ? 'light' : 'dark';
+                        document.documentElement.classList.toggle('dark', this.value === 'dark');
+                        localStorage.setItem('theme', this.value);
+                    }
+                });
+            }
+
+            if (!Alpine.store('sidebarState')) {
+                Alpine.store('sidebarState', {
+                    open: true,
+                    toggle() {
+                        this.open = !this.open;
+                    }
+                });
+            }
+        });
     </script>
 </head>
 
-<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white" x-data>
-    <flux:sidebar sticky stashable x-show="$store.sidebarState.open"
+<body class="min-h-screen antialiased bg-zinc-50 dark:bg-[#1b1c22] text-zinc-900 dark:text-white"
+    x-data="{ sidebarOpen: true }" x-init="if ($store.sidebarState) { sidebarOpen = $store.sidebarState.open }">
+    <flux:sidebar sticky stashable x-show="$store.sidebarState ? $store.sidebarState.open : sidebarOpen"
         x-transition:enter="transition ease-out duration-300" x-transition:enter-start="-translate-x-full"
         x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
@@ -142,14 +170,15 @@
         <flux:sidebar.toggle class="lg:hidden" icon="bars-3" inset="left" />
 
         <div class="flex items-center max-lg:hidden">
-            <button type="button" @click="$store.sidebarState.toggle()"
+            <button type="button"
+                @click="$store.sidebarState ? $store.sidebarState.toggle() : (sidebarOpen = !sidebarOpen)"
                 class="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
-                <template x-if="$store.sidebarState.open">
+                <template x-if="($store.sidebarState ? $store.sidebarState.open : sidebarOpen)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </template>
-                <template x-if="!$store.sidebarState.open">
+                <template x-if="!($store.sidebarState ? $store.sidebarState.open : sidebarOpen)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -242,10 +271,11 @@
                         </svg>
 
                         <span class="text-sm font-medium text-zinc-800 dark:text-white"
-                            x-text="$store.theme.isDark ? 'Dark Mode' : 'Light Mode'"></span>
+                            x-text="$store.theme?.isDark ? 'Dark Mode' : 'Light Mode'"></span>
                     </div>
 
-                    <flux:switch x-on:click.prevent.stop="$store.theme.toggle()" x-bind:checked="$store.theme.isDark" />
+                    <flux:switch x-on:click.prevent.stop="$store.theme?.toggle()"
+                        x-bind:checked="$store.theme?.isDark ?? false" />
                 </div>
 
                 <flux:separator />
