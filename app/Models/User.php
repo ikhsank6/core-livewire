@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\VerifyEmailNotification;
+use App\Traits\HasUuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasUuid, Notifiable;
 
     /**
      * Send the email verification notification.
@@ -43,6 +44,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id', // Active role
         'is_active',
         'avatar',
+        'created_by',
+        'updated_by',
     ];
 
     /**

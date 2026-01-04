@@ -42,6 +42,14 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
+     * Find a record by UUID.
+     */
+    public function findByUuid(string $uuid): ?Model
+    {
+        return $this->model->where('uuid', $uuid)->first();
+    }
+
+    /**
      * Find a record by ID or fail.
      */
     public function findOrFail(int $id): Model

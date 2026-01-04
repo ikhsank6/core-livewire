@@ -70,7 +70,7 @@
 
             <div class="max-h-96 overflow-y-auto">
                 @forelse($this->notifications as $notification)
-                    <div wire:click="markAsRead({{ $notification->id }})"
+                    <div wire:click="markAsRead('{{ $notification->uuid }}')"
                         class="px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer border-b border-zinc-100 dark:border-zinc-800 last:border-0">
                         <div class="flex items-start gap-3">
                             <div class="shrink-0 mt-1">

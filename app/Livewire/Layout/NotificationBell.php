@@ -30,15 +30,15 @@ class NotificationBell extends Component
         return $this->notificationRepository->countUnreadForRole(Auth::user()->role_id);
     }
 
-    public function markAsRead($id)
+    public function markAsRead(string $uuid)
     {
         DB::beginTransaction();
 
         try {
-            $notification = $this->notificationRepository->find($id);
+            $notification = $this->notificationRepository->findByUuid($uuid);
 
             if ($notification && $notification->to_role_id == Auth::user()->role_id) {
-                $this->notificationRepository->markAsRead($id, Auth::user()->role_id);
+                $this->notificationRepository->markAsRead($notification->id, Auth::user()->role_id);
 
                 DB::commit();
 

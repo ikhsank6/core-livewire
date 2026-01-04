@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
 {
-    use \Illuminate\Database\Eloquent\SoftDeletes;
+    use HasUuid, SoftDeletes;
 
     protected $fillable = [
         'from_role_id',
@@ -15,6 +17,8 @@ class Notification extends Model
         'url',
         'id_reference',
         'read',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [

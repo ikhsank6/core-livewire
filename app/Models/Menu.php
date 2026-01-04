@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
+    use HasUuid;
+
     protected $fillable = [
         'parent_id',
         'name',
@@ -17,6 +20,8 @@ class Menu extends Model
         'route',
         'order',
         'is_active',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [

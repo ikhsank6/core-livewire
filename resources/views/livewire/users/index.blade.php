@@ -78,7 +78,7 @@
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
                                 <div class="flex items-center justify-end gap-2">
-                                    <button wire:click="edit({{ $user->id }})"
+                                    <button wire:click="edit('{{ $user->uuid }}')"
                                         class="p-2 text-zinc-400 hover:text-[#1b84ff] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -86,7 +86,11 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    <button wire:confirm="Are you sure?" wire:click="delete({{ $user->id }})"
+                                    <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                id: '{{ $user->uuid }}', 
+                                                componentId: '{{ $this->getId() }}',
+                                                message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
+                                            })"
                                         class="p-2 text-zinc-400 hover:text-[#f8285a] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,7 +117,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Edit/Create Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit User' : 'Create User'" formId="user-form">
         <form wire:submit="save" id="user-form" novalidate>
             {{ $this->form }}

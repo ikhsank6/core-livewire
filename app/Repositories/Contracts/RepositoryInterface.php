@@ -24,6 +24,11 @@ interface RepositoryInterface
     public function find(int $id): ?Model;
 
     /**
+     * Find a record by UUID.
+     */
+    public function findByUuid(string $uuid): ?Model;
+
+    /**
      * Find a record by ID or fail.
      */
     public function findOrFail(int $id): Model;
