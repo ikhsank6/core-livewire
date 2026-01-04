@@ -19,7 +19,8 @@
                         <button type="button" wire:click="create"
                             class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4">
                                 </path>
                             </svg>
                             Add Menu
@@ -37,7 +38,7 @@
             </div>
 
             <!-- Drag & Drop Menu List -->
-            <div class="premium-table-container overflow-hidden bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl"
+            <div class="premium-table-container overflow-x-auto bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl"
                 x-data="{
                     dragging: null,
                     dragOver: null,
@@ -110,7 +111,7 @@
                                 class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
                                 Status</th>
                             <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent w-20">
+                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent w-28 min-w-[110px]">
                             </th>
                         </tr>
                     </thead>
@@ -160,11 +161,11 @@
                                         {{ $menu->is_active ? 'Active' : 'Inactive' }}
                                     </x-ui.badge>
                                 </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <div class="flex items-center justify-end gap-2">
+                                <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                    <div class="flex items-center justify-end gap-2 text-right">
                                         <flux:tooltip content="Edit Data Menu" position="top">
                                             <button wire:click="edit('{{ $menu->uuid }}')"
-                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
+                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
@@ -174,13 +175,12 @@
                                         </flux:tooltip>
 
                                         <flux:tooltip content="Hapus Data Menu" position="top">
-                                            <button 
-                                                x-on:click="$dispatch('open-delete-confirm', { 
-                                                    id: '{{ $menu->uuid }}', 
-                                                    componentId: '{{ $this->getId() }}',
-                                                    message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?'
-                                                })"
-                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
+                                            <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                            id: '{{ $menu->uuid }}', 
+                                                            componentId: '{{ $this->getId() }}',
+                                                            message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
+                                                        })"
+                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
