@@ -239,43 +239,58 @@
                 <flux:menu.item icon="user-circle" href="{{ route('profile') }}">Profile</flux:menu.item>
                 <flux:menu.item icon="key" href="{{ route('password.change') }}">Change Password</flux:menu.item>
 
+                @if(auth()->user()->roles->count() > 1)
+                    <flux:separator />
+
+                    <flux:menu.submenu icon="shield-check" heading="Switch Role">
+                        @foreach(auth()->user()->roles as $role)
+                            <flux:menu.item href="{{ route('roles.switch', $role->id) }}"
+                                :icon="auth()->user()->role_id == $role->id ? 'check' : ''">
+                                {{ $role->name }}
+                            </flux:menu.item>
+                        @endforeach
+                    </flux:menu.submenu>
+                @endif
+
                 <flux:separator />
 
-                <flux:menu.submenu icon="shield-check" heading="Switch Role">
-                    @foreach(auth()->user()->roles as $role)
-                        <flux:menu.item href="{{ route('roles.switch', $role->id) }}"
-                            :icon="auth()->user()->role_id == $role->id ? 'check' : ''">
-                            {{ $role->name }}
-                        </flux:menu.item>
-                    @endforeach
-                </flux:menu.submenu>
-
-                <flux:separator />
-
-                <div x-data x-on:mousedown.stop x-on:click.stop x-on:mouseup.stop x-on:keydown.stop
+                <div x-data="{
+                        isDark: localStorage.getItem('theme') === 'dark',
+                        toggle() {
+                            this.isDark = !this.isDark;
+                            const theme = this.isDark ? 'dark' : 'light';
+                            localStorage.setItem('theme', theme);
+                            document.documentElement.classList.toggle('dark', this.isDark);
+                            if (window.$flux) window.$flux.appearance = theme;
+                            // Sync with store if available
+                            if ($store.theme) $store.theme.value = theme;
+                        }
+                    }" x-init="
+                        // Sync from store if available
+                        $watch('$store.theme.value', value => { if(value) isDark = value === 'dark'; });
+                    " x-on:mousedown.stop x-on:click.stop x-on:mouseup.stop x-on:keydown.stop
                     class="flex items-center justify-between px-3 py-2 outline-hidden">
                     <div class="flex items-center gap-2">
                         {{-- Sun Icon (Light Mode) --}}
-                        <svg x-show="!($store.theme?.isDark ?? false)" class="w-5 h-5 text-zinc-400" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="!isDark" class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
                             </path>
                         </svg>
                         {{-- Moon Icon (Dark Mode) --}}
-                        <svg x-show="$store.theme?.isDark ?? false" x-cloak class="w-5 h-5 text-zinc-400" fill="none"
-                            stroke="currentColor" viewBox="0 0 24 24">
+                        <svg x-show="isDark" x-cloak class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
                             </path>
                         </svg>
 
                         <span class="text-sm font-medium text-zinc-800 dark:text-white"
-                            x-text="$store.theme?.isDark ? 'Dark Mode' : 'Light Mode'"></span>
+                            x-text="isDark ? 'Dark Mode' : 'Light Mode'"></span>
                     </div>
 
-                    <flux:switch x-on:click.prevent.stop="$store.theme?.toggle()"
-                        x-bind:checked="$store.theme?.isDark ?? false" />
+                    <flux:switch x-on:click.prevent.stop="toggle()" x-bind:checked="isDark" />
                 </div>
 
                 <flux:separator />

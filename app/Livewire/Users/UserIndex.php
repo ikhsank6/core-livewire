@@ -161,6 +161,25 @@ class UserIndex extends Component implements HasForms
         }
     }
 
+    public function resendActivation(User $user): void
+    {
+        try {
+            // Check if user email is already verified
+            if ($user->hasVerifiedEmail()) {
+                $this->dispatch('notify', text: 'User email is already verified.', variant: 'danger');
+
+                return;
+            }
+
+            // Send verification email
+            $user->sendEmailVerificationNotification();
+
+            $this->dispatch('notify', text: 'Activation email has been sent to '.$user->email, variant: 'success');
+        } catch (\Exception $e) {
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+        }
+    }
+
     public function updatedSearch()
     {
         $this->resetPage();
