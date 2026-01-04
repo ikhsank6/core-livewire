@@ -135,17 +135,13 @@ textarea:focus {
 }
 
 /* Light Mode - Buttons */
-button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ) {
+button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(.bg-green-600):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn) {
     background-color: #f1f1f4 !important;
     color: #4b5675 !important;
     border: none !important;
 }
 
-button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ):hover {
+button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(.bg-green-600):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn):hover {
     background-color: #e8e8e8 !important;
     color: #1b1c22 !important;
 }
@@ -239,10 +235,7 @@ button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
 }
 
 /* Dark Mode - Buttons */
-.dark
-    button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ) {
+.dark button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(.bg-green-600):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn) {
     background-color: #252532 !important;
     color: #6d6d80 !important;
     border: none !important;

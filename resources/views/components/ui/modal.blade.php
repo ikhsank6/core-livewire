@@ -82,7 +82,7 @@ $maxWidthClass = [
                 {{ $footer }}
             @else
                 <button type="submit" @if($formId) form="{{ $formId }}" @endif
-                    class="inline-flex justify-center items-center gap-2 rounded-lg px-4 py-2 bg-[#1b84ff] text-sm font-bold text-white hover:bg-[#0070f0] focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    class="inline-flex justify-center items-center gap-2 rounded-lg px-4 py-2 bg-blue-600 text-sm font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     wire:loading.attr="disabled">
                     <svg wire:loading class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -91,8 +91,8 @@ $maxWidthClass = [
                     <span wire:loading.remove>Save Changes</span>
                     <span wire:loading>Saving...</span>
                 </button>
-                <button type="button" wire:click="{{ $cancelClick }}"
-                    class="inline-flex justify-center rounded-lg px-4 py-2 bg-transparent text-sm font-bold text-[#99a1b7] hover:text-[#4b5675] dark:hover:text-white transition-colors">
+                <button type="button" @click.prevent="show = false" wire:click="{{ $cancelClick }}"
+                    class="cancel-btn inline-flex justify-center rounded-lg px-4 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-700 transition-colors cursor-pointer">
                     Cancel
                 </button>
             @endif
