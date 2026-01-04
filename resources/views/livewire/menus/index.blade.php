@@ -181,15 +181,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-12">
-                                    <div class="flex flex-col items-center justify-center text-zinc-400">
-                                        <svg class="w-12 h-12 mb-4 opacity-20" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 6h16M4 12h16M4 18h7"></path>
-                                        </svg>
-                                        <p class="text-base font-medium">No menus found</p>
-                                    </div>
+                                <td colspan="8">
+                                    <x-ui.empty-state />
                                 </td>
                             </tr>
                         @endforelse
