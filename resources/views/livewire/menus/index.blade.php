@@ -15,14 +15,16 @@
                         hierarchy. Drag items to reorder.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <button type="button" wire:click="create"
-                        class="flex items-center gap-2 rounded-lg bg-[#1b84ff] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#0070f0] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b84ff]">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        Add Menu
-                    </button>
+                    <flux:tooltip content="Tambah Menu Baru" position="top">
+                        <button type="button" wire:click="create"
+                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                                </path>
+                            </svg>
+                            Add Menu
+                        </button>
+                    </flux:tooltip>
                 </div>
             </div>
         </div>
@@ -118,7 +120,7 @@
                                 x-on:dragend="handleDragEnd($event)" x-on:dragover="handleDragOver($event, {{ $menu->id }})"
                                 x-on:dragleave="handleDragLeave($event)" x-on:drop="handleDrop($event, {{ $menu->id }})"
                                 class="hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-grab active:cursor-grabbing"
-                                :class="{ 'bg-[#1b84ff]/10 border-[#1b84ff] border-2': dragOver === {{ $menu->id }} }">
+                                :class="{ 'bg-metronic-primary/10 border-metronic-primary border-2': dragOver === {{ $menu->id }} }">
 
                                 <!-- Drag Handle -->
                                 <td class="px-4 py-4 text-sm text-zinc-400">
@@ -142,7 +144,7 @@
                                 </td>
                                 <td class="px-4 py-4 text-sm">
                                     <code
-                                        class="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[#1b84ff] border border-zinc-200 dark:border-zinc-700">{{ $menu->slug }}</code>
+                                        class="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-metronic-primary border border-zinc-200 dark:border-zinc-700">{{ $menu->slug }}</code>
                                 </td>
                                 <td class="px-4 py-4 text-sm">
                                     <span class="text-zinc-500 dark:text-zinc-400 text-xs">{{ $menu->route ?? '-' }}</span>
@@ -160,27 +162,32 @@
                                 </td>
                                 <td class="px-4 py-4 text-sm">
                                     <div class="flex items-center justify-end gap-2">
-                                        <button wire:click="edit('{{ $menu->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-[#1b84ff] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                        <button 
-                                            x-on:click="$dispatch('open-delete-confirm', { 
-                                                id: '{{ $menu->uuid }}', 
-                                                componentId: '{{ $this->getId() }}',
-                                                message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?'
-                                            })"
-                                            class="p-2 text-zinc-400 hover:text-[#f8285a] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
+                                        <flux:tooltip content="Edit Data Menu" position="top">
+                                            <button wire:click="edit('{{ $menu->uuid }}')"
+                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </flux:tooltip>
+
+                                        <flux:tooltip content="Hapus Data Menu" position="top">
+                                            <button 
+                                                x-on:click="$dispatch('open-delete-confirm', { 
+                                                    id: '{{ $menu->uuid }}', 
+                                                    componentId: '{{ $this->getId() }}',
+                                                    message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?'
+                                                })"
+                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </flux:tooltip>
                                     </div>
                                 </td>
                             </tr>

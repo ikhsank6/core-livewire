@@ -53,15 +53,14 @@ $maxWidthClass = [
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        class="relative w-full {{ $maxWidthClass }} max-h-[90vh] flex flex-col transform rounded-2xl bg-white dark:bg-[#1e1e2d] border border-[#e8e8e8] dark:border-[#2d2d3a] shadow-2xl transition-all overflow-hidden"
+        class="relative w-full {{ $maxWidthClass }} max-h-[90vh] flex flex-col transform rounded-2xl bg-white dark:bg-[#1e1e2d] border border-metronic-light-border dark:border-[#2d2d3a] shadow-2xl transition-all overflow-hidden"
     >
-        {{-- Header --}}
         @if($title)
-            <div class="px-6 py-4 border-b border-[#e8e8e8] dark:border-[#2d2d3a] flex items-center justify-between shrink-0 bg-[#f9f9f9] dark:bg-[#252532]/50 rounded-t-2xl">
+            <div class="px-6 py-4 border-b border-metronic-light-border dark:border-[#2d2d3a] flex items-center justify-between shrink-0 bg-metronic-light-bg dark:bg-metronic-dark-card-hover/50 rounded-t-2xl">
                 <h3 class="text-lg font-bold text-[#1b1c22] dark:text-white">
                     {{ $title }}
                 </h3>
-                <button @click="show = false" class="text-[#99a1b7] hover:text-[#4b5675] dark:hover:text-white transition-colors">
+                <button @click="show = false" class="text-metronic-light-text-muted hover:text-[#4b5675] dark:hover:text-white transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -77,7 +76,7 @@ $maxWidthClass = [
         </div>
 
         {{-- Footer - Always visible at bottom --}}
-        <div class="bg-[#f9f9f9] dark:bg-[#252532]/50 px-6 py-4 flex flex-row-reverse gap-3 border-t border-[#e8e8e8] dark:border-[#2d2d3a] shrink-0 rounded-b-2xl">
+        <div class="bg-metronic-light-bg dark:bg-metronic-dark-card-hover/50 px-6 py-4 flex flex-row-reverse gap-3 border-t border-metronic-light-border dark:border-[#2d2d3a] shrink-0 rounded-b-2xl">
             @if(isset($footer))
                 {{ $footer }}
             @else

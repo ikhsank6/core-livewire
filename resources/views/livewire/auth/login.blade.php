@@ -24,7 +24,7 @@
         <flux:field>
             <div class="flex items-center justify-between">
                 <flux:label>Password</flux:label>
-                <flux:link href="{{ route('password.request') }}" wire:navigate variant="subtle"
+                <flux:link href="{{ route('auth.password.request') }}" wire:navigate variant="subtle"
                     class="text-sm font-medium">
                     Forgot password?
                 </flux:link>

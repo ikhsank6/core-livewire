@@ -12,7 +12,7 @@
         message = $event.detail.message || 'Apakah Anda yakin ingin menghapus data ini?';
         action = $event.detail.action || 'delete';
         show = true;
-    " x-show="show" class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6" style="display: none;">
+    " x-show="show" class="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-6" style="display: none;">
     {{-- Backdrop --}}
     <div x-show="show" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"

@@ -129,7 +129,7 @@
                             </svg>
                         </div>
                         <input type="text" wire:model.live.debounce.300ms="search" placeholder="Search roles..."
-                            class="block w-full pl-10 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-[#1b84ff] focus:border-[#1b84ff] placeholder-zinc-400 dark:placeholder-zinc-500 transition-all">
+                            class="block w-full pl-10 pr-3 py-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-white text-sm rounded-lg focus:ring-2 focus:ring-metronic-primary focus:border-metronic-primary placeholder-zinc-400 dark:placeholder-zinc-500 transition-all">
                     </div>
                 </div>
 
@@ -137,18 +137,18 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     @forelse($roles as $role)
                         <button wire:click="selectRole({{ $role->id }})"
-                            class="relative flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-5 py-4 text-left transition-all hover:border-[#1b84ff] hover:shadow-lg hover:shadow-[#1b84ff]/10 group">
+                            class="relative flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-5 py-4 text-left transition-all hover:border-metronic-primary hover:shadow-lg hover:shadow-metronic-primary/10 group active:scale-95">
 
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0 transition-transform group-hover:scale-110">
                                 <div
-                                    class="h-12 w-12 rounded-xl bg-gradient-to-br from-[#1b84ff] to-[#0070f0] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#1b84ff]/25">
+                                    class="h-12 w-12 rounded-xl bg-linear-to-br from-metronic-primary to-[#0070f0] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-metronic-primary/25">
                                     {{ strtoupper(substr($role->name, 0, 1)) }}
                                 </div>
                             </div>
 
                             <div class="min-w-0 flex-1">
                                 <p
-                                    class="text-base font-bold text-zinc-900 dark:text-white group-hover:text-[#1b84ff] transition-colors">
+                                    class="text-base font-bold text-zinc-900 dark:text-white group-hover:text-metronic-primary transition-colors">
                                     {{ $role->name }}
                                 </p>
                                 <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ $role->slug }}</p>
@@ -157,7 +157,7 @@
                                 </div>
                             </div>
 
-                            <div class="text-zinc-400 group-hover:text-[#1b84ff] transition-colors">
+                            <div class="text-zinc-400 group-hover:text-metronic-primary transition-all group-hover:translate-x-1">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
                                     </path>

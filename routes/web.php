@@ -18,17 +18,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware('guest')->prefix('auth')->group(function () {
-    Route::get('/login', Login::class)->name('auth.login');
-    Route::get('/register', Register::class)->name('auth.register');
+Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
 });
 
-// Email verification route (accessible without auth for clicking from email)
+// Alias for Laravel's default 'login' route name requirement
+Route::get('/login', function () {
+    return redirect()->route('auth.login');
+})->name('login');
+
+// Email verification route
 Route::get('/auth/verify-email/{id}/{hash}', VerifyEmail::class)
     ->middleware(['throttle:6,1'])
-    ->name('verification.verify');
+    ->name('auth.verification.verify');
 
 // Routes that need auth but NOT menu.access restriction
 Route::middleware(['auth'])->group(function () {

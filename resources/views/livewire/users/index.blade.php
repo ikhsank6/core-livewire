@@ -15,14 +15,17 @@
                         permissions.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <button type="button" wire:click="create"
-                        class="flex items-center gap-2 rounded-lg bg-[#1b84ff] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#0070f0] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1b84ff]">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
-                            </path>
-                        </svg>
-                        Add User
-                    </button>
+                    <flux:tooltip content="Tambah User Baru" position="top">
+                        <button type="button" wire:click="create"
+                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4v16m8-8H4">
+                                </path>
+                            </svg>
+                            Add User
+                        </button>
+                    </flux:tooltip>
                 </div>
             </div>
         </div>
@@ -69,7 +72,7 @@
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <a href="mailto:{{ $user->email }}"
-                                    class="text-[#1b84ff] hover:text-[#0070f0] transition-colors">{{ $user->email }}</a>
+                                    class="text-metronic-primary hover:opacity-80 transition-colors">{{ $user->email }}</a>
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <x-ui.badge :variant="$user->is_active ? 'success' : 'danger'">
@@ -78,26 +81,31 @@
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
                                 <div class="flex items-center justify-end gap-2">
-                                    <button wire:click="edit('{{ $user->uuid }}')"
-                                        class="p-2 text-zinc-400 hover:text-[#1b84ff] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                            </path>
-                                        </svg>
-                                    </button>
-                                    <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                id: '{{ $user->uuid }}', 
-                                                componentId: '{{ $this->getId() }}',
-                                                message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
-                                            })"
-                                        class="p-2 text-zinc-400 hover:text-[#f8285a] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                            </path>
-                                        </svg>
-                                    </button>
+                                    <flux:tooltip content="Edit Data User" position="top">
+                                        <button wire:click="edit('{{ $user->uuid }}')"
+                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </flux:tooltip>
+
+                                    <flux:tooltip content="Hapus Data User" position="top">
+                                        <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                        id: '{{ $user->uuid }}', 
+                                                        componentId: '{{ $this->getId() }}',
+                                                        message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
+                                                    })"
+                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                    </flux:tooltip>
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
