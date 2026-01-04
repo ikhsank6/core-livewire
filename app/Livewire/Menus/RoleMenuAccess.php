@@ -3,7 +3,8 @@
 namespace App\Livewire\Menus;
 
 use App\Models\Menu;
-use App\Models\Role;
+use App\Repositories\Contracts\MenuRepositoryInterface;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Services\MenuService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -25,12 +26,25 @@ class RoleMenuAccess extends Component
     // Store previous state to detect changes
     public array $oldSelectedMenus = [];
 
+    protected RoleRepositoryInterface $roleRepository;
+
+    protected MenuRepositoryInterface $menuRepository;
+
+    public function boot(
+        RoleRepositoryInterface $roleRepository,
+        MenuRepositoryInterface $menuRepository
+    ): void {
+        $this->roleRepository = $roleRepository;
+        $this->menuRepository = $menuRepository;
+    }
+
     public function selectRole(int $roleId): void
     {
         $this->selectedRoleId = $roleId;
 
         // Load current menu access for this role
-        $role = Role::with('menus')->find($roleId);
+        $role = $this->roleRepository->find($roleId);
+        $role->load('menus');
         $this->selectedMenus = $role->menus->pluck('id')->toArray();
         $this->oldSelectedMenus = $this->selectedMenus;
     }
@@ -44,7 +58,7 @@ class RoleMenuAccess extends Component
         if (! empty($added)) {
             foreach ($added as $menuId) {
                 // If a child is checked, check the parent
-                $menu = Menu::find($menuId);
+                $menu = $this->menuRepository->find($menuId);
                 if ($menu && $menu->parent_id && ! in_array($menu->parent_id, $this->selectedMenus)) {
                     $this->selectedMenus[] = $menu->parent_id;
                 }
@@ -77,8 +91,8 @@ class RoleMenuAccess extends Component
         DB::beginTransaction();
 
         try {
-            $role = Role::findOrFail($this->selectedRoleId);
-            $role->menus()->sync($this->selectedMenus);
+            $role = $this->roleRepository->findOrFail($this->selectedRoleId);
+            $this->roleRepository->syncMenus($this->selectedRoleId, $this->selectedMenus);
 
             // Clear menu cache for this role
             $menuService = app(MenuService::class);
@@ -104,19 +118,19 @@ class RoleMenuAccess extends Component
 
     public function render()
     {
-        $roles = Role::withCount('users')
-            ->where('name', 'like', '%'.$this->search.'%')
-            ->orWhere('slug', 'like', '%'.$this->search.'%')
-            ->get();
+        $roles = $this->roleRepository->allWithUserCount();
 
-        $menus = Menu::with('children')
-            ->whereNull('parent_id')
-            ->active()
-            ->ordered()
-            ->get();
+        if ($this->search) {
+            $roles = $roles->filter(function ($role) {
+                return str_contains(strtolower($role->name), strtolower($this->search))
+                    || str_contains(strtolower($role->slug), strtolower($this->search));
+            });
+        }
+
+        $menus = $this->menuRepository->getMenuTree();
 
         $selectedRole = $this->selectedRoleId
-            ? Role::find($this->selectedRoleId)
+            ? $this->roleRepository->find($this->selectedRoleId)
             : null;
 
         return view('livewire.menus.role-menu-access', [

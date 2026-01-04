@@ -1,4 +1,4 @@
-@props(['name' => '', 'size' => 'md'])
+@props(['name' => '', 'src' => null, 'size' => 'md'])
 
 @php
     $initials = collect(explode(' ', $name))->map(fn($n) => mb_substr($n, 0, 1))->take(2)->join('');
@@ -7,6 +7,7 @@
         'sm' => 'h-6 w-6 text-[10px]',
         'md' => 'h-9 w-9 text-xs',
         'lg' => 'h-12 w-12 text-sm',
+        'xl' => 'h-16 w-16 text-base',
     ];
 
     $colors = [
@@ -24,12 +25,25 @@
     // Simple hash to pick a consistent color for a name
     $colorIndex = abs(crc32($name)) % count($colors);
     $bgColor = $colors[$colorIndex];
+    
+    $sizeClass = $sizes[$size] ?? $sizes['md'];
 @endphp
 
-<div {{ $attributes->class([
-    'flex items-center justify-center rounded-full font-bold text-white shrink-0',
-    $sizes[$size] ?? $sizes['md'],
-    $bgColor
-]) }}>
-    {{ $initials }}
-</div>
+@if($src)
+    <img 
+        src="{{ $src }}" 
+        alt="{{ $name }}"
+        {{ $attributes->class([
+            'rounded-full object-cover shrink-0',
+            $sizeClass
+        ]) }}
+    />
+@else
+    <div {{ $attributes->class([
+        'flex items-center justify-center rounded-full font-bold text-white shrink-0',
+        $sizeClass,
+        $bgColor
+    ]) }}>
+        {{ $initials }}
+    </div>
+@endif

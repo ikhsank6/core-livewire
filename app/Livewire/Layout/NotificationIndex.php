@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Layout;
 
-use App\Models\Notification;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
@@ -20,15 +20,19 @@ class NotificationIndex extends Component
     #[Url]
     public string $filter = 'all'; // all, unread, read
 
+    protected NotificationRepositoryInterface $notificationRepository;
+
+    public function boot(NotificationRepositoryInterface $notificationRepository): void
+    {
+        $this->notificationRepository = $notificationRepository;
+    }
+
     public function markAsRead(int $id): void
     {
         DB::beginTransaction();
 
         try {
-            $notification = Notification::find($id);
-            if ($notification && $notification->to_role_id == Auth::user()->role_id) {
-                $notification->update(['read' => true]);
-            }
+            $this->notificationRepository->markAsRead($id, Auth::user()->role_id);
 
             DB::commit();
 
@@ -44,9 +48,7 @@ class NotificationIndex extends Component
         DB::beginTransaction();
 
         try {
-            Notification::where('to_role_id', Auth::user()->role_id)
-                ->where('read', false)
-                ->update(['read' => true]);
+            $this->notificationRepository->markAllAsReadForRole(Auth::user()->role_id);
 
             DB::commit();
 
@@ -62,10 +64,7 @@ class NotificationIndex extends Component
         DB::beginTransaction();
 
         try {
-            $notification = Notification::find($id);
-            if ($notification && $notification->to_role_id == Auth::user()->role_id) {
-                $notification->delete();
-            }
+            $this->notificationRepository->delete($id);
 
             DB::commit();
 
@@ -81,9 +80,7 @@ class NotificationIndex extends Component
         DB::beginTransaction();
 
         try {
-            Notification::where('to_role_id', Auth::user()->role_id)
-                ->where('read', true)
-                ->delete();
+            $this->notificationRepository->deleteAllReadForRole(Auth::user()->role_id);
 
             DB::commit();
 
@@ -96,24 +93,17 @@ class NotificationIndex extends Component
 
     public function getUnreadCountProperty(): int
     {
-        return Notification::where('to_role_id', Auth::user()->role_id)
-            ->where('read', false)
-            ->count();
+        return $this->notificationRepository->countUnreadForRole(Auth::user()->role_id);
     }
 
     public function render()
     {
-        $query = Notification::with('fromRole')
-            ->where('to_role_id', Auth::user()->role_id);
-
-        if ($this->filter === 'unread') {
-            $query->where('read', false);
-        } elseif ($this->filter === 'read') {
-            $query->where('read', true);
-        }
-
         return view('livewire.layout.notification-index', [
-            'notifications' => $query->latest()->paginate(15),
+            'notifications' => $this->notificationRepository->getPaginatedForRole(
+                Auth::user()->role_id,
+                $this->filter === 'all' ? null : $this->filter,
+                15
+            ),
         ]);
     }
 }

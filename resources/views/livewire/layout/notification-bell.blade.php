@@ -71,7 +71,7 @@
             <div class="max-h-96 overflow-y-auto">
                 @forelse($this->notifications as $notification)
                     <div wire:click="markAsRead({{ $notification->id }})"
-                        class="px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors border-b border-zinc-100 dark:border-zinc-800 last:border-0">
+                        class="px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer border-b border-zinc-100 dark:border-zinc-800 last:border-0">
                         <div class="flex items-start gap-3">
                             <div class="shrink-0 mt-1">
                                 @if($notification->read)
@@ -83,7 +83,7 @@
 
                             <div class="flex flex-col gap-1">
                                 <p
-                                    class="text-xs text-zinc-600 dark:text-zinc-300 line-clamp-2 {{ $notification->read ? '' : 'font-semibold text-zinc-900! dark:text-white!' }}">
+                                    class="text-xs text-zinc-600 dark:text-zinc-500 line-clamp-2 {{ $notification->read ? '' : 'font-semibold text-zinc-900! dark:text-white!' }}">
                                     {{ $notification->message }}
                                 </p>
 
@@ -92,8 +92,7 @@
                                         {{ $notification->created_at->diffForHumans() }}
                                     </span>
                                     @if($notification->fromRole)
-                                        <span
-                                            class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-medium">
+                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-400/20">
                                             {{ $notification->fromRole->name }}
                                         </span>
                                     @endif

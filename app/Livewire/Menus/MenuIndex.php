@@ -4,6 +4,7 @@ namespace App\Livewire\Menus;
 
 use App\Forms\MenuForm;
 use App\Models\Menu;
+use App\Repositories\Contracts\MenuRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -33,6 +34,13 @@ class MenuIndex extends Component implements HasForms
 
     public $showModal = false;
 
+    protected MenuRepositoryInterface $menuRepository;
+
+    public function boot(MenuRepositoryInterface $menuRepository): void
+    {
+        $this->menuRepository = $menuRepository;
+    }
+
     public function mount(): void
     {
         $this->form->fill();
@@ -51,7 +59,7 @@ class MenuIndex extends Component implements HasForms
     {
         $this->record = null;
         $this->form->fill([
-            'order' => Menu::max('order') + 1, // Auto-set next order
+            'order' => $this->menuRepository->getNextOrder(),
         ]);
         $this->showModal = true;
     }
@@ -71,14 +79,18 @@ class MenuIndex extends Component implements HasForms
             $data = $this->form->getState();
 
             if ($this->record) {
-                $this->record->update($data);
+                $this->menuRepository->update($this->record->id, $data);
+
+                DB::commit();
+
                 $this->dispatch('notify', text: 'Menu updated successfully.', variant: 'success');
             } else {
-                Menu::create($data);
+                $this->menuRepository->create($data);
+
+                DB::commit();
+
                 $this->dispatch('notify', text: 'Menu created successfully.', variant: 'success');
             }
-
-            DB::commit();
 
             $this->showModal = false;
             $this->dispatch('refresh');
@@ -93,7 +105,7 @@ class MenuIndex extends Component implements HasForms
         DB::beginTransaction();
 
         try {
-            $menu->delete();
+            $this->menuRepository->delete($menu->id);
 
             DB::commit();
 
@@ -112,9 +124,7 @@ class MenuIndex extends Component implements HasForms
         DB::beginTransaction();
 
         try {
-            foreach ($orderedIds as $index => $id) {
-                Menu::where('id', $id)->update(['order' => $index]);
-            }
+            $this->menuRepository->updateOrder($orderedIds);
 
             DB::commit();
 
@@ -138,13 +148,7 @@ class MenuIndex extends Component implements HasForms
     public function render()
     {
         return view('livewire.menus.index', [
-            'menus' => Menu::with('parent')
-                ->where(function ($query) {
-                    $query->where('name', 'like', '%'.$this->search.'%')
-                        ->orWhere('slug', 'like', '%'.$this->search.'%');
-                })
-                ->orderByRaw('COALESCE(parent_id, id), parent_id IS NOT NULL, `order`')
-                ->paginate($this->perPage), // Support custom page size
+            'menus' => $this->menuRepository->searchWithParent($this->search, $this->perPage),
         ]);
     }
 }

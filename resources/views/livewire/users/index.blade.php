@@ -60,7 +60,7 @@
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <div class="flex items-center gap-3">
-                                    <x-ui.avatar :name="$user->name" size="md" />
+                                    <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="md" />
                                     <div class="flex flex-col">
                                         <span class="font-bold text-zinc-900 dark:text-white">{{ $user->name }}</span>
                                         <span class="text-xs text-zinc-500 dark:text-zinc-400">Indonesia/Jakarta</span>

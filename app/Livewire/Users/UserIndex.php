@@ -4,8 +4,9 @@ namespace App\Livewire\Users;
 
 use App\Forms\UserForm;
 use App\Models\Notification;
-use App\Models\Role;
 use App\Models\User;
+use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -35,6 +36,18 @@ class UserIndex extends Component implements HasForms
     public ?User $record = null;
 
     public $showModal = false;
+
+    protected UserRepositoryInterface $userRepository;
+
+    protected RoleRepositoryInterface $roleRepository;
+
+    public function boot(
+        UserRepositoryInterface $userRepository,
+        RoleRepositoryInterface $roleRepository
+    ): void {
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+    }
 
     public function mount(): void
     {
@@ -90,33 +103,37 @@ class UserIndex extends Component implements HasForms
             }
 
             if ($this->record) {
-                $this->record->update($data);
-                $this->record->syncRoles($roleIds, $defaultRoleId);
+                $this->userRepository->updateWithRoles(
+                    $this->record->id,
+                    $data,
+                    $roleIds,
+                    $defaultRoleId
+                );
+
+                DB::commit();
+
                 $this->dispatch('notify', text: 'User updated successfully.', variant: 'success');
             } else {
-                $user = User::create($data);
-                $user->syncRoles($roleIds, $defaultRoleId);
+                $user = $this->userRepository->createWithRoles($data, $roleIds, $defaultRoleId);
 
                 // Send notification to Super Admin
-                $superAdminRole = Role::where('slug', 'super-admin')
-                    ->orWhere('name', 'Super Admin')
-                    ->first();
+                $superAdminRole = $this->roleRepository->findBySlug('super-admin');
 
                 if ($superAdminRole) {
                     Notification::create([
                         'from_role_id' => Auth::user()->role_id,
                         'to_role_id' => $superAdminRole->id,
                         'message' => 'New user "'.$user->name.'" has been created by '.Auth::user()->name.'.',
-                        'url' => null, // Or detail page if exists
+                        'url' => null,
                         'id_reference' => $user->id,
                         'read' => false,
                     ]);
                 }
 
+                DB::commit();
+
                 $this->dispatch('notify', text: 'User created successfully.', variant: 'success');
             }
-
-            DB::commit();
 
             $this->showModal = false;
             $this->dispatch('refresh');
@@ -131,7 +148,7 @@ class UserIndex extends Component implements HasForms
         DB::beginTransaction();
 
         try {
-            $user->delete();
+            $this->userRepository->delete($user->id);
 
             DB::commit();
 
@@ -155,11 +172,7 @@ class UserIndex extends Component implements HasForms
     public function render()
     {
         return view('livewire.users.index', [
-            'users' => User::with('role')
-                ->where('name', 'like', '%'.$this->search.'%')
-                ->orWhere('email', 'like', '%'.$this->search.'%')
-                ->latest()
-                ->paginate($this->perPage),
+            'users' => $this->userRepository->searchWithRoles($this->search, $this->perPage),
         ]);
     }
 }

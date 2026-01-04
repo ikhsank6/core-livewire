@@ -2,27 +2,32 @@
 
 namespace App\Livewire\Layout;
 
-use App\Models\Notification;
+use App\Repositories\Contracts\NotificationRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class NotificationBell extends Component
 {
+    protected NotificationRepositoryInterface $notificationRepository;
+
+    public function boot(NotificationRepositoryInterface $notificationRepository): void
+    {
+        $this->notificationRepository = $notificationRepository;
+    }
+
     public function getNotificationsProperty()
     {
-        return Notification::where('to_role_id', Auth::user()->role_id)
-            ->where('read', false)
-            ->latest()
-            ->take(5)
-            ->get();
+        return $this->notificationRepository->getForRole(
+            Auth::user()->role_id,
+            5,
+            true
+        );
     }
 
     public function getUnreadCountProperty()
     {
-        return Notification::where('to_role_id', Auth::user()->role_id)
-            ->where('read', false)
-            ->count();
+        return $this->notificationRepository->countUnreadForRole(Auth::user()->role_id);
     }
 
     public function markAsRead($id)
@@ -30,15 +35,18 @@ class NotificationBell extends Component
         DB::beginTransaction();
 
         try {
-            $notification = Notification::find($id);
+            $notification = $this->notificationRepository->find($id);
+
             if ($notification && $notification->to_role_id == Auth::user()->role_id) {
-                $notification->update(['read' => true]);
-            }
+                $this->notificationRepository->markAsRead($id, Auth::user()->role_id);
 
-            DB::commit();
+                DB::commit();
 
-            if ($notification?->url) {
-                return redirect($notification->url);
+                if ($notification->url) {
+                    return redirect($notification->url);
+                }
+            } else {
+                DB::commit();
             }
         } catch (\Exception $e) {
             DB::rollBack();

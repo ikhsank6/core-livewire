@@ -4,6 +4,7 @@ namespace App\Livewire\Roles;
 
 use App\Forms\RoleForm;
 use App\Models\Role;
+use App\Repositories\Contracts\RoleRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -32,6 +33,13 @@ class RoleIndex extends Component implements HasForms
     public ?Role $record = null;
 
     public $showModal = false;
+
+    protected RoleRepositoryInterface $roleRepository;
+
+    public function boot(RoleRepositoryInterface $roleRepository): void
+    {
+        $this->roleRepository = $roleRepository;
+    }
 
     public function mount(): void
     {
@@ -69,14 +77,18 @@ class RoleIndex extends Component implements HasForms
             $data = $this->form->getState();
 
             if ($this->record) {
-                $this->record->update($data);
+                $this->roleRepository->update($this->record->id, $data);
+
+                DB::commit();
+
                 $this->dispatch('notify', text: 'Role updated successfully.', variant: 'success');
             } else {
-                Role::create($data);
+                $this->roleRepository->create($data);
+
+                DB::commit();
+
                 $this->dispatch('notify', text: 'Role created successfully.', variant: 'success');
             }
-
-            DB::commit();
 
             $this->showModal = false;
             $this->dispatch('refresh');
@@ -91,7 +103,7 @@ class RoleIndex extends Component implements HasForms
         DB::beginTransaction();
 
         try {
-            $role->delete();
+            $this->roleRepository->delete($role->id);
 
             DB::commit();
 
@@ -115,10 +127,7 @@ class RoleIndex extends Component implements HasForms
     public function render()
     {
         return view('livewire.roles.index', [
-            'roles' => Role::withCount('users')
-                ->where('name', 'like', '%'.$this->search.'%')
-                ->orWhere('slug', 'like', '%'.$this->search.'%')
-                ->paginate($this->perPage),
+            'roles' => $this->roleRepository->searchWithUserCount($this->search, $this->perPage),
         ]);
     }
 }
