@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Forms;
+
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+
+class AboutUsForm
+{
+    public static function schema(): array
+    {
+        return [
+            Section::make('Company Information')
+                ->schema([
+                    TextInput::make('company_name')
+                        ->label('Company Name')
+                        ->required()
+                        ->maxLength(255),
+
+                    RichEditor::make('description')
+                        ->label('Description')
+                        ->required()
+                        ->columnSpanFull(),
+
+                    FileUpload::make('logo')
+                        ->label('Logo')
+                        ->image()
+                        ->directory('about')
+                        ->columnSpanFull(),
+                ]),
+
+            Section::make('Contact Information')
+                ->schema([
+                    TextInput::make('address')
+                        ->label('Address')
+                        ->maxLength(500),
+
+                    TextInput::make('phone')
+                        ->label('Phone')
+                        ->tel()
+                        ->maxLength(50),
+
+                    TextInput::make('email')
+                        ->label('Email')
+                        ->email()
+                        ->maxLength(255),
+
+                    TextInput::make('whatsapp')
+                        ->label('WhatsApp')
+                        ->maxLength(50),
+                ]),
+
+            Section::make('Social Media')
+                ->schema([
+                    TextInput::make('facebook')
+                        ->label('Facebook')
+                        ->url()
+                        ->maxLength(255),
+
+                    TextInput::make('instagram')
+                        ->label('Instagram')
+                        ->url()
+                        ->maxLength(255),
+
+                    TextInput::make('twitter')
+                        ->label('Twitter/X')
+                        ->url()
+                        ->maxLength(255),
+
+                    TextInput::make('youtube')
+                        ->label('YouTube')
+                        ->url()
+                        ->maxLength(255),
+
+                    TextInput::make('linkedin')
+                        ->label('LinkedIn')
+                        ->url()
+                        ->maxLength(255),
+                ]),
+
+            Section::make('Location')
+                ->schema([
+                    TextInput::make('latitude')
+                        ->label('Latitude')
+                        ->numeric(),
+
+                    TextInput::make('longitude')
+                        ->label('Longitude')
+                        ->numeric(),
+
+                    Textarea::make('map_embed')
+                        ->label('Google Maps Embed Code')
+                        ->helperText('Paste the iframe embed code from Google Maps')
+                        ->rows(3)
+                        ->columnSpanFull(),
+                ]),
+
+            Toggle::make('is_active')
+                ->label('Active')
+                ->default(true),
+        ];
+    }
+}

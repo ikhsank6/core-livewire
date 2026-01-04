@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\AboutUs\AboutUsIndex;
 use App\Livewire\Auth\ChangePassword;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
@@ -7,16 +8,21 @@ use App\Livewire\Auth\Profile;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Auth\VerifyEmail;
+use App\Livewire\Carousels\CarouselIndex;
 use App\Livewire\Dashboard;
 use App\Livewire\Layout\NotificationIndex;
 use App\Livewire\Menus\MenuIndex;
 use App\Livewire\Menus\RoleMenuAccess;
+use App\Livewire\News\NewsIndex;
+use App\Livewire\NewsCategories\NewsCategoryIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Users\UserIndex;
+use App\Livewire\Website\LandingPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/dashboard');
+// Landing Page (Public)
+Route::get('/', LandingPage::class)->name('landing');
 
 Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', Login::class)->name('login');
@@ -75,5 +81,13 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
         Route::get('/roles', RoleIndex::class)->name('roles.index');
         Route::get('/menus', MenuIndex::class)->name('menus.index');
         Route::get('/menu-access', RoleMenuAccess::class)->name('menu-access.index');
+    });
+
+    // Website Management Routes
+    Route::prefix('website')->name('website.')->group(function () {
+        Route::get('/carousels', CarouselIndex::class)->name('carousels.index');
+        Route::get('/news-categories', NewsCategoryIndex::class)->name('news-categories.index');
+        Route::get('/news', NewsIndex::class)->name('news.index');
+        Route::get('/about-us', AboutUsIndex::class)->name('about-us.index');
     });
 });

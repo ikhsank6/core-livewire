@@ -64,6 +64,48 @@ class MenuSeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'name' => 'Website',
+                'slug' => 'website',
+                'icon' => 'globe-alt',
+                'route' => null,
+                'order' => 3,
+                'is_active' => true,
+                'children' => [
+                    [
+                        'name' => 'Carousels',
+                        'slug' => 'carousels',
+                        'icon' => 'photo',
+                        'route' => 'website.carousels.index',
+                        'order' => 1,
+                        'is_active' => true,
+                    ],
+                    [
+                        'name' => 'News Categories',
+                        'slug' => 'news-categories',
+                        'icon' => 'tag',
+                        'route' => 'website.news-categories.index',
+                        'order' => 2,
+                        'is_active' => true,
+                    ],
+                    [
+                        'name' => 'News',
+                        'slug' => 'news',
+                        'icon' => 'newspaper',
+                        'route' => 'website.news.index',
+                        'order' => 3,
+                        'is_active' => true,
+                    ],
+                    [
+                        'name' => 'About Us',
+                        'slug' => 'about-us',
+                        'icon' => 'building-office',
+                        'route' => 'website.about-us.index',
+                        'order' => 4,
+                        'is_active' => true,
+                    ],
+                ],
+            ],
         ];
 
         foreach ($menus as $menuData) {

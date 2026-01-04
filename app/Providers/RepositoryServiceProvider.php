@@ -2,11 +2,19 @@
 
 namespace App\Providers;
 
+use App\Repositories\AboutUsRepository;
+use App\Repositories\CarouselRepository;
+use App\Repositories\Contracts\AboutUsRepositoryInterface;
+use App\Repositories\Contracts\CarouselRepositoryInterface;
 use App\Repositories\Contracts\MenuRepositoryInterface;
+use App\Repositories\Contracts\NewsCategoryRepositoryInterface;
+use App\Repositories\Contracts\NewsRepositoryInterface;
 use App\Repositories\Contracts\NotificationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\MenuRepository;
+use App\Repositories\NewsCategoryRepository;
+use App\Repositories\NewsRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
@@ -24,6 +32,10 @@ class RepositoryServiceProvider extends ServiceProvider
         RoleRepositoryInterface::class => RoleRepository::class,
         MenuRepositoryInterface::class => MenuRepository::class,
         NotificationRepositoryInterface::class => NotificationRepository::class,
+        CarouselRepositoryInterface::class => CarouselRepository::class,
+        NewsCategoryRepositoryInterface::class => NewsCategoryRepository::class,
+        NewsRepositoryInterface::class => NewsRepository::class,
+        AboutUsRepositoryInterface::class => AboutUsRepository::class,
     ];
 
     /**
