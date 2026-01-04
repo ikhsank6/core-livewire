@@ -71,11 +71,12 @@ class RoleIndex extends Component implements HasForms
 
     public function save(): void
     {
+        // Validate form first - this will show errors under each field
+        $data = $this->form->getState();
+
         DB::beginTransaction();
 
         try {
-            $data = $this->form->getState();
-
             if ($this->record) {
                 $this->roleRepository->update($this->record->id, $data);
 

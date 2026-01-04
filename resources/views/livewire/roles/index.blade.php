@@ -99,7 +99,7 @@
 
     <!-- Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit Role' : 'Create Role'" formId="role-form">
-        <form wire:submit="save" id="role-form">
+        <form wire:submit="save" id="role-form" novalidate>
             {{ $this->form }}
         </form>
     </x-ui.modal>

@@ -87,21 +87,23 @@ class UserIndex extends Component implements HasForms
 
     public function save(): void
     {
+        // Validate form first - this will show errors under each field
+        $data = $this->form->getState();
+
+        $roleIds = $data['roles'] ?? [];
+        $defaultRoleId = $data['default_role_id'] ?? null;
+
+        // Unset relation data as it's handled separately
+        unset($data['roles'], $data['default_role_id']);
+
+        // Handle password logic efficiently
+        if (array_key_exists('password', $data) && empty($data['password'])) {
+            unset($data['password']);
+        }
+
         DB::beginTransaction();
 
         try {
-            $data = $this->form->getState();
-            $roleIds = $data['roles'] ?? [];
-            $defaultRoleId = $data['default_role_id'] ?? null;
-
-            // Unset relation data as it's handled separately
-            unset($data['roles'], $data['default_role_id']);
-
-            // Handle password logic efficiently
-            if (array_key_exists('password', $data) && empty($data['password'])) {
-                unset($data['password']);
-            }
-
             if ($this->record) {
                 $this->userRepository->updateWithRoles(
                     $this->record->id,

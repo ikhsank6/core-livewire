@@ -198,7 +198,7 @@
 
     <!-- Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit Menu' : 'Create Menu'" formId="menu-form">
-        <form wire:submit="save" id="menu-form">
+        <form wire:submit="save" id="menu-form" novalidate>
             {{ $this->form }}
         </form>
     </x-ui.modal>

@@ -115,7 +115,7 @@
 
     <!-- Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit User' : 'Create User'" formId="user-form">
-        <form wire:submit="save" id="user-form">
+        <form wire:submit="save" id="user-form" novalidate>
             {{ $this->form }}
         </form>
     </x-ui.modal>
