@@ -58,6 +58,7 @@ class MenuIndex extends Component implements HasForms
     public function create(): void
     {
         $this->record = null;
+        $this->resetValidation();
         $this->form->fill([
             'order' => $this->menuRepository->getNextOrder(),
         ]);
@@ -67,8 +68,18 @@ class MenuIndex extends Component implements HasForms
     public function edit(Menu $menu): void
     {
         $this->record = $menu;
+        $this->resetValidation();
         $this->form->fill($menu->attributesToArray());
         $this->showModal = true;
+    }
+
+    public function updatedShowModal($value): void
+    {
+        if (! $value) {
+            $this->resetValidation();
+            $this->record = null;
+            $this->form->fill();
+        }
     }
 
     public function save(): void

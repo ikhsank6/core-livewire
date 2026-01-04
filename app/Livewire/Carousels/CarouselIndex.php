@@ -60,6 +60,7 @@ class CarouselIndex extends Component implements HasForms
     public function create(): void
     {
         $this->record = null;
+        $this->resetValidation();
         $this->form->fill();
         $this->showModal = true;
     }
@@ -67,8 +68,18 @@ class CarouselIndex extends Component implements HasForms
     public function edit(Carousel $carousel): void
     {
         $this->record = $carousel;
+        $this->resetValidation();
         $this->form->fill($carousel->attributesToArray());
         $this->showModal = true;
+    }
+
+    public function updatedShowModal($value): void
+    {
+        if (! $value) {
+            $this->resetValidation();
+            $this->record = null;
+            $this->form->fill();
+        }
     }
 
     public function save(): void

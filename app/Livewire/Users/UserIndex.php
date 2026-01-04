@@ -66,6 +66,7 @@ class UserIndex extends Component implements HasForms
     public function create(): void
     {
         $this->record = null;
+        $this->resetValidation();
         $this->form->fill();
         $this->showModal = true;
     }
@@ -73,6 +74,7 @@ class UserIndex extends Component implements HasForms
     public function edit(User $user): void
     {
         $this->record = $user;
+        $this->resetValidation();
         $formData = $user->attributesToArray();
 
         // Ensure IDs are strings for Filament state matching
@@ -83,6 +85,23 @@ class UserIndex extends Component implements HasForms
 
         $this->form->fill($formData);
         $this->showModal = true;
+    }
+
+    public function closeModal(): void
+    {
+        $this->showModal = false;
+        $this->record = null;
+        $this->resetValidation();
+        $this->form->fill();
+    }
+
+    public function updatedShowModal($value): void
+    {
+        if (! $value) {
+            $this->resetValidation();
+            $this->record = null;
+            $this->form->fill();
+        }
     }
 
     public function save(): void

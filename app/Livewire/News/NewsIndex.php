@@ -60,6 +60,7 @@ class NewsIndex extends Component implements HasForms
     public function create(): void
     {
         $this->record = null;
+        $this->resetValidation();
         $this->form->fill(['published_at' => now()]);
         $this->showModal = true;
     }
@@ -67,8 +68,18 @@ class NewsIndex extends Component implements HasForms
     public function edit(News $news): void
     {
         $this->record = $news;
+        $this->resetValidation();
         $this->form->fill($news->attributesToArray());
         $this->showModal = true;
+    }
+
+    public function updatedShowModal($value): void
+    {
+        if (! $value) {
+            $this->resetValidation();
+            $this->record = null;
+            $this->form->fill();
+        }
     }
 
     public function save(): void
