@@ -9,7 +9,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 
 class NewsForm
 {
@@ -52,13 +52,41 @@ class NewsForm
                 ->label('Publish Date')
                 ->default(now()),
 
-            Toggle::make('is_featured')
+            ToggleButtons::make('is_featured')
                 ->label('Featured')
-                ->default(false),
+                ->options([
+                    1 => 'Yes',
+                    0 => 'No',
+                ])
+                ->icons([
+                    1 => 'heroicon-m-star',
+                    0 => 'heroicon-m-x-mark',
+                ])
+                ->colors([
+                    1 => 'warning',
+                    0 => 'gray',
+                ])
+                ->default(0)
+                ->extraAttributes(['class' => 'premium-toggle-group'])
+                ->inline(),
 
-            Toggle::make('is_active')
-                ->label('Active')
-                ->default(true),
+            ToggleButtons::make('is_active')
+                ->label('Status')
+                ->options([
+                    1 => 'Active',
+                    0 => 'Inactive',
+                ])
+                ->icons([
+                    1 => 'heroicon-m-check-circle',
+                    0 => 'heroicon-m-x-circle',
+                ])
+                ->colors([
+                    1 => 'success',
+                    0 => 'danger',
+                ])
+                ->default(1)
+                ->extraAttributes(['class' => 'premium-toggle-group'])
+                ->inline(),
         ];
     }
 }

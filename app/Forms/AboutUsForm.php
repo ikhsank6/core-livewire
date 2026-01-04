@@ -7,7 +7,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 
 class AboutUsForm
 {
@@ -99,9 +99,23 @@ class AboutUsForm
                         ->columnSpanFull(),
                 ]),
 
-            Toggle::make('is_active')
-                ->label('Active')
-                ->default(true),
+            ToggleButtons::make('is_active')
+                ->label('Status')
+                ->options([
+                    1 => 'Active',
+                    0 => 'Inactive',
+                ])
+                ->icons([
+                    1 => 'heroicon-m-check-circle',
+                    0 => 'heroicon-m-x-circle',
+                ])
+                ->colors([
+                    1 => 'success',
+                    0 => 'danger',
+                ])
+                ->default(1)
+                ->extraAttributes(['class' => 'premium-toggle-group'])
+                ->inline(),
         ];
     }
 }

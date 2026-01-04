@@ -1,5 +1,5 @@
 <x-slot name="breadcrumbs">
-    <flux:breadcrumbs.item>Website</flux:breadcrumbs.item>
+    <flux:breadcrumbs.item>CMS</flux:breadcrumbs.item>
     <flux:breadcrumbs.item>News</flux:breadcrumbs.item>
 </x-slot>
 <div>
@@ -41,7 +41,7 @@
                     <x-ui.table.th>Title</x-ui.table.th>
                     <x-ui.table.th>Category</x-ui.table.th>
                     <x-ui.table.th>Published</x-ui.table.th>
-                    <x-ui.table.th>Status</x-ui.table.th>
+                    <x-ui.table.th>Active</x-ui.table.th>
                     <x-ui.table.th shrink></x-ui.table.th>
                 </x-ui.table.thead>
 
@@ -84,7 +84,7 @@
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <x-ui.badge :variant="$item->is_active ? 'success' : 'danger'">
-                                    {{ $item->is_active ? 'Active' : 'Inactive' }}
+                                    {{ $item->is_active ? 'Yes' : 'No' }}
                                 </x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
@@ -102,10 +102,10 @@
 
                                     <flux:tooltip content="Delete News" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                        id: '{{ $item->uuid }}', 
-                                                        componentId: '{{ $this->getId() }}',
-                                                        message: 'Are you sure you want to delete this news?'
-                                                    })"
+                                                            id: '{{ $item->uuid }}', 
+                                                            componentId: '{{ $this->getId() }}',
+                                                            message: 'Are you sure you want to delete this news?'
+                                                        })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

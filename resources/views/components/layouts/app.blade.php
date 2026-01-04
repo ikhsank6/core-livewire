@@ -139,7 +139,7 @@
             @foreach($menuTree as $menu)
                 @if(empty($menu['children']))
                     <flux:navlist.item :icon="$menu['icon'] ?? 'square-2-stack'"
-                        :href="$menu['route'] ? route($menu['route']) : '#'"
+                        :href="\App\Services\MenuService::safeRoute($menu['route'])"
                         :current="request()->routeIs($menu['route'] ?? '')">
                         {{ $menu['name'] }}
                     </flux:navlist.item>
@@ -148,7 +148,7 @@
                         :expanded="collect($menu['children'])->contains('route', request()->route()?->getName())">
                         @foreach($menu['children'] as $child)
                             <flux:navlist.item :icon="$child['icon'] ?? 'minus'"
-                                :href="$child['route'] ? route($child['route']) : '#'"
+                                :href="\App\Services\MenuService::safeRoute($child['route'])"
                                 :current="request()->routeIs($child['route'] ?? '')">
                                 {{ $child['name'] }}
                             </flux:navlist.item>

@@ -202,4 +202,3 @@ $maxWidthClass = [
     height: 1.25rem !important;
 }
 </style>
-

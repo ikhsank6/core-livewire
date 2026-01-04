@@ -6,9 +6,42 @@ use App\Models\Menu;
 use App\Models\Role;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
 class MenuService
 {
+    /**
+     * Safely generate route URL - returns # if route doesn't exist
+     */
+    public static function safeRoute(?string $routeName): string
+    {
+        if (empty($routeName)) {
+            return '#';
+        }
+
+        try {
+            if (Route::has($routeName)) {
+                return route($routeName);
+            }
+        } catch (\Exception $e) {
+            // Route doesn't exist or has required parameters
+        }
+
+        return '#';
+    }
+
+    /**
+     * Check if route exists
+     */
+    public static function routeExists(?string $routeName): bool
+    {
+        if (empty($routeName)) {
+            return false;
+        }
+
+        return Route::has($routeName);
+    }
+
     /**
      * Cache TTL in seconds (1 hour)
      */

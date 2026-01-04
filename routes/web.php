@@ -83,8 +83,8 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
         Route::get('/menu-access', RoleMenuAccess::class)->name('menu-access.index');
     });
 
-    // Website Management Routes
-    Route::prefix('website')->name('website.')->group(function () {
+    // CMS Management Routes
+    Route::prefix('cms')->name('cms.')->group(function () {
         Route::get('/carousels', CarouselIndex::class)->name('carousels.index');
         Route::get('/news-categories', NewsCategoryIndex::class)->name('news-categories.index');
         Route::get('/news', NewsIndex::class)->name('news.index');
