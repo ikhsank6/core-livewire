@@ -210,13 +210,64 @@
                 </x-slot>
 
                 <x-slot name="board">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        x-data="{
+                            draggingCard: null,
+                            dragOverCard: null,
+                            rootItems: @js($menus->whereNull('parent_id')->sortBy('order')->pluck('id')->values()->toArray()),
+                            
+                            handleCardDragStart(e, id) {
+                                this.draggingCard = id;
+                                e.dataTransfer.effectAllowed = 'move';
+                                e.target.classList.add('opacity-50', 'scale-95');
+                            },
+                            
+                            handleCardDragEnd(e) {
+                                e.target.classList.remove('opacity-50', 'scale-95');
+                                this.draggingCard = null;
+                                this.dragOverCard = null;
+                            },
+                            
+                            handleCardDragOver(e, id) {
+                                e.preventDefault();
+                                if (this.draggingCard !== id) {
+                                    this.dragOverCard = id;
+                                }
+                            },
+                            
+                            handleCardDragLeave(e) {
+                                this.dragOverCard = null;
+                            },
+                            
+                            handleCardDrop(e, targetId) {
+                                e.preventDefault();
+                                if (this.draggingCard === targetId) return;
+                                
+                                const dragIndex = this.rootItems.indexOf(this.draggingCard);
+                                const targetIndex = this.rootItems.indexOf(targetId);
+                                
+                                this.rootItems.splice(dragIndex, 1);
+                                this.rootItems.splice(targetIndex, 0, this.draggingCard);
+                                
+                                $wire.updateOrder(this.rootItems);
+                                
+                                this.draggingCard = null;
+                                this.dragOverCard = null;
+                            }
+                        }">
                         @php
-                            $rootMenus = $menus->whereNull('parent_id');
+                            $rootMenus = $menus->whereNull('parent_id')->sortBy('order');
                         @endphp
 
                         @forelse($rootMenus as $root)
-                            <div class="flex flex-col bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                            <div class="flex flex-col bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-grab active:cursor-grabbing"
+                                draggable="true"
+                                x-on:dragstart="handleCardDragStart($event, {{ $root->id }})"
+                                x-on:dragend="handleCardDragEnd($event)"
+                                x-on:dragover="handleCardDragOver($event, {{ $root->id }})"
+                                x-on:dragleave="handleCardDragLeave($event)"
+                                x-on:drop="handleCardDrop($event, {{ $root->id }})"
+                                :class="{ 'ring-2 ring-metronic-primary ring-offset-2 dark:ring-offset-zinc-900': dragOverCard === {{ $root->id }} }">
                                 <!-- Root Header -->
                                 <div class="px-5 py-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between group">
                                     <div class="flex items-center gap-3">
@@ -241,15 +292,74 @@
                                     </div>
                                 </div>
 
-                                <!-- Children List -->
-                                <div class="p-3 flex-1 space-y-2">
+                                <!-- Children List with Drag & Drop -->
+                                <div class="p-3 flex-1 space-y-2"
+                                    x-data="{
+                                        draggingChild: null,
+                                        dragOverChild: null,
+                                        childItems: @js($menus->where('parent_id', $root->id)->sortBy('order')->pluck('id')->values()->toArray()),
+                                        
+                                        handleChildDragStart(e, id) {
+                                            e.stopPropagation();
+                                            this.draggingChild = id;
+                                            e.dataTransfer.effectAllowed = 'move';
+                                            e.target.classList.add('opacity-50');
+                                        },
+                                        
+                                        handleChildDragEnd(e) {
+                                            e.target.classList.remove('opacity-50');
+                                            this.draggingChild = null;
+                                            this.dragOverChild = null;
+                                        },
+                                        
+                                        handleChildDragOver(e, id) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            if (this.draggingChild !== id) {
+                                                this.dragOverChild = id;
+                                            }
+                                        },
+                                        
+                                        handleChildDragLeave(e) {
+                                            this.dragOverChild = null;
+                                        },
+                                        
+                                        handleChildDrop(e, targetId) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            if (this.draggingChild === targetId) return;
+                                            
+                                            const dragIndex = this.childItems.indexOf(this.draggingChild);
+                                            const targetIndex = this.childItems.indexOf(targetId);
+                                            
+                                            this.childItems.splice(dragIndex, 1);
+                                            this.childItems.splice(targetIndex, 0, this.draggingChild);
+                                            
+                                            $wire.updateOrder(this.childItems);
+                                            
+                                            this.draggingChild = null;
+                                            this.dragOverChild = null;
+                                        }
+                                    }">
                                     @php
                                         $children = $menus->where('parent_id', $root->id)->sortBy('order');
                                     @endphp
 
                                     @forelse($children as $child)
-                                        <div class="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 group hover:border-metronic-primary/50 transition-colors shadow-sm">
+                                        <div class="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 group hover:border-metronic-primary/50 transition-colors shadow-sm cursor-grab active:cursor-grabbing"
+                                            draggable="true"
+                                            x-on:dragstart="handleChildDragStart($event, {{ $child->id }})"
+                                            x-on:dragend="handleChildDragEnd($event)"
+                                            x-on:dragover="handleChildDragOver($event, {{ $child->id }})"
+                                            x-on:dragleave="handleChildDragLeave($event)"
+                                            x-on:drop="handleChildDrop($event, {{ $child->id }})"
+                                            :class="{ 'ring-2 ring-metronic-primary': dragOverChild === {{ $child->id }} }">
                                             <div class="flex items-center gap-3">
+                                                <div class="text-zinc-300 hover:text-zinc-500 cursor-grab">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+                                                    </svg>
+                                                </div>
                                                 @if($child->icon)
                                                     <flux:icon :name="$child->icon" variant="mini" class="w-4 h-4 text-zinc-400 group-hover:text-metronic-primary" />
                                                 @else

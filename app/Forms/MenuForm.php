@@ -41,7 +41,7 @@ class MenuForm
                 ->label('Icon Name')
                 ->placeholder('e.g. home')
                 ->helperText(new \Illuminate\Support\HtmlString('Get icons from <a href="https://fluxui.dev/components/icon" target="_blank" class="text-metronic-primary hover:underline">fluxui.dev/components/icon</a> or <a href="https://heroicons.com" target="_blank" class="text-metronic-primary hover:underline">heroicons.com</a>'))
-                ->prefixIcon(fn ($state) => $state ?? 'heroicon-m-viewfinder-circle'),
+                ->prefixIcon(fn ($state) => filled($state) ? (str_contains($state, 'heroicon-') ? $state : "heroicon-o-{$state}") : 'heroicon-o-magnifying-glass'),
 
             TextInput::make('route')
                 ->label('Route Name')

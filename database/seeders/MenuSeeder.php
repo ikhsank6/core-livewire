@@ -67,7 +67,7 @@ class MenuSeeder extends Seeder
             [
                 'name' => 'CMS',
                 'slug' => 'cms',
-                'icon' => 'globe-alt',
+                'icon' => 'cog-6-tooth',
                 'route' => null,
                 'order' => 3,
                 'is_active' => true,
