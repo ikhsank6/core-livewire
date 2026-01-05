@@ -10,6 +10,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class NewsForm
 {
@@ -25,11 +27,13 @@ class NewsForm
             TextInput::make('title')
                 ->label('Title')
                 ->required()
-                ->maxLength(255),
+                ->maxLength(255)
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
             TextInput::make('slug')
                 ->label('Slug')
-                ->helperText('Leave empty to auto-generate from title')
+                ->helperText('Auto-generated from title, or enter custom slug')
                 ->maxLength(255),
 
             Textarea::make('excerpt')
