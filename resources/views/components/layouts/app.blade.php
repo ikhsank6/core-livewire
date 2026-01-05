@@ -244,7 +244,7 @@
 
                     <flux:menu.submenu icon="shield-check" heading="Switch Role">
                         @foreach(auth()->user()->roles as $role)
-                            <flux:menu.item href="{{ route('roles.switch', $role->id) }}"
+                            <flux:menu.item href="{{ route('roles.switch', $role) }}"
                                 :icon="auth()->user()->role_id == $role->id ? 'check' : ''">
                                 {{ $role->name }}
                             </flux:menu.item>
