@@ -45,7 +45,7 @@ $maxWidthClass = [
     ></div>
 
     {{-- Modal Container --}}
-    <div class="fixed inset-0 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+    <div class="fixed inset-0 flex items-start justify-center p-4 sm:p-6 py-8 overflow-y-auto">
         {{-- Modal Panel --}}
         <div
             x-show="show"
@@ -55,7 +55,7 @@ $maxWidthClass = [
             x-transition:leave="ease-in duration-200"
             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
-            class="relative w-full {{ $maxWidthClass }} bg-white dark:bg-[#1e1e2d] rounded-xl shadow-2xl border border-zinc-200 dark:border-[#2d2d3a] flex flex-col max-h-[90vh] overflow-hidden"
+            class="relative w-full {{ $maxWidthClass }} bg-white dark:bg-[#1e1e2d] rounded-xl shadow-2xl border border-zinc-200 dark:border-[#2d2d3a] flex flex-col my-auto"
         >
             {{-- Header --}}
             @if($title)
@@ -72,7 +72,7 @@ $maxWidthClass = [
             @endif
 
             {{-- Body --}}
-            <div class="flex-1 overflow-y-auto p-6 bg-white dark:bg-[#1e1e2d] custom-modal-body style-scrollbar">
+            <div class="flex-1 p-6 bg-white dark:bg-[#1e1e2d] custom-modal-body">
                 {{ $slot }}
             </div>
 
