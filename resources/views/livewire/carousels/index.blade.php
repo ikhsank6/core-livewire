@@ -31,7 +31,7 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <x-ui.table :paginator="$carousels">
+            <x-ui.table :paginator="$carousels" :view="$view">
                 <x-slot name="header">
                     <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
                         :showViewToggle="true" />

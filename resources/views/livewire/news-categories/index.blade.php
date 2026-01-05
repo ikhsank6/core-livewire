@@ -31,7 +31,7 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <x-ui.table :paginator="$categories">
+            <x-ui.table :paginator="$categories" :view="$view">
                 <x-slot name="header">
                     <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
                         :showViewToggle="true" />
@@ -75,10 +75,10 @@
 
                                     <flux:tooltip content="Hapus Category" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $category->uuid }}', 
-                                                                componentId: '{{ $this->getId() }}',
-                                                                message: 'Are you sure you want to delete this category?'
-                                                            })"
+                                                                    id: '{{ $category->uuid }}', 
+                                                                    componentId: '{{ $this->getId() }}',
+                                                                    message: 'Are you sure you want to delete this category?'
+                                                                })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <flux:icon name="trash" variant="mini" class="w-4 h-4" />
                                         </button>
@@ -142,10 +142,10 @@
                                     </flux:tooltip>
                                     <flux:tooltip content="Hapus Category" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                    id: '{{ $category->uuid }}', 
-                                                                    componentId: '{{ $this->getId() }}',
-                                                                    message: 'Hapus kategori {{ $category->name }}?'
-                                                                })"
+                                                                        id: '{{ $category->uuid }}', 
+                                                                        componentId: '{{ $this->getId() }}',
+                                                                        message: 'Hapus kategori {{ $category->name }}?'
+                                                                    })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
                                             <flux:icon name="trash" variant="mini" class="w-4 h-4" />
                                         </button>
