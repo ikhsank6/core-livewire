@@ -31,9 +31,10 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <x-ui.table :paginator="$news">
+            <x-ui.table :paginator="$news" :view="$view">
                 <x-slot name="header">
-                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false" />
+                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                        :showViewToggle="true" />
                 </x-slot>
 
                 <x-ui.table.thead>
@@ -51,36 +52,26 @@
                             <x-ui.table.td>
                                 @if($item->image)
                                     <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}"
-                                        class="w-16 h-12 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                        class="w-16 h-10 object-cover rounded-lg">
                                 @else
                                     <div
-                                        class="w-16 h-12 bg-zinc-200 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
-                                        <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                            </path>
-                                        </svg>
+                                        class="w-16 h-10 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center">
+                                        <flux:icon name="photo" class="w-4 h-4 text-zinc-400" />
                                     </div>
                                 @endif
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <div class="flex flex-col">
-                                    <span class="font-bold text-zinc-900 dark:text-white">{{ $item->title }}</span>
                                     <span
-                                        class="text-xs text-zinc-500 dark:text-zinc-400">{{ Str::limit($item->excerpt, 50) }}</span>
-                                    @if($item->is_featured)
-                                        <x-ui.badge variant="warning" class="mt-1 w-fit">Featured</x-ui.badge>
-                                    @endif
+                                        class="font-bold text-zinc-900 dark:text-white line-clamp-1">{{ $item->title }}</span>
+                                    <span class="text-xs text-zinc-500">{{ Str::limit($item->summary, 40) }}</span>
                                 </div>
                             </x-ui.table.td>
                             <x-ui.table.td>
-                                <x-ui.badge variant="info">{{ $item->category?->name ?? 'No Category' }}</x-ui.badge>
+                                <x-ui.badge variant="neutral">{{ $item->category->name ?? 'Uncategorized' }}</x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td>
-                                <span class="text-zinc-500 dark:text-zinc-400 text-sm">
-                                    {{ $item->published_at ? $item->published_at->format('d M Y H:i') : '-' }}
-                                </span>
+                                <span class="text-zinc-500">{{ $item->published_at?->format('d M Y') ?? '-' }}</span>
                             </x-ui.table.td>
                             <x-ui.table.td>
                                 <x-ui.badge :variant="$item->is_active ? 'success' : 'danger'">
@@ -88,7 +79,7 @@
                                 </x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
-                                <div class="flex items-center justify-end gap-2">
+                                <div class="flex items-center justify-end gap-2 text-right">
                                     <flux:tooltip content="Edit News" position="top">
                                         <button wire:click="edit('{{ $item->uuid }}')"
                                             class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
@@ -102,10 +93,10 @@
 
                                     <flux:tooltip content="Delete News" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                            id: '{{ $item->uuid }}', 
-                                                            componentId: '{{ $this->getId() }}',
-                                                            message: 'Are you sure you want to delete this news?'
-                                                        })"
+                                                                id: '{{ $item->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Delete news article {{ $item->title }}?'
+                                                            })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -126,6 +117,73 @@
                     @endforelse
                 </x-ui.table.tbody>
 
+                <x-slot name="board">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($news as $item)
+                            <div
+                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition-all group">
+                                <div class="relative h-48 w-full">
+                                    @if($item->image)
+                                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}"
+                                            class="w-full h-full object-cover">
+                                    @else
+                                        <div
+                                            class="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                            <flux:icon name="photo" class="w-12 h-12 text-zinc-300" />
+                                        </div>
+                                    @endif
+                                    <div class="absolute top-4 right-4">
+                                        <x-ui.badge :variant="$item->is_active ? 'success' : 'danger'"
+                                            class="backdrop-blur-md bg-white/80 dark:bg-zinc-900/80">
+                                            {{ $item->is_active ? 'Active' : 'Inactive' }}
+                                        </x-ui.badge>
+                                    </div>
+                                </div>
+                                <div class="p-5">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <span
+                                            class="text-[10px] font-bold uppercase tracking-wider text-metronic-primary bg-metronic-primary/10 px-2 py-0.5 rounded">
+                                            {{ $item->category->name ?? 'General' }}
+                                        </span>
+                                        <span class="text-[10px] text-zinc-400 font-medium">
+                                            {{ $item->published_at?->format('M d, Y') ?? 'Draft' }}
+                                        </span>
+                                    </div>
+                                    <h3 class="font-bold text-zinc-900 dark:text-white mb-2 line-clamp-2 leading-tight">
+                                        {{ $item->title }}
+                                    </h3>
+                                    <p class="text-xs text-zinc-500 line-clamp-2 mb-4 leading-relaxed">
+                                        {{ $item->summary }}
+                                    </p>
+                                    <div
+                                        class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                        <flux:tooltip content="Edit News" position="top">
+                                            <button wire:click="edit('{{ $item->uuid }}')"
+                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                                                <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
+                                            </button>
+                                        </flux:tooltip>
+                                        <flux:tooltip content="Hapus News" position="top">
+                                            <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                    id: '{{ $item->uuid }}', 
+                                                                    componentId: '{{ $this->getId() }}',
+                                                                    message: 'Delete {{ $item->title }}?'
+                                                                })"
+                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+                                                <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                                            </button>
+                                        </flux:tooltip>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full">
+                                <x-ui.empty-state />
+                            </div>
+                        @endforelse
+                    </div>
+                </x-slot>
+
                 <x-slot name="footer">
                     <x-ui.pagination :paginator="$news" />
                 </x-slot>
@@ -133,8 +191,8 @@
         </div>
     </div>
 
-    <!-- Edit/Create Modal -->
-    <x-ui.modal wire:model="showModal" :title="$record ? 'Edit News' : 'Create News'" formId="news-form" maxWidth="4xl">
+    <!-- Modal Form -->
+    <x-ui.modal wire:model="showModal" :title="$record ? 'Edit News' : 'Add News'" formId="news-form">
         <form wire:submit="save" id="news-form" novalidate>
             {{ $this->form }}
         </form>

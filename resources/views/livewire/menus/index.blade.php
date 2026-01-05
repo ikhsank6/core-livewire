@@ -1,6 +1,6 @@
 <x-slot name="breadcrumbs">
     <flux:breadcrumbs.item>Master Data</flux:breadcrumbs.item>
-    <flux:breadcrumbs.item>Menu</flux:breadcrumbs.item>
+    <flux:breadcrumbs.item>Menus</flux:breadcrumbs.item>
 </x-slot>
 <div>
     <!-- Card Container -->
@@ -32,180 +32,273 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <div class="mb-4">
-                <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
-                    :showPageSize="false" />
-            </div>
+            <x-ui.table :view="$view">
+                <x-slot name="header">
+                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                        :showPageSize="false" :showViewToggle="true" />
+                </x-slot>
 
-            <!-- Drag & Drop Menu List -->
-            <div class="premium-table-container overflow-x-auto bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl"
-                x-data="{
-                    dragging: null,
-                    dragOver: null,
-                    items: @js($menus->pluck('id')->toArray()),
-                    
-                    handleDragStart(e, id) {
-                        this.dragging = id;
-                        e.dataTransfer.effectAllowed = 'move';
-                        e.target.classList.add('opacity-50');
-                    },
-                    
-                    handleDragEnd(e) {
-                        e.target.classList.remove('opacity-50');
-                        this.dragging = null;
-                        this.dragOver = null;
-                    },
-                    
-                    handleDragOver(e, id) {
-                        e.preventDefault();
-                        if (this.dragging !== id) {
-                            this.dragOver = id;
-                        }
-                    },
-                    
-                    handleDragLeave(e) {
-                        this.dragOver = null;
-                    },
-                    
-                    handleDrop(e, targetId) {
-                        e.preventDefault();
-                        if (this.dragging === targetId) return;
-                        
-                        const dragIndex = this.items.indexOf(this.dragging);
-                        const targetIndex = this.items.indexOf(targetId);
-                        
-                        // Reorder array
-                        this.items.splice(dragIndex, 1);
-                        this.items.splice(targetIndex, 0, this.dragging);
-                        
-                        // Call Livewire to save order
-                        $wire.updateOrder(this.items);
-                        
-                        this.dragging = null;
-                        this.dragOver = null;
-                    }
-                }">
+                <x-slot name="customTable">
+                    <div class="premium-table-container overflow-x-auto bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl"
+                        x-data="{
+                            dragging: null,
+                            dragOver: null,
+                            items: @js($menus->pluck('id')->toArray()),
+                            
+                            handleDragStart(e, id) {
+                                this.dragging = id;
+                                e.dataTransfer.effectAllowed = 'move';
+                                e.target.classList.add('opacity-50');
+                            },
+                            
+                            handleDragEnd(e) {
+                                e.target.classList.remove('opacity-50');
+                                this.dragging = null;
+                                this.dragOver = null;
+                            },
+                            
+                            handleDragOver(e, id) {
+                                e.preventDefault();
+                                if (this.dragging !== id) {
+                                    this.dragOver = id;
+                                }
+                            },
+                            
+                            handleDragLeave(e) {
+                                this.dragOver = null;
+                            },
+                            
+                            handleDrop(e, targetId) {
+                                e.preventDefault();
+                                if (this.dragging === targetId) return;
+                                
+                                const dragIndex = this.items.indexOf(this.dragging);
+                                const targetIndex = this.items.indexOf(targetId);
+                                
+                                // Reorder array
+                                this.items.splice(dragIndex, 1);
+                                this.items.splice(targetIndex, 0, this.dragging);
+                                
+                                // Call Livewire to save order
+                                $wire.updateOrder(this.items);
+                                
+                                this.dragging = null;
+                                this.dragOver = null;
+                            }
+                        }">
 
-                <table class="w-full text-left border-separate border-spacing-0">
-                    <thead class="bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
-                        <tr>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent w-10">
-                            </th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Name</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Slug</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Route</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Parent</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Order</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
-                                Status</th>
-                            <th
-                                class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent w-28 min-w-[110px]">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700 bg-white dark:bg-zinc-900">
-                        @forelse($menus as $menu)
-                            <tr draggable="true" x-on:dragstart="handleDragStart($event, {{ $menu->id }})"
-                                x-on:dragend="handleDragEnd($event)" x-on:dragover="handleDragOver($event, {{ $menu->id }})"
-                                x-on:dragleave="handleDragLeave($event)" x-on:drop="handleDrop($event, {{ $menu->id }})"
-                                class="hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-grab active:cursor-grabbing"
-                                :class="{ 'bg-metronic-primary/10 border-metronic-primary border-2': dragOver === {{ $menu->id }} }">
+                        <table class="w-full text-left border-separate border-spacing-0">
+                            <thead class="bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-200 dark:border-zinc-700">
+                                <tr>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent w-10">
+                                    </th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Name</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Slug</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Route</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Parent</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Order</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent">
+                                        Status</th>
+                                    <th
+                                        class="px-4 py-4 text-[10px] font-bold tracking-[0.2em] text-zinc-500 dark:text-zinc-400 uppercase whitespace-nowrap bg-transparent text-right">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-zinc-200 dark:divide-zinc-700">
+                                @forelse($menus as $menu)
+                                    <tr draggable="true" x-on:dragstart="handleDragStart($event, {{ $menu->id }})"
+                                        x-on:dragend="handleDragEnd($event)"
+                                        x-on:dragover="handleDragOver($event, {{ $menu->id }})"
+                                        x-on:dragleave="handleDragLeave($event)"
+                                        x-on:drop="handleDrop($event, {{ $menu->id }})"
+                                        class="bg-white dark:bg-zinc-900 transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                                        :class="{ 'opacity-25 scale-95': dragging === {{ $menu->id }}, 'bg-metronic-primary/10 dark:bg-metronic-primary/20': dragOver === {{ $menu->id }} }">
+                                        <td class="px-4 py-4 text-center">
+                                            <div class="cursor-grab active:cursor-grabbing text-zinc-300 hover:text-metronic-primary transition-colors">
+                                                <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 8h16M4 16h16"></path>
+                                                </svg>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="w-10 h-10 rounded-xl bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                                                    @if($menu->icon)
+                                                        <flux:icon :name="$menu->icon" variant="mini" class="w-5 h-5" />
+                                                    @else
+                                                        <flux:icon name="folder" variant="mini" class="w-5 h-5" />
+                                                    @endif
+                                                </div>
+                                                <div class="flex flex-col">
+                                                    <span class="font-bold text-zinc-900 dark:text-white">{{ $menu->name }}</span>
+                                                    <span class="text-[10px] text-zinc-400 font-medium">{{ $menu->route_name ?: 'No Route Name' }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <code
+                                                class="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-metronic-primary border border-zinc-200 dark:border-zinc-700">{{ $menu->slug }}</code>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <span class="text-zinc-500 dark:text-zinc-400 text-xs">{{ $menu->route ?? '-' }}</span>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <span class="text-zinc-500 dark:text-zinc-400">{{ $menu->parent->name ?? '-' }}</span>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <x-ui.badge variant="neutral">{{ $menu->order }}</x-ui.badge>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm">
+                                            <x-ui.badge :variant="$menu->is_active ? 'success' : 'danger'">
+                                                {{ $menu->is_active ? 'Active' : 'Inactive' }}
+                                            </x-ui.badge>
+                                        </td>
+                                        <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                            <div class="flex items-center justify-end gap-2 text-right">
+                                                <flux:tooltip content="Edit Data Menu" position="top">
+                                                    <button wire:click="edit('{{ $menu->uuid }}')"
+                                                        class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                </flux:tooltip>
 
-                                <!-- Drag Handle -->
-                                <td class="px-4 py-4 text-sm text-zinc-400">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 8h16M4 16h16">
-                                        </path>
-                                    </svg>
-                                </td>
+                                                <flux:tooltip content="Hapus Data Menu" position="top">
+                                                    <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                        id: '{{ $menu->uuid }}', 
+                                                                        componentId: '{{ $this->getId() }}',
+                                                                        message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
+                                                                    })"
+                                                        class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                </flux:tooltip>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="8">
+                                            <x-ui.empty-state />
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </x-slot>
 
-                                <td class="px-4 py-4 text-sm">
-                                    <div class="flex items-center gap-2">
-                                        <span
-                                            class="flex items-center {{ $menu->parent_id ? 'pl-6 text-zinc-500 dark:text-zinc-400' : 'font-bold text-zinc-900 dark:text-white whitespace-nowrap' }}">
-                                            @if($menu->icon)
-                                                <flux:icon :name="$menu->icon" variant="mini"
-                                                    class="mr-2 text-zinc-400 group-hover:text-metronic-primary transition-colors" />
+                <x-slot name="board">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @php
+                            $rootMenus = $menus->whereNull('parent_id');
+                        @endphp
+
+                        @forelse($rootMenus as $root)
+                            <div class="flex flex-col bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl border border-zinc-200 dark:border-zinc-700 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
+                                <!-- Root Header -->
+                                <div class="px-5 py-4 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-metronic-primary/10 flex items-center justify-center text-metronic-primary">
+                                            @if($root->icon)
+                                                <flux:icon :name="$root->icon" variant="mini" class="w-5 h-5" />
+                                            @else
+                                                <flux:icon name="folder" variant="mini" class="w-5 h-5" />
                                             @endif
-                                            {{ $menu->name }}
-                                        </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-zinc-900 dark:text-white">{{ $root->name }}</h3>
+                                            <p class="text-[10px] text-zinc-500 font-mono">{{ $root->slug }}</p>
+                                        </div>
                                     </div>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <code
-                                        class="text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-metronic-primary border border-zinc-200 dark:border-zinc-700">{{ $menu->slug }}</code>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="text-zinc-500 dark:text-zinc-400 text-xs">{{ $menu->route ?? '-' }}</span>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="text-zinc-500 dark:text-zinc-400">{{ $menu->parent->name ?? '-' }}</span>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <x-ui.badge variant="neutral">{{ $menu->order }}</x-ui.badge>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <x-ui.badge :variant="$menu->is_active ? 'success' : 'danger'">
-                                        {{ $menu->is_active ? 'Active' : 'Inactive' }}
-                                    </x-ui.badge>
-                                </td>
-                                <td class="px-4 py-4 text-sm whitespace-nowrap">
-                                    <div class="flex items-center justify-end gap-2 text-right">
-                                        <flux:tooltip content="Edit Data Menu" position="top">
-                                            <button wire:click="edit('{{ $menu->uuid }}')"
-                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                    </path>
-                                                </svg>
+                                    <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <flux:tooltip content="Edit Menu" position="top">
+                                            <button wire:click="edit('{{ $root->uuid }}')" class="p-1.5 text-zinc-400 hover:text-metronic-primary rounded-md">
+                                                <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
                                             </button>
                                         </flux:tooltip>
+                                    </div>
+                                </div>
 
-                                        <flux:tooltip content="Hapus Data Menu" position="top">
-                                            <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $menu->uuid }}', 
-                                                                componentId: '{{ $this->getId() }}',
-                                                                message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
-                                                            })"
-                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                        </flux:tooltip>
+                                <!-- Children List -->
+                                <div class="p-3 flex-1 space-y-2">
+                                    @php
+                                        $children = $menus->where('parent_id', $root->id)->sortBy('order');
+                                    @endphp
+
+                                    @forelse($children as $child)
+                                        <div class="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 group hover:border-metronic-primary/50 transition-colors shadow-sm">
+                                            <div class="flex items-center gap-3">
+                                                @if($child->icon)
+                                                    <flux:icon :name="$child->icon" variant="mini" class="w-4 h-4 text-zinc-400 group-hover:text-metronic-primary" />
+                                                @else
+                                                    <div class="w-4 h-4 rounded-full border border-zinc-300 dark:border-zinc-700"></div>
+                                                @endif
+                                                <div>
+                                                    <p class="text-xs font-bold text-zinc-700 dark:text-zinc-300">{{ $child->name }}</p>
+                                                    <p class="text-[10px] text-zinc-400">{{ $child->route ?: '-' }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <x-ui.badge :variant="$child->is_active ? 'success' : 'danger'" class="text-[9px] px-1.5 py-0">
+                                                    {{ $child->is_active ? 'Active' : 'Inactive' }}
+                                                </x-ui.badge>
+                                                <flux:tooltip content="Edit Menu" position="top">
+                                                    <button wire:click="edit('{{ $child->uuid }}')" class="p-1 text-zinc-300 hover:text-metronic-primary transition-colors opacity-0 group-hover:opacity-100">
+                                                        <flux:icon name="pencil-square" variant="mini" class="w-3.5 h-3.5" />
+                                                    </button>
+                                                </flux:tooltip>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="text-center py-4 text-zinc-400 text-xs italic">
+                                            No children menus.
+                                        </div>
+                                    @endforelse
+                                </div>
+
+                                <!-- Footer Stats -->
+                                <div class="px-5 py-3 bg-zinc-100/50 dark:bg-zinc-800/20 border-t border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Status</span>
+                                        <x-ui.badge :variant="$root->is_active ? 'success' : 'danger'" class="text-[10px]">
+                                            {{ $root->is_active ? 'Active' : 'Inactive' }}
+                                        </x-ui.badge>
                                     </div>
-                                </td>
-                            </tr>
+                                    <div class="text-[10px] text-zinc-400">
+                                        Order: <span class="font-bold text-zinc-600 dark:text-zinc-300">{{ $root->order }}</span>
+                                    </div>
+                                </div>
+                            </div>
                         @empty
-                            <tr>
-                                <td colspan="8">
-                                    <x-ui.empty-state />
-                                </td>
-                            </tr>
+                            <div class="col-span-full">
+                                <x-ui.empty-state />
+                            </div>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-4">
-                <x-ui.pagination :paginator="$menus" />
-            </div>
+                    </div>
+                </x-slot>
+            </x-ui.table>
         </div>
     </div>
 

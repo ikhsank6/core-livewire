@@ -3,6 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Forms\UserForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\Notification;
 use App\Models\User;
 use App\Repositories\Contracts\RoleRepositoryInterface;
@@ -24,6 +25,7 @@ class UserIndex extends Component implements HasForms
 {
     use InteractsWithForms;
     use WithPagination;
+    use HasTableView;
 
     #[Url]
     public $search = '';

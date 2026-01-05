@@ -3,6 +3,7 @@
 namespace App\Livewire\Menus;
 
 use App\Forms\MenuForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\Menu;
 use App\Repositories\Contracts\MenuRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -21,6 +22,7 @@ class MenuIndex extends Component implements HasForms
 {
     use InteractsWithForms;
     use WithPagination;
+    use HasTableView;
 
     #[Url]
     public $search = '';

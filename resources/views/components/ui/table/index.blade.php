@@ -1,4 +1,4 @@
-@props(['header' => null, 'footer' => null])
+@props(['header' => null, 'footer' => null, 'view' => 'table', 'board' => null, 'customTable' => null])
 
 <div {{ $attributes->class(['flex flex-col']) }}>
     @if ($header)
@@ -7,14 +7,34 @@
         </div>
     @endif
 
-    <div
-        class="premium-table-container overflow-hidden bg-white dark:bg-[#1e1e2d] border border-[#e8e8e8] dark:border-[#2d2d3a] rounded-xl">
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-separate border-spacing-0">
-                {{ $slot }}
-            </table>
+    @if ($view === 'table')
+        @if ($customTable)
+            {{ $customTable }}
+        @else
+            <div
+                class="premium-table-container overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-separate border-spacing-0">
+                        {{ $slot }}
+                    </table>
+                </div>
+            </div>
+        @endif
+    @elseif ($board)
+        <div class="premium-board-container">
+            {{ $board }}
         </div>
-    </div>
+    @else
+        {{-- Fallback to table if board data not provided --}}
+        <div
+            class="premium-table-container overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-separate border-spacing-0">
+                    {{ $slot }}
+                </table>
+            </div>
+        </div>
+    @endif
 
     @if ($footer)
         <div class="mt-4">

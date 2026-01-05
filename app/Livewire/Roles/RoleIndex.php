@@ -3,6 +3,7 @@
 namespace App\Livewire\Roles;
 
 use App\Forms\RoleForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\Role;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -21,6 +22,7 @@ class RoleIndex extends Component implements HasForms
 {
     use InteractsWithForms;
     use WithPagination;
+    use HasTableView;
 
     #[Url]
     public $search = '';

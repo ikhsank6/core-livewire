@@ -1,10 +1,12 @@
 @props([
     'search' => 'search',
     'perPage' => 'perPage',
+    'view' => 'view',
     'showFilters' => true,
     'showBulk' => true,
     'showColumns' => true,
     'showPageSize' => true,
+    'showViewToggle' => false,
 ])
 
 <div {{ $attributes->class(['flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 pt-1']) }}>
@@ -33,6 +35,16 @@
                     <flux:menu.item icon="trash" variant="danger">Delete Selected</flux:menu.item>
                 </flux:menu>
             </flux:dropdown>
+        @endif
+
+        @if ($showViewToggle)
+            <div class="flex items-center">
+                <flux:radio.group wire:model.live="{{ $view }}" variant="segmented" size="sm">
+                    <flux:radio value="table" icon="table-cells" />
+                    <flux:radio value="board" icon="squares-2x2" />
+                </flux:radio.group>
+            </div>
+            <div class="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden md:block mx-1"></div>
         @endif
 
         @if ($showPageSize)

@@ -33,9 +33,10 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <x-ui.table :paginator="$roles">
+            <x-ui.table :paginator="$roles" :view="$view">
                 <x-slot name="header">
-                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false" />
+                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                        :showViewToggle="true" />
                 </x-slot>
 
                 <x-ui.table.thead>
@@ -78,10 +79,10 @@
 
                                     <flux:tooltip content="Hapus Data Role" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                    id: '{{ $role->uuid }}', 
-                                                    componentId: '{{ $this->getId() }}',
-                                                    message: 'Apakah Anda yakin ingin menghapus role {{ $role->name }}?'
-                                                })"
+                                                                id: '{{ $role->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Apakah Anda yakin ingin menghapus role {{ $role->name }}?'
+                                                            })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -101,6 +102,56 @@
                         </x-ui.table.tr>
                     @endforelse
                 </x-ui.table.tbody>
+
+                <x-slot name="board">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($roles as $role)
+                            <div
+                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 rounded-xl bg-metronic-primary/10 flex items-center justify-center text-metronic-primary">
+                                            <flux:icon name="shield-check" variant="outline" class="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-zinc-900 dark:text-white">{{ $role->name }}</h3>
+                                            <code
+                                                class="text-[10px] text-metronic-primary font-mono uppercase tracking-wider">{{ $role->slug }}</code>
+                                        </div>
+                                    </div>
+                                    <x-ui.badge variant="info">{{ $role->users_count }} users</x-ui.badge>
+                                </div>
+                                <p class="text-sm text-zinc-500 line-clamp-2 min-h-[40px] mb-5">
+                                    {{ $role->description ?: 'No description provided for this role.' }}
+                                </p>
+                                <div
+                                    class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                    <flux:tooltip content="Edit Role" position="top">
+                                        <button wire:click="edit('{{ $role->uuid }}')"
+                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
+                                    <flux:tooltip content="Hapus Role" position="top">
+                                        <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                id: '{{ $role->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Hapus role {{ $role->name }}?'
+                                                            })"
+                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full">
+                                <x-ui.empty-state />
+                            </div>
+                        @endforelse
+                    </div>
+                </x-slot>
 
                 <x-slot name="footer">
                     <x-ui.pagination :paginator="$roles" />

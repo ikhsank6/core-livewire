@@ -16,6 +16,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Livewire\Concerns\HasTableView;
 
 #[Layout('components.layouts.app')]
 #[Title('About Us')]
@@ -23,6 +24,7 @@ class AboutUsIndex extends Component implements HasForms
 {
     use InteractsWithForms;
     use WithPagination;
+    use HasTableView;
 
     #[Url]
     public $search = '';

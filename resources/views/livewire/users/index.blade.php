@@ -32,9 +32,10 @@
 
         <!-- Card Body -->
         <div class="p-6">
-            <x-ui.table :paginator="$users">
+            <x-ui.table :paginator="$users" :view="$view">
                 <x-slot name="header">
-                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false" />
+                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                        :showViewToggle="true" />
                 </x-slot>
 
                 <x-ui.table.thead>
@@ -80,21 +81,25 @@
                                 </x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
-                                <div class="flex items-center justify-end gap-2">
+                                <div class="flex items-center justify-end gap-2 text-right">
                                     @if(!$user->email_verified_at)
                                         <flux:tooltip content="Resend Activation Email" position="top">
                                             <button wire:click="resendActivation('{{ $user->uuid }}')"
-                                                wire:loading.attr="disabled"
-                                                wire:target="resendActivation('{{ $user->uuid }}')"
+                                                wire:loading.attr="disabled" wire:target="resendActivation('{{ $user->uuid }}')"
                                                 class="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-all active:scale-90 disabled:opacity-50">
-                                                <svg wire:loading.remove wire:target="resendActivation('{{ $user->uuid }}')" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg wire:loading.remove wire:target="resendActivation('{{ $user->uuid }}')"
+                                                    class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                                                     </path>
                                                 </svg>
-                                                <svg wire:loading wire:target="resendActivation('{{ $user->uuid }}')" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                <svg wire:loading wire:target="resendActivation('{{ $user->uuid }}')"
+                                                    class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                        stroke-width="4"></circle>
+                                                    <path class="opacity-75" fill="currentColor"
+                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                    </path>
                                                 </svg>
                                             </button>
                                         </flux:tooltip>
@@ -113,10 +118,10 @@
 
                                     <flux:tooltip content="Hapus Data User" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                        id: '{{ $user->uuid }}', 
-                                                        componentId: '{{ $this->getId() }}',
-                                                        message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
-                                                    })"
+                                                                id: '{{ $user->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
+                                                            })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -136,6 +141,64 @@
                         </x-ui.table.tr>
                     @endforelse
                 </x-ui.table.tbody>
+
+                <x-slot name="board">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($users as $user)
+                            <div
+                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="lg" />
+                                        <div>
+                                            <h3 class="font-bold text-zinc-900 dark:text-white">{{ $user->name }}</h3>
+                                            <p class="text-xs text-zinc-500">{{ $user->email }}</p>
+                                        </div>
+                                    </div>
+                                    <x-ui.badge :variant="strtolower($user->role->name ?? 'user') === 'admin' ? 'admin' : 'user'">
+                                        {{ $user->role->name ?? 'User' }}
+                                    </x-ui.badge>
+                                </div>
+                                <div class="space-y-3 mb-5">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Status</span>
+                                        <x-ui.badge :variant="$user->is_active ? 'success' : 'danger'" class="px-1.5 py-0">
+                                            {{ $user->is_active ? 'Active' : 'Inactive' }}
+                                        </x-ui.badge>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Joined</span>
+                                        <span
+                                            class="text-zinc-700 dark:text-zinc-300">{{ $user->created_at->format('M d, Y') }}</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                    <flux:tooltip content="Edit User" position="top">
+                                        <button wire:click="edit('{{ $user->uuid }}')"
+                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                        </flux:tooltip>
+                                        <flux:tooltip content="Hapus User" position="top">
+                                            <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                id: '{{ $user->uuid }}', 
+                                                            componentId: '{{ $this->getId() }}',
+                                                            message: 'Hapus user {{ $user->name }}?'
+                                                        })"
+                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                                            </button>
+                                    </flux:tooltip>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full">
+                                <x-ui.empty-state />
+                            </div>
+                        @endforelse
+                    </div>
+                </x-slot>
 
                 <x-slot name="footer">
                     <x-ui.pagination :paginator="$users" />
