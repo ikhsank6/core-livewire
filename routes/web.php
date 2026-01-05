@@ -1,5 +1,9 @@
 <?php
 
+use App\Actions\Website\ShowAboutPage;
+use App\Actions\Website\ShowHomePage;
+use App\Actions\Website\ShowNewsDetail;
+use App\Actions\Website\ShowNewsList;
 use App\Livewire\AboutUs\AboutUsIndex;
 use App\Livewire\Auth\ChangePassword;
 use App\Livewire\Auth\ForgotPassword;
@@ -17,12 +21,19 @@ use App\Livewire\News\NewsIndex;
 use App\Livewire\NewsCategories\NewsCategoryIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Users\UserIndex;
-use App\Livewire\Website\LandingPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Landing Page (Public)
-Route::get('/', LandingPage::class)->name('landing');
+/*
+|--------------------------------------------------------------------------
+| Website Public Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/', ShowHomePage::class)->name('landing');
+Route::get('/news', ShowNewsList::class)->name('news.index');
+Route::get('/news/{slug}', ShowNewsDetail::class)->name('news.show');
+Route::get('/about', ShowAboutPage::class)->name('about');
 
 Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', Login::class)->name('login');

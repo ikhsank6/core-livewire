@@ -71,4 +71,57 @@ class NewsRepository extends BaseRepository implements NewsRepositoryInterface
             ->published()
             ->first();
     }
+
+    public function getLatest(int $limit = 6): Collection
+    {
+        return $this->model
+            ->with('category')
+            ->where('is_active', true)
+            ->latest('published_at')
+            ->take($limit)
+            ->get();
+    }
+
+    public function getActiveWithFilter(?string $categorySlug, int $perPage = 8): LengthAwarePaginator
+    {
+        return $this->model
+            ->with('category')
+            ->where('is_active', true)
+            ->when($categorySlug, function ($query, $categorySlug) {
+                $query->whereHas('category', fn ($q) => $q->where('slug', $categorySlug));
+            })
+            ->latest('published_at')
+            ->paginate($perPage);
+    }
+
+    public function getRecentExcept(string $exceptId, int $limit = 5): Collection
+    {
+        return $this->model
+            ->with('category')
+            ->where('is_active', true)
+            ->where('id', '!=', $exceptId)
+            ->latest('published_at')
+            ->take($limit)
+            ->get();
+    }
+
+    public function getRelated(string $categoryId, string $exceptId, int $limit = 4): Collection
+    {
+        return $this->model
+            ->with('category')
+            ->where('is_active', true)
+            ->where('id', '!=', $exceptId)
+            ->where('news_category_id', $categoryId)
+            ->take($limit)
+            ->get();
+    }
+
+    public function findActiveBySlugOrFail(string $slug): News
+    {
+        return $this->model
+            ->with('category')
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+    }
 }

@@ -37,4 +37,12 @@ class NewsCategoryRepository extends BaseRepository implements NewsCategoryRepos
     {
         return $this->model->active()->orderBy('name')->get(['id', 'name']);
     }
+
+    public function getActiveWithNewsCount(): Collection
+    {
+        return $this->model
+            ->where('is_active', true)
+            ->withCount(['news' => fn ($q) => $q->where('is_active', true)])
+            ->get();
+    }
 }
