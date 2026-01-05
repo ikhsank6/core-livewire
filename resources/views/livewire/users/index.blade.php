@@ -147,17 +147,19 @@
                         @forelse($users as $user)
                             <div
                                 class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div class="flex items-center gap-3">
-                                        <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="lg" />
-                                        <div>
-                                            <h3 class="font-bold text-zinc-900 dark:text-white">{{ $user->name }}</h3>
-                                            <p class="text-xs text-zinc-500">{{ $user->email }}</p>
+                                <div class="flex items-start justify-between mb-4 gap-2">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="lg" class="shrink-0" />
+                                        <div class="min-w-0">
+                                            <h3 class="font-bold text-zinc-900 dark:text-white truncate" title="{{ $user->name }}">{{ $user->name }}</h3>
+                                            <p class="text-xs text-zinc-500 truncate" title="{{ $user->email }}">{{ $user->email }}</p>
                                         </div>
                                     </div>
-                                    <x-ui.badge :variant="strtolower($user->role->name ?? 'user') === 'admin' ? 'admin' : 'user'">
-                                        {{ $user->role->name ?? 'User' }}
-                                    </x-ui.badge>
+                                    <div class="shrink-0">
+                                        <x-ui.badge :variant="strtolower($user->role->name ?? 'user') === 'admin' ? 'admin' : 'user'" class="whitespace-nowrap">
+                                            {{ $user->role->name ?? 'User' }}
+                                        </x-ui.badge>
+                                    </div>
                                 </div>
                                 <div class="space-y-3 mb-5">
                                     <div class="flex items-center justify-between text-xs">
