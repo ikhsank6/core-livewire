@@ -59,12 +59,12 @@ class NewsForm
                     0 => 'No',
                 ])
                 ->icons([
-                    1 => 'heroicon-m-star',
-                    0 => 'heroicon-m-x-mark',
+                    1 => 'heroicon-m-check-circle',
+                    0 => 'heroicon-m-x-circle',
                 ])
                 ->colors([
-                    1 => 'warning',
-                    0 => 'gray',
+                    1 => 'success',
+                    0 => 'danger',
                 ])
                 ->default(0)
                 ->extraAttributes(['class' => 'premium-toggle-group'])
