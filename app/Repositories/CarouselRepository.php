@@ -32,4 +32,11 @@ class CarouselRepository extends BaseRepository implements CarouselRepositoryInt
 
         return $query->ordered()->paginate($perPage);
     }
+
+    public function updateOrder(array $orderedIds): void
+    {
+        foreach ($orderedIds as $index => $id) {
+            $this->model->where('id', $id)->update(['order' => $index + 1]);
+        }
+    }
 }

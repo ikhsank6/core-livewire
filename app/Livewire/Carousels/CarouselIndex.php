@@ -3,6 +3,7 @@
 namespace App\Livewire\Carousels;
 
 use App\Forms\CarouselForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\Carousel;
 use App\Repositories\Contracts\CarouselRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -16,15 +17,14 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Livewire\Concerns\HasTableView;
 
 #[Layout('components.layouts.app')]
 #[Title('Carousels')]
 class CarouselIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -144,6 +144,22 @@ class CarouselIndex extends Component implements HasForms
     public function updatedPerPage()
     {
         $this->resetPage();
+    }
+
+    public function updateOrder(array $orderedIds): void
+    {
+        DB::beginTransaction();
+
+        try {
+            $this->carouselRepository->updateOrder($orderedIds);
+
+            DB::commit();
+
+            $this->dispatch('notify', text: 'Carousel order updated successfully.', variant: 'success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+        }
     }
 
     public function render()

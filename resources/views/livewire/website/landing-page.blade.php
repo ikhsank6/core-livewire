@@ -43,7 +43,7 @@
                         x-transition:leave-start="opacity-100"
                         x-transition:leave-end="opacity-0"
                         class="absolute inset-0">
-                        <div class="absolute inset-0 bg-gradient-to-r from-zinc-900/90 to-zinc-900/40 z-10"></div>
+                        <div class="absolute inset-0 bg-linear-to-r from-zinc-900/90 to-zinc-900/40 z-10"></div>
                         <img src="{{ Storage::url($carousel->image) }}" alt="{{ $carousel->title }}"
                             class="w-full h-full object-cover">
                         
@@ -60,7 +60,7 @@
                                     @endif
                                     @if($carousel->button_text && $carousel->button_link)
                                         <a href="{{ $carousel->button_link }}"
-                                            class="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl hover:opacity-90 transition-all shadow-2xl shadow-indigo-500/25 animate-fade-in-up"
+                                            class="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold text-white bg-linear-to-r from-indigo-500 to-purple-600 rounded-xl hover:opacity-90 transition-all shadow-2xl shadow-indigo-500/25 animate-fade-in-up"
                                             style="animation-delay: 0.4s">
                                             {{ $carousel->button_text }}
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@
             </div>
         @else
             <!-- Default Hero without carousel -->
-            <div class="relative h-[600px] bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
+            <div class="relative h-[600px] bg-linear-to-br from-indigo-600 via-purple-600 to-pink-500">
                 <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
                     <div class="text-center max-w-3xl px-4">
@@ -122,7 +122,7 @@
 
     <!-- Featured News Section -->
     @if($featuredNews->count() > 0)
-        <section class="py-20 bg-gradient-to-b from-zinc-50 to-white">
+        <section class="py-20 bg-linear-to-b from-zinc-50 to-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <span class="inline-block px-4 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-100 rounded-full mb-4">Featured</span>
@@ -137,7 +137,7 @@
                                     <img src="{{ Storage::url($news->image) }}" alt="{{ $news->title }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
-                                    <div class="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                    <div class="w-full h-full bg-linear-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
                                         <svg class="w-12 h-12 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                                         </svg>
@@ -185,7 +185,7 @@
                                     <img src="{{ Storage::url($news->image) }}" alt="{{ $news->title }}"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 @else
-                                    <div class="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 flex items-center justify-center">
+                                    <div class="w-full h-full bg-linear-to-br from-zinc-200 to-zinc-300 flex items-center justify-center">
                                         <svg class="w-10 h-10 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                                         </svg>
@@ -218,7 +218,7 @@
     </section>
 
     <!-- About Us Section -->
-    <section id="about" class="py-20 bg-gradient-to-b from-zinc-900 to-zinc-800 text-white">
+    <section id="about" class="py-20 bg-linear-to-b from-zinc-900 to-zinc-800 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="inline-block px-4 py-1.5 text-sm font-medium text-indigo-400 bg-indigo-500/20 rounded-full mb-4">About</span>
@@ -331,7 +331,7 @@
                 </div>
 
                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl">
-                    <div class="aspect-[21/9]">
+                    <div class="aspect-21/9">
                         {!! $aboutUs->map_embed !!}
                     </div>
                 </div>
