@@ -93,10 +93,10 @@
 
                                     <flux:tooltip content="Delete News" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $item->uuid }}', 
-                                                                componentId: '{{ $this->getId() }}',
-                                                                message: 'Delete news article {{ $item->title }}?'
-                                                            })"
+                                                                        id: '{{ $item->uuid }}', 
+                                                                        componentId: '{{ $this->getId() }}',
+                                                                        message: 'Delete news article {{ $item->title }}?'
+                                                                    })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -121,59 +121,64 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @forelse($news as $item)
                             <div
-                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition-all group">
-                                <div class="relative h-48 w-full">
-                                    @if($item->image)
-                                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}"
-                                            class="w-full h-full object-cover">
-                                    @else
-                                        <div
-                                            class="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                                            <flux:icon name="photo" class="w-12 h-12 text-zinc-300" />
+                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group">
+                                <div class="flex items-start justify-between mb-4 gap-2">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        @if($item->image)
+                                            <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}"
+                                                class="w-12 h-12 rounded-xl object-cover shrink-0 border border-zinc-200 dark:border-zinc-700">
+                                        @else
+                                            <div
+                                                class="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                                                <flux:icon name="photo" variant="mini" class="w-6 h-6 text-zinc-400" />
+                                            </div>
+                                        @endif
+                                        <div class="min-w-0">
+                                            <h3 class="font-bold text-zinc-900 dark:text-white truncate"
+                                                title="{{ $item->title }}">{{ $item->title }}</h3>
+                                            <p class="text-xs text-zinc-500 truncate"
+                                                title="{{ $item->category->name ?? 'General' }}">
+                                                {{ $item->category->name ?? 'General' }}
+                                            </p>
                                         </div>
-                                    @endif
-                                    <div class="absolute top-4 right-4">
+                                    </div>
+                                    <div class="shrink-0">
                                         <x-ui.badge :variant="$item->is_active ? 'success' : 'danger'"
-                                            class="backdrop-blur-md bg-white/80 dark:bg-zinc-900/80">
+                                            class="whitespace-nowrap px-1.5 py-0">
                                             {{ $item->is_active ? 'Active' : 'Inactive' }}
                                         </x-ui.badge>
                                     </div>
                                 </div>
-                                <div class="p-5">
-                                    <div class="flex items-center gap-2 mb-3">
+                                <div class="space-y-3 mb-5">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Summary</span>
+                                        <span class="text-zinc-700 dark:text-zinc-300 truncate ml-4"
+                                            title="{{ $item->summary }}">{{ Str::limit($item->summary, 40) }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Published</span>
                                         <span
-                                            class="text-[10px] font-bold uppercase tracking-wider text-metronic-primary bg-metronic-primary/10 px-2 py-0.5 rounded">
-                                            {{ $item->category->name ?? 'General' }}
-                                        </span>
-                                        <span class="text-[10px] text-zinc-400 font-medium">
-                                            {{ $item->published_at?->format('M d, Y') ?? 'Draft' }}
-                                        </span>
+                                            class="text-zinc-700 dark:text-zinc-300">{{ $item->published_at?->format('M d, Y') ?? 'Draft' }}</span>
                                     </div>
-                                    <h3 class="font-bold text-zinc-900 dark:text-white mb-2 line-clamp-2 leading-tight">
-                                        {{ $item->title }}
-                                    </h3>
-                                    <p class="text-xs text-zinc-500 line-clamp-2 mb-4 leading-relaxed">
-                                        {{ $item->summary }}
-                                    </p>
-                                    <div
-                                        class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                        <flux:tooltip content="Edit News" position="top">
-                                            <button wire:click="edit('{{ $item->uuid }}')"
-                                                class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                                <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                            </button>
-                                        </flux:tooltip>
-                                        <flux:tooltip content="Hapus News" position="top">
-                                            <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                    id: '{{ $item->uuid }}', 
-                                                                    componentId: '{{ $this->getId() }}',
-                                                                    message: 'Delete {{ $item->title }}?'
-                                                                })"
-                                                class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                                <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                            </button>
-                                        </flux:tooltip>
-                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                    <flux:tooltip content="Edit News" position="top">
+                                        <button wire:click="edit('{{ $item->uuid }}')"
+                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
+                                    <flux:tooltip content="Hapus News" position="top">
+                                        <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                id: '{{ $item->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Delete {{ $item->title }}?'
+                                                            })"
+                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
                                 </div>
                             </div>
                         @empty

@@ -33,7 +33,8 @@
         <div class="p-6">
             <x-ui.table :paginator="$categories">
                 <x-slot name="header">
-                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false" />
+                    <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                        :showViewToggle="true" />
                 </x-slot>
 
                 <x-ui.table.thead>
@@ -68,26 +69,18 @@
                                     <flux:tooltip content="Edit Category" position="top">
                                         <button wire:click="edit('{{ $category->uuid }}')"
                                             class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
+                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
                                         </button>
                                     </flux:tooltip>
 
-                                    <flux:tooltip content="Delete Category" position="top">
+                                    <flux:tooltip content="Hapus Category" position="top">
                                         <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                        id: '{{ $category->uuid }}', 
-                                                        componentId: '{{ $this->getId() }}',
-                                                        message: 'Are you sure you want to delete this category?'
-                                                    })"
+                                                                id: '{{ $category->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Are you sure you want to delete this category?'
+                                                            })"
                                             class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
+                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
                                         </button>
                                     </flux:tooltip>
                                 </div>
@@ -101,6 +94,71 @@
                         </x-ui.table.tr>
                     @endforelse
                 </x-ui.table.tbody>
+
+                <x-slot name="board">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($categories as $category)
+                            <div
+                                class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group">
+                                <div class="flex items-start justify-between mb-4 gap-2">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div
+                                            class="w-10 h-10 rounded-xl bg-metronic-primary/10 flex items-center justify-center text-metronic-primary shrink-0">
+                                            <flux:icon name="tag" variant="outline" class="w-6 h-6" />
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h3 class="font-bold text-zinc-900 dark:text-white truncate"
+                                                title="{{ $category->name }}">{{ $category->name }}</h3>
+                                            <code
+                                                class="text-[10px] text-metronic-primary font-mono uppercase tracking-wider block truncate">{{ $category->slug }}</code>
+                                        </div>
+                                    </div>
+                                    <div class="shrink-0">
+                                        <x-ui.badge :variant="$category->is_active ? 'success' : 'danger'"
+                                            class="whitespace-nowrap px-1.5 py-0">
+                                            {{ $category->is_active ? 'Active' : 'Inactive' }}
+                                        </x-ui.badge>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 mb-5">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Description</span>
+                                        <span class="text-zinc-700 dark:text-zinc-300 truncate ml-4"
+                                            title="{{ $category->description }}">{{ Str::limit($category->description ?: 'No description', 30) }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-zinc-500">Created</span>
+                                        <span
+                                            class="text-zinc-700 dark:text-zinc-300">{{ $category->created_at->format('M d, Y') }}</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                                    <flux:tooltip content="Edit Category" position="top">
+                                        <button wire:click="edit('{{ $category->uuid }}')"
+                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
+                                    <flux:tooltip content="Hapus Category" position="top">
+                                        <button x-on:click="$dispatch('open-delete-confirm', { 
+                                                                    id: '{{ $category->uuid }}', 
+                                                                    componentId: '{{ $this->getId() }}',
+                                                                    message: 'Hapus kategori {{ $category->name }}?'
+                                                                })"
+                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
+                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                                        </button>
+                                    </flux:tooltip>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-span-full">
+                                <x-ui.empty-state />
+                            </div>
+                        @endforelse
+                    </div>
+                </x-slot>
 
                 <x-slot name="footer">
                     <x-ui.pagination :paginator="$categories" />
