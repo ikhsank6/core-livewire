@@ -33,11 +33,15 @@ class MenuForm
             TextInput::make('order')
                 ->numeric()
                 ->default(0)
-                ->required(),
+                ->required()
+                ->readOnly()
+                ->helperText('Order is managed via drag and drop on the list page.'),
 
             TextInput::make('icon')
                 ->label('Icon Name')
-                ->placeholder('e.g. home'),
+                ->placeholder('e.g. home')
+                ->helperText(new \Illuminate\Support\HtmlString('Get icons from <a href="https://fluxui.dev/components/icon" target="_blank" class="text-metronic-primary hover:underline">fluxui.dev/components/icon</a> or <a href="https://heroicons.com" target="_blank" class="text-metronic-primary hover:underline">heroicons.com</a>'))
+                ->prefixIcon(fn ($state) => $state ?? 'heroicon-m-viewfinder-circle'),
 
             TextInput::make('route')
                 ->label('Route Name')

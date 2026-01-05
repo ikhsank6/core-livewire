@@ -135,9 +135,10 @@
                                 <td class="px-4 py-4 text-sm">
                                     <div class="flex items-center gap-2">
                                         <span
-                                            class="{{ $menu->parent_id ? 'pl-6 text-zinc-500 dark:text-zinc-400' : 'font-bold text-zinc-900 dark:text-white' }}">
+                                            class="flex items-center {{ $menu->parent_id ? 'pl-6 text-zinc-500 dark:text-zinc-400' : 'font-bold text-zinc-900 dark:text-white whitespace-nowrap' }}">
                                             @if($menu->icon)
-                                                <span class="mr-2">{{ $menu->icon }}</span>
+                                                <flux:icon :name="$menu->icon" variant="mini"
+                                                    class="mr-2 text-zinc-400 group-hover:text-metronic-primary transition-colors" />
                                             @endif
                                             {{ $menu->name }}
                                         </span>
@@ -176,10 +177,10 @@
 
                                         <flux:tooltip content="Hapus Data Menu" position="top">
                                             <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                            id: '{{ $menu->uuid }}', 
-                                                            componentId: '{{ $this->getId() }}',
-                                                            message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
-                                                        })"
+                                                                id: '{{ $menu->uuid }}', 
+                                                                componentId: '{{ $this->getId() }}',
+                                                                message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
+                                                            })"
                                                 class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
