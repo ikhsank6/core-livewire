@@ -2,8 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -11,10 +13,22 @@ use Illuminate\Support\Facades\Storage;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
+    /**
+     * The storage disk for user files.
+     */
+    private const STORAGE_DISK = 'public';
+
+    /**
+     * The avatar storage path.
+     */
+    private const AVATAR_PATH = 'avatars';
+
     public function __construct(User $model)
     {
         parent::__construct($model);
     }
+
+    // ==================== PUBLIC METHODS ====================
 
     /**
      * Search users with role relation.
@@ -39,20 +53,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User
     {
         return DB::transaction(function () use ($userData, $roleIds, $defaultRoleId) {
-            $isActive = $userData['is_active'] ?? false;
-
-            if ($isActive) {
-                $userData['email_verified_at'] = now();
-            } else {
-                $userData['email_verified_at'] = null;
-            }
+            $userData = $this->handleEmailVerificationOnCreate($userData);
 
             $user = $this->model->create($userData);
             $user->syncRoles($roleIds, $defaultRoleId);
 
-            if (! $isActive) {
-                $user->sendEmailVerificationNotification();
-            }
+            $this->sendVerificationIfInactive($user, $userData['is_active'] ?? false);
 
             return $user->fresh(['role', 'roles']);
         });
@@ -65,26 +71,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return DB::transaction(function () use ($userId, $userData, $roleIds, $defaultRoleId) {
             $user = $this->findOrFail($userId);
-
-            if (isset($userData['is_active'])) {
-                $wasActive = $user->is_active;
-                $isNowActive = $userData['is_active'];
-
-                if ($isNowActive && ! $wasActive && ! $user->email_verified_at) {
-                    $userData['email_verified_at'] = now();
-                }
-
-                if (! $isNowActive && $wasActive) {
-                    $userData['email_verified_at'] = null;
-                }
-            }
+            $userData = $this->handleEmailVerificationOnUpdate($user, $userData);
 
             $user->update($userData);
             $user->syncRoles($roleIds, $defaultRoleId);
 
-            if (isset($userData['is_active']) && ! $userData['is_active'] && ! $user->email_verified_at) {
-                $user->sendEmailVerificationNotification();
-            }
+            $this->sendVerificationIfInactive($user, $userData['is_active'] ?? true);
 
             return true;
         });
@@ -108,13 +100,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userId, $file) {
             $user = $this->findOrFail($userId);
 
-            // Delete old avatar if exists
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
+            $this->removeAvatarFile($user);
 
-            // Store new avatar
-            $avatarPath = $file->store('avatars', 'public');
+            $avatarPath = $file->store(self::AVATAR_PATH, self::STORAGE_DISK);
             $user->update(['avatar' => $avatarPath]);
 
             return $avatarPath;
@@ -129,9 +117,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userId) {
             $user = $this->findOrFail($userId);
 
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
+            $this->removeAvatarFile($user);
 
             return $user->update(['avatar' => null]);
         });
@@ -144,13 +130,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return DB::transaction(function () use ($userId, $roleId) {
             $user = $this->findOrFail($userId);
-            $roleIds = $user->roles->pluck('id')->toArray();
 
-            if (! in_array($roleId, $roleIds)) {
-                throw new \Exception('Unauthorized role selection.');
-            }
+            $this->validateUserHasRole($user, $roleId);
 
-            $user->syncRoles($roleIds, $roleId);
+            $user->syncRoles($user->roles->pluck('id')->toArray(), $roleId);
 
             return true;
         });
@@ -162,7 +145,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function register(array $data): User
     {
         return DB::transaction(function () use ($data) {
-            $defaultRole = \App\Models\Role::where('slug', 'user')->first();
+            $defaultRole = $this->getDefaultRole();
 
             $user = $this->model->create([
                 'name' => $data['name'],
@@ -176,7 +159,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                 $user->roles()->attach($defaultRole->id, ['is_default' => true]);
             }
 
-            event(new \Illuminate\Auth\Events\Registered($user));
+            event(new Registered($user));
 
             return $user;
         });
@@ -189,9 +172,89 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return DB::transaction(function () use ($userId, $roleId) {
             $user = $this->findOrFail($userId);
-            $role = \App\Models\Role::findOrFail($roleId);
+            $role = Role::findOrFail($roleId);
 
             return $user->setActiveRole($role);
         });
+    }
+
+    // ==================== PRIVATE HELPERS ====================
+
+    /**
+     * Handle email_verified_at logic when creating a user.
+     */
+    private function handleEmailVerificationOnCreate(array $userData): array
+    {
+        $isActive = $userData['is_active'] ?? false;
+        $userData['email_verified_at'] = $isActive ? now() : null;
+
+        return $userData;
+    }
+
+    /**
+     * Handle email_verified_at logic when updating a user.
+     */
+    private function handleEmailVerificationOnUpdate(User|\Illuminate\Database\Eloquent\Model $user, array $userData): array
+    {
+        if (! isset($userData['is_active'])) {
+            return $userData;
+        }
+
+        $wasActive = $user->is_active;
+        $isNowActive = $userData['is_active'];
+
+        // If becoming active and was not verified, verify now
+        if ($isNowActive && ! $wasActive && ! $user->email_verified_at) {
+            $userData['email_verified_at'] = now();
+        }
+
+        // If becoming inactive, remove verification
+        if (! $isNowActive && $wasActive) {
+            $userData['email_verified_at'] = null;
+        }
+
+        return $userData;
+    }
+
+    /**
+     * Send email verification notification if user is inactive.
+     */
+    private function sendVerificationIfInactive(User|\Illuminate\Database\Eloquent\Model $user, bool $isActive): void
+    {
+        if (! $isActive && ! $user->email_verified_at) {
+            $user->sendEmailVerificationNotification();
+        }
+    }
+
+    /**
+     * Remove avatar file from storage if exists.
+     */
+    private function removeAvatarFile(User|\Illuminate\Database\Eloquent\Model $user): void
+    {
+        if ($user->avatar && Storage::disk(self::STORAGE_DISK)->exists($user->avatar)) {
+            Storage::disk(self::STORAGE_DISK)->delete($user->avatar);
+        }
+    }
+
+    /**
+     * Validate that user has the specified role.
+     *
+     * @throws \Exception
+     */
+    private function validateUserHasRole(User|\Illuminate\Database\Eloquent\Model $user, int $roleId): void
+    {
+        $roleIds = $user->roles->pluck('id')->toArray();
+
+        if (! in_array($roleId, $roleIds)) {
+            throw new \Exception('Unauthorized role selection.');
+        }
+    }
+
+    /**
+     * Get the default role for registration.
+     */
+    private function getDefaultRole(): ?Role
+    {
+        return Role::where('slug', 'user')->first();
     }
 }
