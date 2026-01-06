@@ -114,7 +114,7 @@
         </div>
         
         {{-- Scroll Indicator - Enhanced Design --}}
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-3 group cursor-pointer" 
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3 group cursor-pointer" 
              onclick="window.scrollBy({top: window.innerHeight, behavior: 'smooth'})">
             {{-- Glow Effect --}}
             <div class="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 animate-pulse"></div>
