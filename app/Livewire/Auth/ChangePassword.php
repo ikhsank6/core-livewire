@@ -25,10 +25,8 @@ class ChangePassword extends Component
     public function changePassword(): void
     {
         DB::beginTransaction();
-
+        $this->validate();
         try {
-            $this->validate();
-
             $user = Auth::user();
 
             $user->update([
