@@ -1,5 +1,5 @@
 {{-- Footer - Elegant Modern Design --}}
-<footer class="relative bg-slate-900 dark:bg-slate-800/90 dark:border-t dark:border-slate-700/50 pt-12 pb-8">
+<footer class="relative bg-slate-900 dark:bg-slate-800 dark:border-t dark:border-slate-700/50 pt-12 pb-8">
     {{-- Curved Top SVG --}}
     <div class="absolute -top-16 left-0 right-0 overflow-hidden">
         <svg class="w-full h-20" viewBox="0 0 1440 80" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
