@@ -1,19 +1,11 @@
 <?php
 
-use App\Actions\LogoutAction;
 use App\Actions\SwitchRoleAction;
 use App\Actions\Website\ShowAboutPage;
 use App\Actions\Website\ShowHomePage;
 use App\Actions\Website\ShowNewsDetail;
 use App\Actions\Website\ShowNewsList;
 use App\Livewire\AboutUs\AboutUsIndex;
-use App\Livewire\Auth\ChangePassword;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\Profile;
-use App\Livewire\Auth\Register;
-use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Carousels\CarouselIndex;
 use App\Livewire\Dashboard;
 use App\Livewire\Layout\NotificationIndex;
@@ -23,7 +15,6 @@ use App\Livewire\News\NewsIndex;
 use App\Livewire\NewsCategories\NewsCategoryIndex;
 use App\Livewire\Roles\RoleIndex;
 use App\Livewire\Users\UserIndex;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,29 +28,22 @@ Route::get('/news', ShowNewsList::class)->name('news.index');
 Route::get('/news/{slug}', ShowNewsDetail::class)->name('news.show');
 Route::get('/about', ShowAboutPage::class)->name('about');
 
-Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
-    Route::get('/login', Login::class)->name('login');
-    Route::get('/register', Register::class)->name('register');
-    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-    Route::get('/reset-password/{token}', ResetPassword::class)->name('password.reset');
-});
+/*
+|--------------------------------------------------------------------------
+| Authentication Modules
+|--------------------------------------------------------------------------
+*/
 
-// Alias for Laravel's default 'login' route name requirement
-Route::get('/login', function () {
-    return redirect()->route('auth.login');
-})->name('login');
+require base_path('routes/modules/auth.php');
 
-// Email verification route
-Route::get('/auth/verify-email/{id}/{hash}', VerifyEmail::class)
-    ->middleware(['throttle:6,1'])
-    ->name('auth.verification.verify');
+/*
+|--------------------------------------------------------------------------
+| Secured Routes
+|--------------------------------------------------------------------------
+*/
 
 // Routes that need auth but NOT menu.access restriction
 Route::middleware(['auth'])->group(function () {
-    Route::get('/logout', LogoutAction::class)->name('logout');
-
-    Route::get('/profile', Profile::class)->name('profile');
-    Route::get('/password/change', ChangePassword::class)->name('password.change');
     Route::get('/notifications', NotificationIndex::class)->name('notifications.index');
 
     // Switch role - accessible to all authenticated users regardless of menu access
