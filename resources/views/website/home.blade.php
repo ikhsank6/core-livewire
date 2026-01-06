@@ -433,6 +433,20 @@
     @if($news->count() > 0)
         <section class="py-24 bg-white dark:bg-dark-card relative overflow-hidden">
             {{-- Decorative Elements --}}
+            {{-- Top Right Grid Pattern --}}
+            <div class="absolute top-0 right-0 w-96 h-96 opacity-[0.2] dark:opacity-[0.1] pointer-events-none z-0">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="grid-pattern-news" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M 30 0 L 0 0 0 30" fill="none" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="1" stroke-dasharray="4,4"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid-pattern-news)"/>
+                </svg>
+                {{-- Gradient mask to fade the pattern --}}
+                <div class="absolute inset-0 bg-gradient-to-bl from-transparent via-transparent to-white dark:to-dark-card opacity-100"></div>
+            </div>
+
             <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2">
             </div>
             <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2">
@@ -569,17 +583,18 @@
             class="absolute inset-0 bg-gradient-to-br from-slate-50 via-teal-50/30 to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
         </div>
 
-        {{-- Diamond Pattern Overlay --}}
-        <div class="absolute inset-0 opacity-[0.15] dark:opacity-[0.08]">
+        {{-- Full Diamond Pattern --}}
+        <div class="absolute inset-0 opacity-[0.08] dark:opacity-[0.05] pointer-events-none">
             <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <pattern id="diamond-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <rect x="20" y="0" width="14" height="14" transform="rotate(45 20 7)" class="fill-slate-400 dark:fill-slate-500"/>
+                    <pattern id="diamond-pattern-faq" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <rect x="20" y="0" width="16" height="16" transform="rotate(45 20 8)" class="fill-slate-500 dark:fill-slate-400"/>
                     </pattern>
                 </defs>
-                <rect width="100%" height="100%" fill="url(#diamond-pattern)"/>
+                <rect width="100%" height="100%" fill="url(#diamond-pattern-faq)"/>
             </svg>
         </div>
+
 
         {{-- Gradient Orbs --}}
         <div
