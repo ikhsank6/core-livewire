@@ -65,4 +65,23 @@ class MenuRepository extends BaseRepository implements MenuRepositoryInterface
             }
         });
     }
+
+    /**
+     * Update menu parent.
+     */
+    public function updateParent(int $menuId, ?int $newParentId): void
+    {
+        DB::transaction(function () use ($menuId, $newParentId) {
+            // Get the max order for the new parent's children
+            $maxOrder = $this->model
+                ->where('parent_id', $newParentId)
+                ->max('order') ?? -1;
+
+            // Update the menu's parent and set order to last position
+            $this->model->where('id', $menuId)->update([
+                'parent_id' => $newParentId,
+                'order' => $maxOrder + 1,
+            ]);
+        });
+    }
 }

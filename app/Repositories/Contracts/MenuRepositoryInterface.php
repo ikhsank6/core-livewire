@@ -26,4 +26,9 @@ interface MenuRepositoryInterface extends RepositoryInterface
      * Update menu order.
      */
     public function updateOrder(array $orderedIds): void;
+
+    /**
+     * Update menu parent.
+     */
+    public function updateParent(int $menuId, ?int $newParentId): void;
 }

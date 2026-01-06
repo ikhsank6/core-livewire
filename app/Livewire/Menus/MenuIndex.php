@@ -20,9 +20,9 @@ use Livewire\WithPagination;
 #[Title('Menus')]
 class MenuIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -143,6 +143,25 @@ class MenuIndex extends Component implements HasForms
             DB::commit();
 
             $this->dispatch('notify', text: 'Menu order updated successfully.', variant: 'success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+        }
+    }
+
+    /**
+     * Update menu parent from drag and drop between parents
+     */
+    public function updateParent(int $menuId, ?int $newParentId): void
+    {
+        DB::beginTransaction();
+
+        try {
+            $this->menuRepository->updateParent($menuId, $newParentId);
+
+            DB::commit();
+
+            $this->dispatch('notify', text: 'Menu moved successfully.', variant: 'success');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
