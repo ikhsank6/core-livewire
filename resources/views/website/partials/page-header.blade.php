@@ -4,7 +4,7 @@
     <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
         <div class="absolute inset-0 opacity-20"
-            style="background-image: url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1920'); background-size: cover; background-position: center;">
+            style="background-image: url('{{ $bgImage ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1920' }}'); background-size: cover; background-position: center;">
         </div>
         {{-- Animated Pattern --}}
         <div class="absolute inset-0 opacity-10">

@@ -96,8 +96,93 @@
 
         .swiper-pagination-bullet-active {
             background: #0d9488 !important;
-            width: 24px !important;
-            border-radius: 5px !important;
+            width: 32px !important;
+            border-radius: 6px !important;
+        }
+
+        /* Hero Carousel Animations */
+        @keyframes fade-in-up {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradient-x {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-gradient-x {
+            animation: gradient-x 3s ease infinite;
+        }
+
+        .swiper-slide-active .animate-fade-in-up {
+            opacity: 0;
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        /* Swiper Modern Navigation */
+        .heroCarousel .swiper-button-next,
+        .heroCarousel .swiper-button-prev {
+            color: white !important;
+            width: 56px !important;
+            height: 56px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 16px !important;
+            transition: all 0.3s ease;
+        }
+
+        .heroCarousel .swiper-button-next:hover,
+        .heroCarousel .swiper-button-prev:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: scale(1.05);
+        }
+
+        .heroCarousel .swiper-button-next::after,
+        .heroCarousel .swiper-button-prev::after {
+            font-size: 16px !important;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+
+            .heroCarousel .swiper-button-next,
+            .heroCarousel .swiper-button-prev {
+                display: none !important;
+            }
+        }
+
+        .heroCarousel .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.4) !important;
+            width: 12px !important;
+            height: 12px !important;
+            transition: all 0.3s ease;
+        }
+
+        .heroCarousel .swiper-pagination-bullet-active {
+            background: #0d9488 !important;
+            width: 40px !important;
+            border-radius: 6px !important;
         }
 
         .line-clamp-2 {

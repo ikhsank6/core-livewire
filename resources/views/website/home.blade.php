@@ -7,41 +7,118 @@
 @section('content')
     {{-- ==================== HERO CAROUSEL ==================== --}}
     @if($carousels->count() > 0)
-    <section class="relative h-screen">
+    <section class="relative h-screen overflow-hidden">
         <div class="swiper heroCarousel h-full">
             <div class="swiper-wrapper">
-                @foreach($carousels as $carousel)
+                @foreach($carousels as $index => $carousel)
                 <div class="swiper-slide">
-                    <div class="relative h-screen flex items-center"
-                         style="background-image: linear-gradient(to right, rgba(10,10,15,0.9) 0%, rgba(10,10,15,0.6) 50%, rgba(10,10,15,0.3) 100%), url('{{ $carousel->image ? Storage::url($carousel->image) : 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920' }}'); background-size: cover; background-position: center;">
-                        <div class="max-w-7xl mx-auto px-4 w-full">
-                            <div class="max-w-2xl">
+                    {{-- Background with Parallax Effect --}}
+                    <div class="absolute inset-0 z-0">
+                        <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+                        <div class="absolute inset-0 transition-transform duration-[2000ms] scale-105"
+                             style="background-image: url('{{ $carousel->image ? Storage::url($carousel->image) : 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920' }}'); background-size: cover; background-position: center;">
+                        </div>
+                        {{-- Gradient Overlay --}}
+                        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-slate-950/30"></div>
+                        {{-- Animated Orbs --}}
+                        <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse"></div>
+                        <div class="absolute bottom-1/4 left-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[100px] animate-pulse delay-1000"></div>
+                    </div>
+
+                    {{-- Content --}}
+                    <div class="relative z-10 h-screen flex items-center">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+                            <div class="max-w-3xl">
+                                {{-- Badge/Description --}}
                                 @if($carousel->description)
-                                <p class="text-primary font-medium mb-4 tracking-wide text-sm md:text-base">
-                                    {{ $carousel->description }}
-                                </p>
+                                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full mb-6 animate-fade-in-up" style="animation-delay: 0.2s;">
+                                    <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                                    <span class="text-white/90 text-sm font-medium tracking-wide">{{ $carousel->description }}</span>
+                                </div>
                                 @endif
-                                <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-6">
-                                    {{ $carousel->title }}
+                                
+                                {{-- Title with Gradient --}}
+                                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[0.9] mb-8 animate-fade-in-up" style="animation-delay: 0.4s;">
+                                    <span class="block text-white">{{ Str::before($carousel->title, ' ') }}</span>
+                                    <span class="block bg-gradient-to-r from-primary via-teal-400 to-accent bg-clip-text text-transparent">
+                                        {{ Str::after($carousel->title, ' ') ?: $carousel->title }}
+                                    </span>
                                 </h1>
+                                
+                                {{-- Subtitle Line --}}
+                                <div class="flex items-center gap-4 mb-10 animate-fade-in-up" style="animation-delay: 0.6s;">
+                                    <div class="h-px flex-1 max-w-[100px] bg-gradient-to-r from-primary to-transparent"></div>
+                                    <p class="text-white/60 text-lg font-light">Discover the possibilities</p>
+                                </div>
+                                
+                                {{-- CTA Buttons --}}
                                 @if($carousel->button_text)
-                                <a href="{{ $carousel->button_link ?? '#' }}" 
-                                   class="inline-flex items-center gap-2 px-8 py-4 text-base md:text-lg font-bold text-white bg-accent rounded-xl hover:bg-orange-600 shadow-lg shadow-orange-500/30 transition-all">
-                                    {{ $carousel->button_text }}
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                </a>
+                                <div class="flex flex-wrap items-center gap-4 animate-fade-in-up" style="animation-delay: 0.8s;">
+                                    {{-- Primary Button --}}
+                                    <a href="{{ $carousel->button_link ?? '#' }}" 
+                                       class="group relative inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-white overflow-hidden rounded-2xl transition-all duration-500 hover:scale-105 active:scale-95">
+                                        {{-- Button Gradient Background --}}
+                                        <span class="absolute inset-0 bg-gradient-to-r from-accent via-orange-500 to-accent bg-[length:200%_100%] animate-gradient-x"></span>
+                                        {{-- Glow Effect --}}
+                                        <span class="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-gradient-to-r from-accent to-orange-500"></span>
+                                        {{-- Button Content --}}
+                                        <span class="relative z-10">{{ $carousel->button_text }}</span>
+                                        <svg class="relative z-10 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                        </svg>
+                                    </a>
+                                    
+                                    {{-- Secondary Button --}}
+                                    <a href="#features" 
+                                       class="group inline-flex items-center gap-3 px-6 py-4 text-white/80 font-medium border border-white/20 rounded-2xl backdrop-blur-sm hover:bg-white/10 hover:border-white/30 transition-all duration-300">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span>Watch Demo</span>
+                                    </a>
+                                </div>
                                 @endif
+                                
+                                {{-- Stats Row --}}
+                                <div class="flex items-center gap-8 mt-16 pt-8 border-t border-white/10 animate-fade-in-up" style="animation-delay: 1s;">
+                                    <div>
+                                        <div class="text-3xl font-bold text-white">10K+</div>
+                                        <div class="text-sm text-white/50">Active Users</div>
+                                    </div>
+                                    <div class="w-px h-12 bg-white/20"></div>
+                                    <div>
+                                        <div class="text-3xl font-bold text-white">99%</div>
+                                        <div class="text-sm text-white/50">Satisfaction</div>
+                                    </div>
+                                    <div class="w-px h-12 bg-white/20"></div>
+                                    <div>
+                                        <div class="text-3xl font-bold text-white">24/7</div>
+                                        <div class="text-sm text-white/50">Support</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 @endforeach
             </div>
-            {{-- Navigation --}}
+            
+            {{-- Navigation Arrows (Styled via CSS) --}}
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
-            {{-- Pagination --}}
+            
+            {{-- Pagination (Styled via CSS) --}}
             <div class="swiper-pagination"></div>
+        </div>
+        
+        {{-- Scroll Indicator --}}
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2 text-white/50">
+            <span class="text-xs tracking-widest uppercase">Scroll</span>
+            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+                <div class="w-1 h-2 bg-white/60 rounded-full animate-bounce"></div>
+            </div>
         </div>
     </section>
     @endif
@@ -225,54 +302,111 @@
 
     {{-- ==================== NEWS SECTION ==================== --}}
     @if($news->count() > 0)
-        <section class="py-20 bg-slate-50 dark:bg-dark">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="text-center mb-12">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 dark:bg-primary/20 text-primary rounded-full text-xs font-semibold mb-4">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <section class="py-24 bg-white dark:bg-dark-card relative overflow-hidden">
+            {{-- Decorative Elements --}}
+            <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative">
+                {{-- Section Header --}}
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 dark:bg-primary/20 text-primary rounded-full text-sm font-semibold mb-6">
+                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
                         Latest News
                     </div>
-                    <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Stay Updated With Our News</h2>
-                    <p class="text-slate-500 dark:text-slate-400 max-w-xl mx-auto">Get the latest updates and insights from our team.</p>
+                    <h2 class="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white mb-6">
+                        Stay Updated With <span class="text-primary">Our News</span>
+                    </h2>
+                    <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+                        Get the latest updates, insights, and announcements from our team.
+                    </p>
                 </div>
 
+                {{-- News Grid --}}
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @foreach($news as $item)
-                        <article class="bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-slate-100 dark:border-dark-border hover:shadow-lg dark:hover:shadow-2xl dark:hover:shadow-primary/5 transition-all group">
-                            <div class="relative h-48 overflow-hidden">
+                    @foreach($news as $index => $item)
+                        <article class="group bg-white dark:bg-dark rounded-3xl overflow-hidden border border-slate-100 dark:border-dark-border shadow-sm hover:shadow-2xl dark:hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2">
+                            {{-- Image Container with Overlay --}}
+                            <div class="relative h-56 overflow-hidden">
                                 @if($item->image)
-                                    <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" 
+                                         class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110">
                                 @else
-                                    <div class="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/10 dark:to-accent/10 flex items-center justify-center">
-                                        <svg class="w-12 h-12 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                                    <div class="w-full h-full bg-gradient-to-br from-primary/20 via-teal-500/10 to-accent/20 dark:from-primary/10 dark:to-accent/10 flex items-center justify-center">
+                                        <svg class="w-16 h-16 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                                        </svg>
                                     </div>
                                 @endif
+                                
+                                {{-- Gradient Overlay --}}
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                
+                                {{-- Category Badge --}}
                                 @if($item->category)
-                                    <span class="absolute top-4 left-4 bg-primary text-white text-xs px-3 py-1 rounded-full font-semibold">{{ $item->category->name }}</span>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="px-4 py-1.5 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm text-primary text-xs font-bold rounded-full shadow-lg">
+                                            {{ $item->category->name }}
+                                        </span>
+                                    </div>
                                 @endif
+                                
+                                {{-- Read Time Badge --}}
+                                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                                    <span class="px-3 py-1.5 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm text-slate-600 dark:text-slate-300 text-xs font-medium rounded-full flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        5 min read
+                                    </span>
+                                </div>
                             </div>
+                            
+                            {{-- Content --}}
                             <div class="p-6">
-                                <div class="flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 mb-3">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                {{-- Date --}}
+                                <div class="flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 mb-4">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
                                     {{ $item->published_at?->format('d M Y') }}
                                 </div>
-                                <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                
+                                {{-- Title --}}
+                                <h3 class="font-bold text-slate-900 dark:text-white text-xl mb-3 group-hover:text-primary transition-colors duration-300 line-clamp-2">
                                     <a href="{{ route('news.show', $item->slug) }}">{{ $item->title }}</a>
                                 </h3>
-                                <p class="text-slate-500 dark:text-slate-400 text-sm mb-4 line-clamp-2">{{ Str::limit($item->excerpt ?? strip_tags($item->content), 100) }}</p>
-                                <a href="{{ route('news.show', $item->slug) }}" class="inline-flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all">
-                                    Read More
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                
+                                {{-- Excerpt --}}
+                                <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 line-clamp-2 leading-relaxed">
+                                    {{ Str::limit($item->excerpt ?? strip_tags($item->content), 120) }}
+                                </p>
+                                
+                                {{-- Read More Link --}}
+                                <a href="{{ route('news.show', $item->slug) }}" 
+                                   class="inline-flex items-center gap-2 text-primary font-semibold text-sm group/link">
+                                    <span>Read Article</span>
+                                    <span class="w-6 h-6 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center transition-all duration-300 group-hover/link:bg-primary group-hover/link:text-white">
+                                        <svg class="w-3 h-3 transition-transform duration-300 group-hover/link:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                        </svg>
+                                    </span>
                                 </a>
                             </div>
                         </article>
                     @endforeach
                 </div>
 
-                <div class="text-center mt-12">
-                    <a href="{{ route('news.index') }}" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-slate-900 dark:border-white text-slate-900 dark:text-white font-semibold rounded-xl hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-dark transition-colors">
-                        View All News
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                {{-- View All Button --}}
+                <div class="text-center mt-16">
+                    <a href="{{ route('news.index') }}" 
+                       class="group inline-flex items-center gap-3 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-2xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl">
+                        <span>View All Articles</span>
+                        <span class="w-8 h-8 bg-white/20 dark:bg-slate-900/20 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </span>
                     </a>
                 </div>
             </div>

@@ -5,19 +5,11 @@
 
 @section('content')
     {{-- Page Header --}}
-    <section class="relative h-[250px] md:h-[300px] bg-dark dark:bg-dark flex items-center justify-center grid-pattern"
-        style="background-image: linear-gradient(rgba(10,10,15,0.9), rgba(10,10,15,0.9)), url('{{ $news->image ? Storage::url($news->image) : 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1920' }}'); background-size: cover; background-position: center;">
-        <div class="text-center text-white px-4">
-            <div class="flex items-center justify-center gap-2 text-sm mb-4 flex-wrap">
-                <a href="/" class="hover:text-primary transition-colors">Home</a>
-                <span class="text-slate-500">›</span>
-                <a href="{{ route('news.index') }}" class="hover:text-primary transition-colors">News</a>
-                <span class="text-slate-500">›</span>
-                <span class="text-primary">{{ Str::limit($news->title, 30) }}</span>
-            </div>
-            <h1 class="text-2xl md:text-4xl font-bold max-w-3xl mx-auto">{{ $news->title }}</h1>
-        </div>
-    </section>
+    @include('website.partials.page-header', [
+        'title' => $news->title,
+        'breadcrumb' => 'News Details',
+        'bgImage' => $news->image ? Storage::url($news->image) : null
+    ])
 
     {{-- News Content --}}
     <section class="py-12 md:py-20 bg-slate-50 dark:bg-dark">
