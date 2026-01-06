@@ -33,7 +33,7 @@
             </div>
 
             <button @click="sidebarOpen = false"
-                class="lg:hidden text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200">
+                class="lg:hidden text-zinc-500 hover:text-zinc-700 dark:text-white dark:hover:text-indigo-400 trasition-colors duration-200">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -46,17 +46,17 @@
                 @if(empty($menu['children']))
                     <!-- Single Menu Item -->
                     <div x-data="{ 
-                                                    active: '{{ $currentRoute === $menu['route'] }}',
-                                                    tooltip: '{{ $menu['name'] }}'
-                                                 }" class="relative group">
+                        active: '{{ $currentRoute === $menu['route'] }}',
+                        tooltip: '{{ $menu['name'] }}'
+                    }" class="relative group">
 
                         <a href="{{ \App\Services\MenuService::safeRoute($menu['route']) }}" wire:navigate
                             class="flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 group relative"
                             :class="{ 
-                                                       'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400': active,
-                                                       'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200': !active,
-                                                       'justify-center': sidebarCollapsed
-                                                   }">
+                                'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-white': active,
+                                'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-indigo-400': !active,
+                                'justify-center': sidebarCollapsed
+                            }">
 
                             <div class="shrink-0">
                                 @if($menu['icon'])
@@ -79,12 +79,12 @@
 
                 @else
                     <!-- Dropdown/Nested Menu -->
-                    <?php        $hasActiveChild = collect($menu['children'])->contains('route', $currentRoute); ?>
+                    <?php $hasActiveChild = collect($menu['children'])->contains('route', $currentRoute); ?>
                     <div x-data="{ expanded: {{ $hasActiveChild ? 'true' : 'false' }} }" class="relative group">
 
                         <button
                             @click="if(sidebarCollapsed) { sidebarCollapsed = false; setTimeout(() => expanded = true, 300); } else { expanded = !expanded }"
-                            class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 group relative"
+                            class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-indigo-400 group relative"
                             :class="{ 'justify-center': sidebarCollapsed }">
 
                             <div class="shrink-0">
@@ -114,12 +114,12 @@
                         <!-- Children -->
                         <div x-show="expanded && !sidebarCollapsed" x-collapse class="mt-1 space-y-1 pl-10 pr-2">
                             @foreach($menu['children'] as $child)
-                                <?php            $isChildActive = $currentRoute === $child['route']; ?>
+                                <?php $isChildActive = $currentRoute === $child['route']; ?>
                                 <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
                                     class="flex items-center px-3 py-2 rounded-md text-sm transition-colors duration-200" :class="{ 
-                                                                           'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400': {{ $isChildActive ? 'true' : 'false' }},
-                                                                           'text-zinc-600 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-300': !{{ $isChildActive ? 'true' : 'false' }}
-                                                                       }">
+                                        'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-white font-semibold': {{ $isChildActive ? 'true' : 'false' }},
+                                        'text-zinc-600 hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-indigo-400': !{{ $isChildActive ? 'true' : 'false' }}
+                                    }">
 
                                     @if($child['icon'])
                                         <div class="mr-2">
