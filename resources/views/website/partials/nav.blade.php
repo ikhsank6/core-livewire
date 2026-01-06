@@ -1,118 +1,245 @@
-{{-- Navigation with Transparent Overlay & Sticky on Scroll --}}
-<nav x-data="{ mobileMenuOpen: false, scrolled: false }" 
-     @scroll.window="scrolled = (window.pageYOffset > 100)"
-     class="z-50 transition-all duration-300"
-     :class="{ 
-         'fixed top-0 left-0 right-0 bg-white dark:bg-dark shadow-lg': scrolled, 
-         'absolute top-0 left-0 right-0 bg-transparent': !scrolled 
+{{-- Navigation with Glassmorphism & Modern Effects --}}
+<nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 50)"
+    class="z-50 transition-all duration-500" :class="{ 
+         'fixed top-0 left-0 right-0': scrolled, 
+         'absolute top-0 left-0 right-0': !scrolled 
      }">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center h-20">
-            {{-- Logo --}}
-            <a href="/" class="flex items-center gap-2">
-                @if($aboutUs?->logo)
-                    <img src="{{ Storage::url($aboutUs->logo) }}" alt="{{ $aboutUs->company_name }}" class="h-8" :class="{ 'brightness-0 dark:brightness-100 dark:invert': scrolled, 'brightness-0 invert': !scrolled }">
-                @else
-                    <div class="w-7 h-7 rounded flex items-center justify-center" :class="{ 'bg-primary': scrolled, 'bg-white': !scrolled }">
-                        <svg class="w-4 h-4" :class="{ 'text-white': scrolled, 'text-slate-900': !scrolled }" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+
+    {{-- Glass Container --}}
+    <div class="transition-all duration-500" :class="{
+             'mx-4 mt-4 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-black/20': scrolled,
+             'bg-transparent': !scrolled
+         }">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16" :class="{ 'h-16': scrolled, 'h-20': !scrolled }">
+                {{-- Logo --}}
+                <a href="/" class="flex items-center gap-3 group">
+                    @if($aboutUs?->logo)
+                        <img src="{{ Storage::url($aboutUs->logo) }}" alt="{{ $aboutUs->company_name }}"
+                            class="h-8 transition-all duration-300 group-hover:scale-105"
+                            :class="{ 'brightness-0 dark:brightness-100 dark:invert': scrolled, 'brightness-0 invert': !scrolled }">
+                    @else
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                            :class="{ 'bg-gradient-to-br from-primary to-teal-600 shadow-lg shadow-primary/25': scrolled, 'bg-white/90 shadow-lg backdrop-blur': !scrolled }">
+                            <svg class="w-5 h-5" :class="{ 'text-white': scrolled, 'text-primary': !scrolled }"
+                                viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            </svg>
+                        </div>
+                    @endif
+                    <span class="font-bold text-lg transition-all duration-300"
+                        :class="{ 'text-slate-900 dark:text-white': scrolled, 'text-white drop-shadow-lg': !scrolled }">
+                        {{ $aboutUs->company_name ?? config('app.name') }}
+                    </span>
+                </a>
+
+                {{-- Desktop Navigation --}}
+                <div class="hidden lg:flex items-center gap-2">
+                    {{-- Nav Links Container --}}
+                    <div class="flex items-center p-1 rounded-xl transition-all duration-300"
+                        :class="{ 'bg-slate-100/80 dark:bg-white/5': scrolled, 'bg-white/10 backdrop-blur-sm': !scrolled }">
+                        @php
+                            $navItems = [
+                                ['url' => '/', 'label' => 'Home', 'active' => request()->is('/')],
+                                ['url' => route('news.index'), 'label' => 'News', 'active' => request()->is('news*')],
+                                ['url' => route('about'), 'label' => 'About', 'active' => request()->is('about*')],
+                                ['url' => route('about') . '#contact', 'label' => 'Contact', 'active' => false],
+                            ];
+                        @endphp
+
+                        @foreach($navItems as $item)
+                            <a href="{{ $item['url'] }}"
+                                class="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 overflow-hidden group">
+
+                                {{-- Background for active/hover --}}
+                                @if($item['active'])
+                                    <span class="absolute inset-0 rounded-lg transition-all duration-300"
+                                        :class="{ 'bg-white dark:bg-slate-800 shadow-sm': scrolled, 'bg-white/20': !scrolled }"></span>
+                                @else
+                                    <span
+                                        class="absolute inset-0 rounded-lg bg-transparent group-hover:bg-white dark:group-hover:bg-slate-800 group-hover:shadow-sm transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                        :class="{ '': scrolled, 'group-hover:bg-white/10 group-hover:shadow-none': !scrolled }"></span>
+                                @endif
+
+                                {{-- Text --}}
+                                <span class="relative z-10 transition-colors duration-300" :class="{ 
+                                              '{{ $item['active'] ? 'text-primary dark:text-primary font-semibold' : 'text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white' }}': scrolled,
+                                              '{{ $item['active'] ? 'text-white font-semibold' : 'text-white/80 group-hover:text-white' }}': !scrolled
+                                          }">
+                                    {{ $item['label'] }}
+                                </span>
+
+                                {{-- Active indicator dot --}}
+                                @if($item['active'])
+                                    <span
+                                        class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300"
+                                        :class="{ 'bg-primary': scrolled, 'bg-white': !scrolled }"></span>
+                                @endif
+                            </a>
+                        @endforeach
                     </div>
-                @endif
-                <span class="font-bold text-xl transition-colors" :class="{ 'text-slate-900 dark:text-white': scrolled, 'text-white': !scrolled }">{{ $aboutUs->company_name ?? config('app.name') }}</span>
-            </a>
 
-            {{-- Desktop Navigation (Right Aligned) --}}
-            <div class="hidden lg:flex items-center gap-8">
-                <a href="/" class="text-sm font-medium transition-colors relative pb-1 {{ request()->is('/') ? 'border-b-2 border-white' : '' }}" 
-                   :class="{ 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white {{ request()->is('/') ? '!border-primary' : '' }}': scrolled, 'text-white/80 hover:text-white': !scrolled }">
-                    Home
-                </a>
-                <a href="{{ route('news.index') }}" class="text-sm font-medium transition-colors relative pb-1 {{ request()->is('news*') ? 'border-b-2 border-white' : '' }}" 
-                   :class="{ 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white {{ request()->is('news*') ? '!border-primary' : '' }}': scrolled, 'text-white/80 hover:text-white': !scrolled }">
-                    News
-                </a>
-                <a href="{{ route('about') }}" class="text-sm font-medium transition-colors relative pb-1 {{ request()->is('about*') ? 'border-b-2 border-white' : '' }}" 
-                   :class="{ 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white {{ request()->is('about*') ? '!border-primary' : '' }}': scrolled, 'text-white/80 hover:text-white': !scrolled }">
-                    About
-                </a>
-                <a href="{{ route('about') }}#contact" class="text-sm font-medium transition-colors" 
-                   :class="{ 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white': scrolled, 'text-white/80 hover:text-white': !scrolled }">
-                    Contact
-                </a>
-                
-                {{-- Auth Buttons --}}
-                @auth
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all"
-                       :class="{ 'text-white bg-primary hover:bg-teal-700': scrolled, 'text-slate-900 bg-white hover:bg-slate-100': !scrolled }">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('auth.login') }}" class="text-sm font-medium transition-colors" 
-                       :class="{ 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white': scrolled, 'text-white/80 hover:text-white': !scrolled }">
-                        Login
-                    </a>
-                    <a href="{{ route('auth.register') }}" class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all"
-                       :class="{ 'text-white bg-accent hover:bg-orange-600 shadow-lg shadow-orange-500/30': scrolled, 'text-slate-900 bg-white hover:bg-slate-100': !scrolled }">
-                        Sign Up
-                    </a>
-                @endauth
+                    {{-- Divider --}}
+                    <div class="w-px h-8 mx-3 transition-colors duration-300"
+                        :class="{ 'bg-slate-200 dark:bg-slate-700': scrolled, 'bg-white/20': !scrolled }"></div>
 
-                {{-- Dark Mode Toggle --}}
-                <button @click="darkMode = !darkMode" class="p-2 rounded-lg transition-colors"
-                        :class="{ 'hover:bg-slate-100 dark:hover:bg-dark-card text-slate-600 dark:text-slate-300': scrolled, 'hover:bg-white/10 text-white/80': !scrolled }">
-                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    </svg>
-                </button>
-            </div>
+                    {{-- Auth Buttons --}}
+                    <div class="flex items-center gap-2">
+                        @auth
+                            <a href="{{ route('dashboard') }}"
+                                class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                                :class="{ 
+                                       'text-white bg-gradient-to-r from-primary to-teal-600 shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30': scrolled, 
+                                       'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
+                                   }">
+                                <span class="relative z-10 flex items-center gap-2">
+                                    Dashboard
+                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </span>
+                            </a>
+                        @else
+                            <a href="{{ route('auth.login') }}"
+                                class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                                :class="{ 
+                                       'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10': scrolled, 
+                                       'text-white/90 hover:text-white hover:bg-white/10': !scrolled 
+                                   }">
+                                Sign In
+                            </a>
+                            <a href="{{ route('auth.register') }}"
+                                class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                                :class="{ 
+                                       'text-white bg-gradient-to-r from-accent to-orange-500 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/30': scrolled, 
+                                       'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
+                                   }">
+                                <span class="relative z-10 flex items-center gap-2">
+                                    Get Started
+                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                    </svg>
+                                </span>
+                            </a>
+                        @endauth
+                    </div>
 
-            {{-- Mobile: Theme Toggle & Menu Button --}}
-            <div class="flex items-center gap-2 lg:hidden">
-                {{-- Dark Mode Toggle (Mobile) --}}
-                <button @click="darkMode = !darkMode" class="p-2 rounded-lg transition-colors"
-                        :class="{ 'hover:bg-slate-100 dark:hover:bg-dark-card text-slate-600 dark:text-slate-300': scrolled, 'hover:bg-white/10 text-white': !scrolled }">
-                    <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                    </svg>
-                </button>
-                
-                {{-- Mobile Menu Button --}}
-                <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-lg transition-colors"
-                        :class="{ 'hover:bg-slate-100 dark:hover:bg-dark-card': scrolled, 'hover:bg-white/10': !scrolled }">
-                    <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-colors" :class="{ 'text-slate-600 dark:text-slate-300': scrolled, 'text-white': !scrolled }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-colors" :class="{ 'text-slate-600 dark:text-slate-300': scrolled, 'text-white': !scrolled }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+                    {{-- Dark Mode Toggle --}}
+                    <button @click="darkMode = !darkMode"
+                        class="ml-2 p-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95"
+                        :class="{ 
+                                'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-700 dark:hover:text-white': scrolled, 
+                                'text-white/70 hover:text-white hover:bg-white/10': !scrolled 
+                            }">
+                        <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Mobile: Theme Toggle & Menu Button --}}
+                <div class="flex items-center gap-2 lg:hidden">
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-xl transition-all duration-300" :class="{ 
+                                'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10': scrolled, 
+                                'text-white/80 hover:bg-white/10': !scrolled 
+                            }">
+                        <svg x-show="darkMode" x-cloak class="w-5 h-5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-xl transition-all duration-300"
+                        :class="{ 
+                                'hover:bg-slate-100 dark:hover:bg-white/10': scrolled, 
+                                'hover:bg-white/10': !scrolled 
+                            }">
+                        <svg x-show="!mobileMenuOpen" class="w-6 h-6 transition-colors"
+                            :class="{ 'text-slate-600 dark:text-slate-300': scrolled, 'text-white': !scrolled }"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transition-colors"
+                            :class="{ 'text-slate-600 dark:text-slate-300': scrolled, 'text-white': !scrolled }"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
+    </div>
 
-        {{-- Mobile Navigation Menu --}}
-        <div x-show="mobileMenuOpen" x-cloak 
-             x-transition:enter="transition ease-out duration-200" 
-             x-transition:enter-start="opacity-0 -translate-y-2" 
-             x-transition:enter-end="opacity-100 translate-y-0" 
-             x-transition:leave="transition ease-in duration-150" 
-             x-transition:leave-start="opacity-100 translate-y-0" 
-             x-transition:leave-end="opacity-0 -translate-y-2" 
-             class="lg:hidden py-4 bg-white dark:bg-dark rounded-xl shadow-xl mb-4">
-            <div class="flex flex-col gap-1 px-2">
-                <a href="/" @click="mobileMenuOpen = false" class="px-4 py-3 {{ request()->is('/') ? 'text-primary bg-teal-50 dark:bg-teal-900/20' : 'text-slate-600 dark:text-slate-300' }} hover:bg-slate-50 dark:hover:bg-dark-card rounded-lg font-medium">Home</a>
-                <a href="{{ route('news.index') }}" @click="mobileMenuOpen = false" class="px-4 py-3 {{ request()->is('news*') ? 'text-primary bg-teal-50 dark:bg-teal-900/20' : 'text-slate-600 dark:text-slate-300' }} hover:bg-slate-50 dark:hover:bg-dark-card rounded-lg font-medium">News</a>
-                <a href="{{ route('about') }}" @click="mobileMenuOpen = false" class="px-4 py-3 {{ request()->is('about*') ? 'text-primary bg-teal-50 dark:bg-teal-900/20' : 'text-slate-600 dark:text-slate-300' }} hover:bg-slate-50 dark:hover:bg-dark-card rounded-lg font-medium">About</a>
-                <a href="{{ route('about') }}#contact" @click="mobileMenuOpen = false" class="px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-dark-card rounded-lg font-medium">Contact</a>
-                
-                <div class="border-t border-slate-100 dark:border-dark-border mt-2 pt-4 px-2 space-y-3">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="block w-full text-center px-4 py-3 text-sm font-semibold text-white bg-primary rounded-lg">Dashboard</a>
-                    @else
-                        <a href="{{ route('auth.login') }}" class="block w-full text-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-dark-border rounded-lg">Login</a>
-                        <a href="{{ route('auth.register') }}" class="block w-full text-center px-4 py-3 text-sm font-semibold text-white bg-accent rounded-lg shadow-lg shadow-orange-500/30">Sign Up</a>
-                    @endauth
-                </div>
+    {{-- Mobile Navigation Menu --}}
+    <div x-show="mobileMenuOpen" x-cloak x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+        x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
+        class="lg:hidden mx-4 mt-2 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-white/10">
+        <div class="flex flex-col gap-1 px-3">
+            @php
+                $navItems = [
+                    ['url' => '/', 'label' => 'Home', 'active' => request()->is('/')],
+                    ['url' => route('news.index'), 'label' => 'News', 'active' => request()->is('news*')],
+                    ['url' => route('about'), 'label' => 'About', 'active' => request()->is('about*')],
+                    ['url' => route('about') . '#contact', 'label' => 'Contact', 'active' => false],
+                ];
+            @endphp
+
+            @foreach($navItems as $item)
+                <a href="{{ $item['url'] }}" @click="mobileMenuOpen = false"
+                    class="relative px-4 py-3 rounded-xl font-medium transition-all duration-300 {{ $item['active'] ? 'text-primary bg-primary/10 dark:bg-primary/20' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-white/5' }}">
+                    {{ $item['label'] }}
+                    @if($item['active'])
+                        <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-full"></span>
+                    @endif
+                </a>
+            @endforeach
+
+            <div class="border-t border-slate-200/50 dark:border-white/10 mt-3 pt-4 px-1 space-y-2">
+                @auth
+                    <a href="{{ route('dashboard') }}"
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-primary to-teal-600 rounded-xl shadow-md shadow-primary/25">
+                        Dashboard
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                @else
+                    <a href="{{ route('auth.login') }}"
+                        class="block w-full text-center px-4 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100/80 dark:bg-white/5 rounded-xl transition-colors hover:bg-slate-200/80 dark:hover:bg-white/10">
+                        Sign In
+                    </a>
+                    <a href="{{ route('auth.register') }}"
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-accent to-orange-500 rounded-xl shadow-md shadow-orange-500/25">
+                        Get Started
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </a>
+                @endauth
             </div>
         </div>
     </div>

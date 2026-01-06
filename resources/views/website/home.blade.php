@@ -7,12 +7,12 @@
 @section('content')
     {{-- ==================== HERO CAROUSEL ==================== --}}
     @if($carousels->count() > 0)
-    <section class="relative">
-        <div class="swiper heroCarousel">
+    <section class="relative h-screen">
+        <div class="swiper heroCarousel h-full">
             <div class="swiper-wrapper">
                 @foreach($carousels as $carousel)
                 <div class="swiper-slide">
-                    <div class="relative min-h-[600px] md:min-h-[650px] lg:min-h-[700px] flex items-center pt-20"
+                    <div class="relative h-screen flex items-center"
                          style="background-image: linear-gradient(to right, rgba(10,10,15,0.9) 0%, rgba(10,10,15,0.6) 50%, rgba(10,10,15,0.3) 100%), url('{{ $carousel->image ? Storage::url($carousel->image) : 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920' }}'); background-size: cover; background-position: center;">
                         <div class="max-w-7xl mx-auto px-4 w-full">
                             <div class="max-w-2xl">
