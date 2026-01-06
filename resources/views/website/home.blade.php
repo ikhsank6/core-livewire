@@ -113,11 +113,33 @@
             <div class="swiper-pagination"></div>
         </div>
         
-        {{-- Scroll Indicator --}}
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-2 text-white/50">
-            <span class="text-xs tracking-widest uppercase">Scroll</span>
-            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-                <div class="w-1 h-2 bg-white/60 rounded-full animate-bounce"></div>
+        {{-- Scroll Indicator - Enhanced Design --}}
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex flex-col items-center gap-3 group cursor-pointer" 
+             onclick="window.scrollBy({top: window.innerHeight, behavior: 'smooth'})">
+            {{-- Glow Effect --}}
+            <div class="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 animate-pulse"></div>
+            
+            {{-- Text with gradient --}}
+            <span class="relative text-xs font-semibold tracking-[0.3em] uppercase text-white/80 group-hover:text-primary transition-colors duration-300">
+                Scroll Down
+            </span>
+            
+            {{-- Animated Mouse Icon --}}
+            <div class="relative w-7 h-12 rounded-full border-2 border-white/40 group-hover:border-primary/80 transition-all duration-300 flex justify-center overflow-hidden shadow-lg shadow-black/20">
+                {{-- Inner glow --}}
+                <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent"></div>
+                {{-- Scroll wheel/dot --}}
+                <div class="w-1.5 h-3 bg-white/80 group-hover:bg-primary rounded-full mt-2 animate-scroll-down"></div>
+            </div>
+            
+            {{-- Chevron arrows --}}
+            <div class="flex flex-col -mt-1 animate-bounce">
+                <svg class="w-4 h-4 text-white/60 group-hover:text-primary transition-colors -mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+                <svg class="w-4 h-4 text-white/40 group-hover:text-primary/70 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
             </div>
         </div>
     </section>
@@ -537,8 +559,29 @@
             </div>
         </div>
     </section>
-
 @endsection
+
+@push('styles')
+<style>
+    @keyframes scroll-down {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        50% {
+            transform: translateY(8px);
+            opacity: 0.5;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    .animate-scroll-down {
+        animation: scroll-down 1.5s ease-in-out infinite;
+    }
+</style>
+@endpush
 
 @push('scripts')
     <script>
