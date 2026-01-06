@@ -2,9 +2,8 @@
 
 namespace App\Livewire\Auth;
 
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
@@ -22,24 +21,17 @@ class ChangePassword extends Component
 
     public string $password_confirmation = '';
 
-    public function changePassword(): void
+    public function changePassword(UserRepositoryInterface $userRepository): void
     {
-        DB::beginTransaction();
         $this->validate();
+
         try {
-            $user = Auth::user();
-
-            $user->update([
-                'password' => Hash::make($this->password),
-            ]);
-
-            DB::commit();
+            $userRepository->updatePassword(Auth::id(), $this->password);
 
             $this->reset(['current_password', 'password', 'password_confirmation']);
 
             $this->dispatch('notify', text: 'Password changed successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

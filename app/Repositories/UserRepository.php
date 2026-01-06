@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -33,27 +35,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     /**
      * Create user with roles.
-     *
-     * If is_active = true, email_verified_at is set immediately.
-     * If is_active = false, send activation email via queue.
      */
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User
     {
         return DB::transaction(function () use ($userData, $roleIds, $defaultRoleId) {
             $isActive = $userData['is_active'] ?? false;
 
-            // If active, set email_verified_at immediately
             if ($isActive) {
                 $userData['email_verified_at'] = now();
             } else {
-                // Ensure email_verified_at is null for inactive users
                 $userData['email_verified_at'] = null;
             }
 
             $user = $this->model->create($userData);
             $user->syncRoles($roleIds, $defaultRoleId);
 
-            // If not active, send activation email via queue
             if (! $isActive) {
                 $user->sendEmailVerificationNotification();
             }
@@ -70,17 +66,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userId, $userData, $roleIds, $defaultRoleId) {
             $user = $this->findOrFail($userId);
 
-            // Handle activation status change
             if (isset($userData['is_active'])) {
                 $wasActive = $user->is_active;
                 $isNowActive = $userData['is_active'];
 
-                // If becoming active and was not verified, verify now
                 if ($isNowActive && ! $wasActive && ! $user->email_verified_at) {
                     $userData['email_verified_at'] = now();
                 }
 
-                // If becoming inactive and was active, user needs re-verification
                 if (! $isNowActive && $wasActive) {
                     $userData['email_verified_at'] = null;
                 }
@@ -89,12 +82,116 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $user->update($userData);
             $user->syncRoles($roleIds, $defaultRoleId);
 
-            // If user is now inactive and email not verified, send verification email
             if (isset($userData['is_active']) && ! $userData['is_active'] && ! $user->email_verified_at) {
                 $user->sendEmailVerificationNotification();
             }
 
             return true;
+        });
+    }
+
+    /**
+     * Update user password.
+     */
+    public function updatePassword(int $userId, string $newPassword): bool
+    {
+        return $this->update($userId, [
+            'password' => Hash::make($newPassword),
+        ]);
+    }
+
+    /**
+     * Update user avatar.
+     */
+    public function updateAvatar(int $userId, $file): string
+    {
+        return DB::transaction(function () use ($userId, $file) {
+            $user = $this->findOrFail($userId);
+
+            // Delete old avatar if exists
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Store new avatar
+            $avatarPath = $file->store('avatars', 'public');
+            $user->update(['avatar' => $avatarPath]);
+
+            return $avatarPath;
+        });
+    }
+
+    /**
+     * Delete user avatar.
+     */
+    public function deleteAvatar(int $userId): bool
+    {
+        return DB::transaction(function () use ($userId) {
+            $user = $this->findOrFail($userId);
+
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            return $user->update(['avatar' => null]);
+        });
+    }
+
+    /**
+     * Set default role for login.
+     */
+    public function setDefaultRole(int $userId, int $roleId): bool
+    {
+        return DB::transaction(function () use ($userId, $roleId) {
+            $user = $this->findOrFail($userId);
+            $roleIds = $user->roles->pluck('id')->toArray();
+
+            if (! in_array($roleId, $roleIds)) {
+                throw new \Exception('Unauthorized role selection.');
+            }
+
+            $user->syncRoles($roleIds, $roleId);
+
+            return true;
+        });
+    }
+
+    /**
+     * Register a new user.
+     */
+    public function register(array $data): User
+    {
+        return DB::transaction(function () use ($data) {
+            $defaultRole = \App\Models\Role::where('slug', 'user')->first();
+
+            $user = $this->model->create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role_id' => $defaultRole?->id,
+                'is_active' => false,
+            ]);
+
+            if ($defaultRole) {
+                $user->roles()->attach($defaultRole->id, ['is_default' => true]);
+            }
+
+            event(new \Illuminate\Auth\Events\Registered($user));
+
+            return $user;
+        });
+    }
+
+    /**
+     * Set the active role for a user.
+     */
+    public function setActiveRole(int $userId, int $roleId): bool
+    {
+        return DB::transaction(function () use ($userId, $roleId) {
+            $user = $this->findOrFail($userId);
+            $role = \App\Models\Role::findOrFail($roleId);
+
+            return $user->setActiveRole($role);
         });
     }
 }

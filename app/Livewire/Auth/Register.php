@@ -2,11 +2,7 @@
 
 namespace App\Livewire\Auth;
 
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
@@ -29,40 +25,22 @@ class Register extends Component
 
     public bool $registered = false;
 
-    public function register(): void
+    public function register(UserRepositoryInterface $userRepository): void
     {
-        DB::beginTransaction();
-
         try {
             $this->validate();
 
-            // Get the default role (User)
-            $defaultRole = Role::where('slug', 'user')->first();
-
-            $user = User::create([
+            $userRepository->register([
                 'name' => $this->name,
                 'email' => $this->email,
-                'password' => Hash::make($this->password),
-                'role_id' => $defaultRole?->id,
-                'is_active' => false, // Will be activated after email verification
+                'password' => $this->password,
             ]);
-
-            // Attach role to user via pivot table
-            if ($defaultRole) {
-                $user->roles()->attach($defaultRole->id, ['is_default' => true]);
-            }
-
-            // Fire Registered event - this will trigger email verification
-            event(new Registered($user));
-
-            DB::commit();
 
             // Show success message
             $this->registered = true;
             $this->dispatch('notify', text: 'Registration successful! Please check your email to verify your account.', variant: 'success');
 
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

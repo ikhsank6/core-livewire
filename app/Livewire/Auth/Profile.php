@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Role;
 use App\Models\User;
+use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\MenuService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -38,24 +39,16 @@ class Profile extends Component
     /**
      * Update name on change
      */
-    public function updateName(): void
+    public function updateName(UserRepositoryInterface $userRepository): void
     {
         $this->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-            $user->update(['name' => $this->name]);
-
-            DB::commit();
-
+            $userRepository->update(Auth::id(), ['name' => $this->name]);
             $this->dispatch('notify', text: 'Name updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -63,24 +56,16 @@ class Profile extends Component
     /**
      * Update email on change
      */
-    public function updateEmail(): void
+    public function updateEmail(UserRepositoryInterface $userRepository): void
     {
         $this->validate([
             'email' => 'required|email|max:255|unique:users,email,'.Auth::id(),
         ]);
 
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-            $user->update(['email' => $this->email]);
-
-            DB::commit();
-
+            $userRepository->update(Auth::id(), ['email' => $this->email]);
             $this->dispatch('notify', text: 'Email updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -88,35 +73,19 @@ class Profile extends Component
     /**
      * Handle avatar upload - triggered automatically when avatar property changes
      */
-    public function updatedAvatar(): void
+    public function updatedAvatar(UserRepositoryInterface $userRepository): void
     {
         $this->validate([
             'avatar' => 'image|max:2048',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-
-            // Delete old avatar if exists
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            // Store new avatar
-            $avatarPath = $this->avatar->store('avatars', 'public');
-            $user->update(['avatar' => $avatarPath]);
+            $avatarPath = $userRepository->updateAvatar(Auth::id(), $this->avatar);
             $this->currentAvatar = $avatarPath;
-
             $this->reset('avatar');
-
-            DB::commit();
 
             $this->dispatch('notify', text: 'Photo updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -124,26 +93,13 @@ class Profile extends Component
     /**
      * Delete current avatar
      */
-    public function deleteAvatar(): void
+    public function deleteAvatar(UserRepositoryInterface $userRepository): void
     {
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-
-            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-
-            $user->update(['avatar' => null]);
+            $userRepository->deleteAvatar(Auth::id());
             $this->currentAvatar = null;
-
-            DB::commit();
-
             $this->dispatch('notify', text: 'Photo removed successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -151,29 +107,19 @@ class Profile extends Component
     /**
      * Switch currently active role
      */
-    public function switchRole($roleId): void
+    public function switchRole($roleId, MenuService $menuService, UserRepositoryInterface $userRepository): void
     {
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-            $role = \App\Models\Role::findOrFail($roleId);
-
-            if ($user->setActiveRole($role)) {
+            if ($userRepository->setActiveRole(Auth::id(), $roleId)) {
                 // Clear menu cache to reflect new role
-                app(\App\Services\MenuService::class)->clearMenuCache($roleId);
+                $menuService->clearMenuCache($roleId);
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Switched to '.$role->name.' role.', variant: 'success');
+                $this->dispatch('notify', text: 'Role switched successfully.', variant: 'success');
                 $this->js('window.location.reload()');
             } else {
-                DB::rollBack();
                 $this->dispatch('notify', text: 'Unauthorized role switch.', variant: 'danger');
             }
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -181,32 +127,16 @@ class Profile extends Component
     /**
      * Set default role for login
      */
-    public function setDefaultRole($roleId): void
+    public function setDefaultRole($roleId, UserRepositoryInterface $userRepository): void
     {
-        DB::beginTransaction();
-
         try {
-            /** @var User $user */
-            $user = Auth::user();
-
-            // Get all role IDs for this user
-            $roleIds = $user->roles->pluck('id')->toArray();
-
-            if (! in_array($roleId, $roleIds)) {
-                throw new \Exception('Unauthorized role selection.');
-            }
-
-            // Sync with new default
-            $user->syncRoles($roleIds, $roleId);
+            $userRepository->setDefaultRole(Auth::id(), $roleId);
 
             // Refresh the user instance relationship to update the UI
-            $user->load('roles');
-
-            DB::commit();
+            Auth::user()->load('roles');
 
             $this->dispatch('notify', text: 'Default role updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
