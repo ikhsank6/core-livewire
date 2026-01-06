@@ -279,6 +279,131 @@
         </section>
     @endif
 
+    {{-- ==================== FAQ SECTION ==================== --}}
+    <section class="py-20 bg-slate-100 dark:bg-dark relative overflow-hidden">
+        {{-- Decorative Arrows --}}
+        <div class="absolute left-8 bottom-0 hidden lg:block opacity-60">
+            <div class="space-y-3">
+                <div class="flex gap-3">
+                    <svg class="w-6 h-6 text-teal-400 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <svg class="w-4 h-4 text-teal-300 -rotate-45 mt-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </div>
+                <div class="flex gap-4 ml-4">
+                    <svg class="w-5 h-5 text-teal-400 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <svg class="w-7 h-7 text-teal-300 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </div>
+                <div class="flex gap-2 ml-8">
+                    <svg class="w-4 h-4 text-teal-400 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <svg class="w-6 h-6 text-teal-300 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </div>
+                <div class="flex gap-3 ml-2">
+                    <svg class="w-5 h-5 text-teal-400 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                    <svg class="w-4 h-4 text-teal-300 -rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12 items-start">
+                {{-- Left Side: Title --}}
+                <div class="md:sticky md:top-24">
+                    <h2 class="text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6">
+                        Have Any<br>Questions?
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400 max-w-sm">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed facilisis eleifend quam, non efficitur nisi mattis quis.
+                    </p>
+                </div>
+
+                {{-- Right Side: FAQ Accordion --}}
+                <div class="bg-white dark:bg-dark-card rounded-2xl shadow-lg dark:shadow-xl dark:shadow-black/20 p-6 md:p-8" x-data="{ activeIndex: null }">
+                    @php
+                        $faqs = [
+                            [
+                                'question' => 'How can I set up a FiFaster account?',
+                                'answer' => 'Getting started is easy! Simply click the "Get Started" button on our homepage, fill in your details, and verify your email. Your account will be ready in minutes.'
+                            ],
+                            [
+                                'question' => 'How do I schedule a delivery?',
+                                'answer' => 'Once logged in, navigate to the Dashboard and click "Schedule Delivery". Select your preferred date, time, and location. You can also set recurring deliveries for convenience.'
+                            ],
+                            [
+                                'question' => 'What are your hours of operation?',
+                                'answer' => 'Our customer service team is available Monday through Friday, 9 AM to 6 PM (local time). However, our platform is accessible 24/7 for self-service options.'
+                            ],
+                            [
+                                'question' => 'Do you operate 24/7?',
+                                'answer' => 'Yes! Our platform operates around the clock. While live support has specific hours, you can access all features, submit requests, and track orders at any time.'
+                            ],
+                            [
+                                'question' => 'What equipment do you have?',
+                                'answer' => 'We maintain a diverse fleet including refrigerated trucks, standard delivery vans, and specialized vehicles for fragile items. All equipment is regularly maintained and GPS-tracked.'
+                            ],
+                            [
+                                'question' => 'Can I track my orders?',
+                                'answer' => 'Absolutely! Real-time tracking is available for all orders. You\'ll receive updates via email and SMS, plus you can monitor your delivery through our mobile app or website.'
+                            ],
+                        ];
+                    @endphp
+
+                    <div class="divide-y divide-slate-200 dark:divide-slate-700">
+                        @foreach($faqs as $index => $faq)
+                            <div class="py-4 first:pt-0 last:pb-0">
+                                {{-- Question Header --}}
+                                <button 
+                                    @click="activeIndex = activeIndex === {{ $index }} ? null : {{ $index }}"
+                                    class="flex items-center justify-between w-full text-left gap-4 group"
+                                >
+                                    <div class="flex items-center gap-4">
+                                        {{-- Question Icon --}}
+                                        <div 
+                                            class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center border-2 font-bold text-sm transition-all duration-200"
+                                            :class="activeIndex === {{ $index }} 
+                                                ? 'bg-primary border-primary text-white' 
+                                                : 'bg-slate-100 dark:bg-dark border-slate-700 dark:border-slate-400 text-slate-700 dark:text-slate-400 group-hover:border-primary group-hover:text-primary'"
+                                        >
+                                            ?
+                                        </div>
+                                        {{-- Question Text --}}
+                                        <span 
+                                            class="font-medium transition-colors duration-200"
+                                            :class="activeIndex === {{ $index }} 
+                                                ? 'text-primary' 
+                                                : 'text-slate-800 dark:text-slate-200 group-hover:text-primary'"
+                                        >
+                                            {{ $faq['question'] }}
+                                        </span>
+                                    </div>
+                                    {{-- Chevron Icon --}}
+                                    <svg 
+                                        class="w-5 h-5 shrink-0 text-slate-400 transition-transform duration-300"
+                                        :class="{ 'rotate-180': activeIndex === {{ $index }} }"
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+
+                                {{-- Answer Content --}}
+                                <div 
+                                    x-show="activeIndex === {{ $index }}"
+                                    x-collapse
+                                    x-cloak
+                                >
+                                    <div class="pt-4 pl-12 text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                                        {{ $faq['answer'] }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- ==================== CTA SECTION ==================== --}}
     <section class="py-20 lg:py-32 bg-slate-900 dark:bg-dark-card">
         <div class="max-w-4xl mx-auto px-4 text-center">
