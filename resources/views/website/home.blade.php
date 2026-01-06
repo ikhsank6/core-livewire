@@ -538,16 +538,6 @@
         </div>
     </section>
 
-    {{-- ==================== CTA SECTION ==================== --}}
-    <section class="py-20 lg:py-32 bg-slate-900 dark:bg-dark-card">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-4xl lg:text-5xl font-extrabold text-white mb-6">Get your professional results today</h2>
-            <p class="text-xl text-slate-400 mb-10">Join 86,000+ professionals who upgraded their workflow.</p>
-            <a href="{{ route('auth.register') }}" class="inline-flex items-center gap-2 px-10 py-5 text-xl font-bold text-white bg-accent rounded-xl hover:bg-orange-600 shadow-lg shadow-orange-500/30 transition-all">
-                Get started for $29 →
-            </a>
-        </div>
-    </section>
 @endsection
 
 @push('scripts')

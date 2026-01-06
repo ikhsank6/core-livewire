@@ -12,26 +12,12 @@
          }">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex justify-between items-center h-16" :class="{ 'h-16': scrolled, 'h-20': !scrolled }">
-                {{-- Logo --}}
-                <a href="/" class="flex items-center gap-3 group">
-                    @if($aboutUs?->logo)
-                        <img src="{{ Storage::url($aboutUs->logo) }}" alt="{{ $aboutUs->company_name }}"
-                            class="h-8 transition-all duration-300 group-hover:scale-105"
-                            :class="{ 'brightness-0 dark:brightness-100 dark:invert': scrolled, 'brightness-0 invert': !scrolled }">
-                    @else
-                        <div class="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
-                            :class="{ 'bg-gradient-to-br from-primary to-teal-600 shadow-lg shadow-primary/25': scrolled, 'bg-white/90 shadow-lg backdrop-blur': !scrolled }">
-                            <svg class="w-5 h-5" :class="{ 'text-white': scrolled, 'text-primary': !scrolled }"
-                                viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg>
-                        </div>
-                    @endif
-                    <span class="font-bold text-lg transition-all duration-300"
-                        :class="{ 'text-slate-900 dark:text-white': scrolled, 'text-white drop-shadow-lg': !scrolled }">
-                        {{ $aboutUs->company_name ?? config('app.name') }}
-                    </span>
+                <a href="/" class="group">
+                    @include('website.partials.logo', [
+                        'logoClass' => 'h-9 transition-all duration-300 group-hover:scale-105',
+                        'textClass' => 'font-bold text-lg transition-all duration-300',
+                        'alpineTextClass' => "{ 'text-slate-900 dark:text-white': scrolled, 'text-white drop-shadow-lg': !scrolled }"
+                    ])
                 </a>
 
                 {{-- Desktop Navigation --}}
