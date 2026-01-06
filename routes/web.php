@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\SwitchRoleAction;
 use App\Actions\Website\ShowAboutPage;
 use App\Actions\Website\ShowHomePage;
 use App\Actions\Website\ShowNewsDetail;
@@ -67,19 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', NotificationIndex::class)->name('notifications.index');
 
     // Switch role - accessible to all authenticated users regardless of menu access
-    Route::get('/roles/switch/{role}', function (\App\Models\Role $role) {
-        $user = auth()->user();
-
-        // Verify user has this role
-        if (! $user->roles->contains('id', $role->id)) {
-            return back()->with('error', 'Unauthorized role switch.');
-        }
-
-        $user->setActiveRole($role);
-        app(\App\Services\MenuService::class)->clearMenuCache($role->id);
-
-        return redirect()->route('dashboard')->with('success', "Switched to active role: {$role->name}");
-    })->name('roles.switch');
+    Route::get('/roles/switch/{role}', SwitchRoleAction::class)->name('roles.switch');
 });
 
 // Routes that need both auth AND menu.access restriction
