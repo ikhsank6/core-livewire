@@ -15,17 +15,7 @@
                         hierarchy. Drag items to reorder.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Tambah Menu Baru" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add Menu
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah Menu" tooltip="Tambah Menu Baru" />
                 </div>
             </div>
         </div>
@@ -223,31 +213,9 @@
                                         </td>
                                         <td class="px-4 py-4 text-sm whitespace-nowrap">
                                             <div class="flex items-center justify-end gap-2 text-right">
-                                                <flux:tooltip content="Edit Data Menu" position="top">
-                                                    <button wire:click="edit('{{ $menu->uuid }}')"
-                                                        class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </flux:tooltip>
-
-                                                <flux:tooltip content="Hapus Data Menu" position="top">
-                                                    <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                        id: '{{ $menu->uuid }}', 
-                                                                        componentId: '{{ $this->getId() }}',
-                                                                        message: 'Apakah Anda yakin ingin menghapus menu {{ $menu->name }}? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'
-                                                                    })"
-                                                        class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                </flux:tooltip>
+                                                <x-ui.button.edit :uuid="$menu->uuid" tooltip="Edit Data Menu" />
+                                                <x-ui.button.delete :uuid="$menu->uuid" :name="$menu->name" tooltip="Hapus Data Menu" 
+                                                    :message="'Apakah Anda yakin ingin menghapus menu ' . $menu->name . '? Tindakan ini juga akan menghapus akses menu ini dari semua role yang memilikinya.'" />
                                             </div>
                                         </td>
                                     </tr>
@@ -393,11 +361,7 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <flux:tooltip content="Edit Menu" position="top">
-                                            <button wire:click="edit('{{ $root->uuid }}')" class="p-1.5 text-zinc-400 hover:text-metronic-primary rounded-md">
-                                                <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                            </button>
-                                        </flux:tooltip>
+                                        <x-ui.button.edit :uuid="$root->uuid" tooltip="Edit Menu" />
                                     </div>
                                 </div>
 
@@ -495,11 +459,7 @@
                                                 <x-ui.badge :variant="$child->is_active ? 'success' : 'danger'" class="text-[9px] px-1.5 py-0">
                                                     {{ $child->is_active ? 'Active' : 'Inactive' }}
                                                 </x-ui.badge>
-                                                <flux:tooltip content="Edit Menu" position="top">
-                                                    <button wire:click="edit('{{ $child->uuid }}')" class="p-1 text-zinc-300 hover:text-metronic-primary transition-colors opacity-0 group-hover:opacity-100">
-                                                        <flux:icon name="pencil-square" variant="mini" class="w-3.5 h-3.5" />
-                                                    </button>
-                                                </flux:tooltip>
+                                                <x-ui.button.edit :uuid="$child->uuid" tooltip="Edit Menu" class="p-1 text-zinc-300 hover:text-metronic-primary transition-colors opacity-0 group-hover:opacity-100" />
                                             </div>
                                         </div>
                                     @empty

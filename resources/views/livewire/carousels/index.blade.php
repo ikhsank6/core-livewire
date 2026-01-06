@@ -14,17 +14,7 @@
                     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Manage homepage carousel/slider images.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Add New Carousel" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add Carousel
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah Carousel" tooltip="Tambah Gambar Baru" />
                 </div>
             </div>
         </div>
@@ -128,9 +118,9 @@
                                         x-on:drop="handleDrop($event, {{ $carousel->id }})"
                                         class="bg-white dark:bg-zinc-900 transition-all duration-200 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 font-medium"
                                         :class="{ 
-                                            'opacity-25 scale-[0.98]': dragging == {{ $carousel->id }}, 
-                                            'bg-metronic-primary/5 dark:bg-metronic-primary/10 ring-2 ring-inset ring-metronic-primary/30': dragOver == {{ $carousel->id }} 
-                                        }">
+                                                    'opacity-25 scale-[0.98]': dragging == {{ $carousel->id }}, 
+                                                    'bg-metronic-primary/5 dark:bg-metronic-primary/10 ring-2 ring-inset ring-metronic-primary/30': dragOver == {{ $carousel->id }} 
+                                                }">
                                         <td class="px-4 py-4 text-center">
                                             <div
                                                 class="cursor-grab active:cursor-grabbing text-zinc-300 hover:text-metronic-primary transition-colors">
@@ -168,22 +158,9 @@
                                         </td>
                                         <td class="px-4 py-4 text-sm whitespace-nowrap">
                                             <div class="flex items-center justify-end gap-1">
-                                                <flux:tooltip content="Edit Carousel" position="top">
-                                                    <button wire:click="edit('{{ $carousel->uuid }}')"
-                                                        class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-95">
-                                                        <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                                    </button>
-                                                </flux:tooltip>
-                                                <flux:tooltip content="Hapus Carousel" position="top">
-                                                    <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                        id: '{{ $carousel->uuid }}', 
-                                                                        componentId: '{{ $this->getId() }}',
-                                                                        message: 'Hapus carousel {{ $carousel->title }}?'
-                                                                    })"
-                                                        class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95">
-                                                        <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                                    </button>
-                                                </flux:tooltip>
+                                                <x-ui.button.edit :uuid="$carousel->uuid" tooltip="Edit Carousel" />
+                                                <x-ui.button.delete :uuid="$carousel->uuid" :name="$carousel->title"
+                                                    tooltip="Hapus Carousel" :message="'Hapus carousel ' . $carousel->title . '?'" />
                                             </div>
                                         </td>
                                     </tr>
@@ -200,8 +177,7 @@
                 </x-slot>
 
                 <x-slot name="board">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                    x-data="{
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-data="{
                         dragging: null,
                         dragOver: null,
                         items: @js($carousels->pluck('id')->toArray()),
@@ -241,15 +217,13 @@
                             this.dragOver = null;
                         }
                     }">
-                    @forelse($carousels->sortBy('order') as $carousel)
-                        <div
-                            class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group cursor-grab active:cursor-grabbing hover:border-metronic-primary/50"
-                            draggable="true"
-                            x-on:dragstart="handleDragStart($event, {{ $carousel->id }})"
-                            x-on:dragend="handleDragEnd($event)"
-                            x-on:dragover="handleDragOver($event, {{ $carousel->id }})"
-                            x-on:drop="handleDrop($event, {{ $carousel->id }})"
-                            :class="{ 'ring-2 ring-metronic-primary ring-offset-2 dark:ring-offset-zinc-900 border-metronic-primary': dragOver == {{ $carousel->id }} }">
+                        @forelse($carousels->sortBy('order') as $carousel)
+                            <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 hover:shadow-md transition-all group cursor-grab active:cursor-grabbing hover:border-metronic-primary/50"
+                                draggable="true" x-on:dragstart="handleDragStart($event, {{ $carousel->id }})"
+                                x-on:dragend="handleDragEnd($event)"
+                                x-on:dragover="handleDragOver($event, {{ $carousel->id }})"
+                                x-on:drop="handleDrop($event, {{ $carousel->id }})"
+                                :class="{ 'ring-2 ring-metronic-primary ring-offset-2 dark:ring-offset-zinc-900 border-metronic-primary': dragOver == {{ $carousel->id }} }">
                                 <div class="flex items-start justify-between mb-4 gap-2">
                                     <div class="flex items-center gap-3 min-w-0 pointer-events-none">
                                         @if($carousel->image)
@@ -265,7 +239,8 @@
                                             <h3 class="font-bold text-zinc-900 dark:text-white truncate"
                                                 title="{{ $carousel->title }}">{{ $carousel->title }}</h3>
                                             <p class="text-xs text-zinc-500 truncate" title="{{ $carousel->description }}">
-                                                {{ Str::limit($carousel->description, 30) ?: 'No description' }}</p>
+                                                {{ Str::limit($carousel->description, 30) ?: 'No description' }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="shrink-0">
@@ -290,22 +265,9 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <flux:tooltip content="Edit Carousel" position="top">
-                                        <button wire:click="edit('{{ $carousel->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
-                                    <flux:tooltip content="Hapus Carousel" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                            id: '{{ $carousel->uuid }}', 
-                                                            componentId: '{{ $this->getId() }}',
-                                                            message: 'Hapus carousel {{ $carousel->title }}?'
-                                                        })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$carousel->uuid" tooltip="Edit Carousel" />
+                                    <x-ui.button.delete :uuid="$carousel->uuid" :name="$carousel->title"
+                                        tooltip="Hapus Carousel" :message="'Hapus carousel ' . $carousel->title . '?'" />
                                 </div>
                             </div>
                         @empty

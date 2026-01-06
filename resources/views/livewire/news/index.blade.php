@@ -14,17 +14,7 @@
                     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Manage news articles and publications.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Add New News" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add News
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah Berita" tooltip="Buat Artikel Baru" />
                 </div>
             </div>
         </div>
@@ -80,31 +70,9 @@
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
                                 <div class="flex items-center justify-end gap-2 text-right">
-                                    <flux:tooltip content="Edit News" position="top">
-                                        <button wire:click="edit('{{ $item->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
-
-                                    <flux:tooltip content="Delete News" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                        id: '{{ $item->uuid }}', 
-                                                                        componentId: '{{ $this->getId() }}',
-                                                                        message: 'Delete news article {{ $item->title }}?'
-                                                                    })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$item->uuid" tooltip="Edit News" />
+                                    <x-ui.button.delete :uuid="$item->uuid" :name="$item->title" tooltip="Delete News"
+                                        :message="'Delete news article ' . $item->title . '?'" />
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
@@ -163,22 +131,9 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <flux:tooltip content="Edit News" position="top">
-                                        <button wire:click="edit('{{ $item->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
-                                    <flux:tooltip content="Hapus News" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $item->uuid }}', 
-                                                                componentId: '{{ $this->getId() }}',
-                                                                message: 'Delete {{ $item->title }}?'
-                                                            })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$item->uuid" tooltip="Edit News" />
+                                    <x-ui.button.delete :uuid="$item->uuid" :name="$item->title" tooltip="Hapus News"
+                                        :message="'Delete ' . $item->title . '?'" />
                                 </div>
                             </div>
                         @empty

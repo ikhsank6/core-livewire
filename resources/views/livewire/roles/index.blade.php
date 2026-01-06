@@ -16,17 +16,7 @@
                         permissions.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Tambah Role Baru" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add Role
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah Role" tooltip="Tambah Role Baru" />
                 </div>
             </div>
         </div>
@@ -65,32 +55,10 @@
                                 <x-ui.badge variant="info">{{ $role->users_count }} users</x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
-                                <div class="flex items-center justify-end gap-2">
-                                    <flux:tooltip content="Edit Data Role" position="top">
-                                        <button wire:click="edit('{{ $role->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
-
-                                    <flux:tooltip content="Hapus Data Role" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                    id: '{{ $role->uuid }}', 
-                                                                    componentId: '{{ $this->getId() }}',
-                                                                    message: 'Apakah Anda yakin ingin menghapus role {{ $role->name }}?'
-                                                                })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
+                                <div class="flex items-center justify-end gap-2 text-right">
+                                    <x-ui.button.edit :uuid="$role->uuid" tooltip="Edit Role" />
+                                    <x-ui.button.delete :uuid="$role->uuid" :name="$role->name" tooltip="Hapus Role"
+                                        :message="'Apakah Anda yakin ingin menghapus role ' . $role->name . '?'" />
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
@@ -131,22 +99,9 @@
                                 </p>
                                 <div
                                     class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <flux:tooltip content="Edit Role" position="top">
-                                        <button wire:click="edit('{{ $role->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
-                                    <flux:tooltip content="Hapus Role" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                    id: '{{ $role->uuid }}', 
-                                                                    componentId: '{{ $this->getId() }}',
-                                                                    message: 'Hapus role {{ $role->name }}?'
-                                                                })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$role->uuid" tooltip="Edit Role" />
+                                    <x-ui.button.delete :uuid="$role->uuid" :name="$role->name" tooltip="Hapus Role"
+                                        :message="'Apakah Anda yakin ingin menghapus role ' . $role->name . '?'" />
                                 </div>
                             </div>
                         @empty

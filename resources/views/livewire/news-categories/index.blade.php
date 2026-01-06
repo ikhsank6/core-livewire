@@ -14,17 +14,7 @@
                     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Manage news article categories.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Add New Category" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add Category
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah Category" tooltip="Tambah Category Baru" />
                 </div>
             </div>
         </div>
@@ -65,24 +55,10 @@
                                 </x-ui.badge>
                             </x-ui.table.td>
                             <x-ui.table.td shrink>
-                                <div class="flex items-center justify-end gap-2">
-                                    <flux:tooltip content="Edit Category" position="top">
-                                        <button wire:click="edit('{{ $category->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
-
-                                    <flux:tooltip content="Hapus Category" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                    id: '{{ $category->uuid }}', 
-                                                                    componentId: '{{ $this->getId() }}',
-                                                                    message: 'Are you sure you want to delete this category?'
-                                                                })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
+                                <div class="flex items-center justify-end gap-2 text-right">
+                                    <x-ui.button.edit :uuid="$category->uuid" tooltip="Edit Category" />
+                                    <x-ui.button.delete :uuid="$category->uuid" :name="$category->name"
+                                        tooltip="Hapus Category" message="Are you sure you want to delete this category?" />
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
@@ -134,22 +110,9 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                                    <flux:tooltip content="Edit Category" position="top">
-                                        <button wire:click="edit('{{ $category->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
-                                    <flux:tooltip content="Hapus Category" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                        id: '{{ $category->uuid }}', 
-                                                                        componentId: '{{ $this->getId() }}',
-                                                                        message: 'Hapus kategori {{ $category->name }}?'
-                                                                    })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$category->uuid" tooltip="Edit Category" />
+                                    <x-ui.button.delete :uuid="$category->uuid" :name="$category->name"
+                                        tooltip="Hapus Category" message="Are you sure you want to delete this category?" />
                                 </div>
                             </div>
                         @empty

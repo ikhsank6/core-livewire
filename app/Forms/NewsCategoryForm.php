@@ -5,6 +5,8 @@ namespace App\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class NewsCategoryForm
 {
@@ -14,11 +16,13 @@ class NewsCategoryForm
             TextInput::make('name')
                 ->label('Category Name')
                 ->required()
-                ->maxLength(255),
+                ->maxLength(255)
+                ->live(onBlur: true)
+                ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
 
             TextInput::make('slug')
                 ->label('Slug')
-                ->helperText('Leave empty to auto-generate from name')
+                ->helperText('Otomatis terisi dari nama kategori')
                 ->maxLength(255),
 
             Textarea::make('description')

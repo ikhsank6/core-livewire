@@ -15,17 +15,7 @@
                         permissions.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <flux:tooltip content="Tambah User Baru" position="top">
-                        <button type="button" wire:click="create"
-                            class="flex items-center gap-2 rounded-lg bg-metronic-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-all active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-metronic-primary">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4">
-                                </path>
-                            </svg>
-                            Add User
-                        </button>
-                    </flux:tooltip>
+                    <x-ui.button.add label="Tambah User" tooltip="Tambah User Baru" />
                 </div>
             </div>
         </div>
@@ -105,31 +95,9 @@
                                         </flux:tooltip>
                                     @endif
 
-                                    <flux:tooltip content="Edit Data User" position="top">
-                                        <button wire:click="edit('{{ $user->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
-
-                                    <flux:tooltip content="Hapus Data User" position="top">
-                                        <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $user->uuid }}', 
-                                                                componentId: '{{ $this->getId() }}',
-                                                                message: 'Apakah Anda yakin ingin menghapus user {{ $user->name }}?'
-                                                            })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-90">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$user->uuid" tooltip="Edit Data User" />
+                                    <x-ui.button.delete :uuid="$user->uuid" :name="$user->name" tooltip="Hapus Data User"
+                                        :message="'Apakah Anda yakin ingin menghapus user ' . $user->name . '?'" />
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
@@ -151,8 +119,11 @@
                                     <div class="flex items-center gap-3 min-w-0">
                                         <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="lg" class="shrink-0" />
                                         <div class="min-w-0">
-                                            <h3 class="font-bold text-zinc-900 dark:text-white truncate" title="{{ $user->name }}">{{ $user->name }}</h3>
-                                            <p class="text-xs text-zinc-500 truncate" title="{{ $user->email }}">{{ $user->email }}</p>
+                                            <h3 class="font-bold text-zinc-900 dark:text-white truncate"
+                                                title="{{ $user->name }}">{{ $user->name }}</h3>
+                                            <p class="text-xs text-zinc-500 truncate" title="{{ $user->email }}">
+                                                {{ $user->email }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="shrink-0">
@@ -198,23 +169,9 @@
                                             </button>
                                         </flux:tooltip>
                                     @endif
-                                    
-                                    <flux:tooltip content="Edit User" position="top">
-                                        <button wire:click="edit('{{ $user->uuid }}')"
-                                            class="p-2 text-zinc-400 hover:text-metronic-primary hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-colors">
-                                            <flux:icon name="pencil-square" variant="mini" class="w-4 h-4" />
-                                        </button>
-                                        </flux:tooltip>
-                                        <flux:tooltip content="Hapus User" position="top">
-                                            <button x-on:click="$dispatch('open-delete-confirm', { 
-                                                                id: '{{ $user->uuid }}', 
-                                                            componentId: '{{ $this->getId() }}',
-                                                            message: 'Hapus user {{ $user->name }}?'
-                                                        })"
-                                            class="p-2 text-zinc-400 hover:text-metronic-danger hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors">
-                                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
-                                            </button>
-                                    </flux:tooltip>
+                                    <x-ui.button.edit :uuid="$user->uuid" tooltip="Edit Data User" />
+                                    <x-ui.button.delete :uuid="$user->uuid" :name="$user->name" tooltip="Hapus Data User"
+                                        :message="'Apakah Anda yakin ingin menghapus user ' . $user->name . '?'" />
                                 </div>
                             </div>
                         @empty
