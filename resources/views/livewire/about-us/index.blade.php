@@ -15,7 +15,12 @@
                         location.</p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:flex-none">
-                    <x-ui.button.add label="Tambah Info" tooltip="Tambah Informasi Perusahaan Baru" />
+                    @if(!$hasRecord)
+                        <x-ui.button.add label="Tambah Info" tooltip="Tambah Informasi Perusahaan Baru" />
+                    @else
+                        <x-ui.button.edit :uuid="$firstRecord->uuid" label="Edit Info"
+                            tooltip="Edit Informasi Perusahaan" />
+                    @endif
                 </div>
             </div>
         </div>
@@ -75,8 +80,6 @@
                             <x-ui.table.td shrink>
                                 <div class="flex items-center justify-end gap-2 text-right">
                                     <x-ui.button.edit :uuid="$item->uuid" tooltip="Edit Info" />
-                                    <x-ui.button.delete :uuid="$item->uuid" :name="$item->company_name" tooltip="Hapus Info"
-                                        message="Are you sure you want to delete this information?" />
                                 </div>
                             </x-ui.table.td>
                         </x-ui.table.tr>
@@ -135,8 +138,6 @@
                                 <div
                                     class="flex items-center justify-end gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
                                     <x-ui.button.edit :uuid="$item->uuid" tooltip="Edit Info" />
-                                    <x-ui.button.delete :uuid="$item->uuid" :name="$item->company_name" tooltip="Hapus Info"
-                                        :message="'Hapus informasi ' . $item->company_name . '?'" />
                                 </div>
                             </div>
                         @empty

@@ -5,7 +5,6 @@ namespace App\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 
@@ -84,19 +83,26 @@ class AboutUsForm
 
             Section::make('Location')
                 ->schema([
+                    TextInput::make('map_url')
+                        ->label('Google Maps Link')
+                        ->url()
+                        ->placeholder('https://www.google.com/maps/place/...')
+                        ->helperText('Paste the Google Maps link. Coordinates will be auto-extracted.')
+                        ->columnSpanFull(),
+
                     TextInput::make('latitude')
                         ->label('Latitude')
-                        ->numeric(),
+                        ->numeric()
+                        ->disabled()
+                        ->dehydrated()
+                        ->helperText('Auto-filled from Google Maps link'),
 
                     TextInput::make('longitude')
                         ->label('Longitude')
-                        ->numeric(),
-
-                    Textarea::make('map_embed')
-                        ->label('Google Maps Embed Code')
-                        ->helperText('Paste the iframe embed code from Google Maps')
-                        ->rows(3)
-                        ->columnSpanFull(),
+                        ->numeric()
+                        ->disabled()
+                        ->dehydrated()
+                        ->helperText('Auto-filled from Google Maps link'),
                 ]),
 
             ToggleButtons::make('is_active')

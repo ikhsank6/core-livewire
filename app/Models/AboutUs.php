@@ -28,6 +28,7 @@ class AboutUs extends Model
         'latitude',
         'longitude',
         'map_embed',
+        'map_url',
         'logo',
         'is_active',
         'created_by',

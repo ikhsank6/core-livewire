@@ -3,6 +3,7 @@
 namespace App\Livewire\AboutUs;
 
 use App\Forms\AboutUsForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\AboutUs;
 use App\Repositories\Contracts\AboutUsRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -16,15 +17,14 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Livewire\Concerns\HasTableView;
 
 #[Layout('components.layouts.app')]
 #[Title('About Us')]
 class AboutUsIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -89,6 +89,15 @@ class AboutUsIndex extends Component implements HasForms
         $data = $this->form->getState();
         $data['updated_by'] = Auth::id();
 
+        // Extract coordinates from Google Maps URL
+        if (! empty($data['map_url'])) {
+            $coords = $this->extractCoordsFromUrl($data['map_url']);
+            if ($coords) {
+                $data['latitude'] = $coords['lat'];
+                $data['longitude'] = $coords['lng'];
+            }
+        }
+
         DB::beginTransaction();
 
         try {
@@ -113,6 +122,38 @@ class AboutUsIndex extends Component implements HasForms
             DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
+    }
+
+    /**
+     * Extract latitude and longitude from a Google Maps URL.
+     */
+    private function extractCoordsFromUrl(?string $url): ?array
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        // Pattern 1: @lat,lng in URL (most common)
+        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)) {
+            return ['lat' => (float) $matches[1], 'lng' => (float) $matches[2]];
+        }
+
+        // Pattern 2: ?q=lat,lng
+        if (preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)) {
+            return ['lat' => (float) $matches[1], 'lng' => (float) $matches[2]];
+        }
+
+        // Pattern 3: ll=lat,lng
+        if (preg_match('/ll=(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)) {
+            return ['lat' => (float) $matches[1], 'lng' => (float) $matches[2]];
+        }
+
+        // Pattern 4: /place/lat,lng
+        if (preg_match('/\/place\/(-?\d+\.\d+),(-?\d+\.\d+)/', $url, $matches)) {
+            return ['lat' => (float) $matches[1], 'lng' => (float) $matches[2]];
+        }
+
+        return null;
     }
 
     public function delete(AboutUs $aboutUs): void
@@ -148,8 +189,12 @@ class AboutUsIndex extends Component implements HasForms
 
     public function render()
     {
+        $items = $this->aboutUsRepository->searchByTerm($this->search, $this->perPage);
+
         return view('livewire.about-us.index', [
-            'items' => $this->aboutUsRepository->searchByTerm($this->search, $this->perPage),
+            'items' => $items,
+            'hasRecord' => $items->total() > 0,
+            'firstRecord' => $items->getCollection()->first(),
         ]);
     }
 }
