@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+    x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="{ 'dark': darkMode }">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', $aboutUs->company_name ?? config('app.name'))</title>
     <meta name="description" content="@yield('description', '')">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800,900&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind & Alpine -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     @hasSection('swiper')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     @endif
+
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#E84C3D',
-                        dark: '#1a1a2e',
+                        primary: '#0d9488',
+                        accent: '#f97316',
+                        dark: '#0a0a0f',
+                        'dark-card': '#111118',
+                        'dark-border': '#1f1f2e',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -28,9 +39,18 @@
             }
         }
     </script>
+
     <style>
         [x-cloak] {
             display: none !important;
+        }
+
+        /* Grid pattern for dark mode */
+        .dark .grid-pattern {
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
 
         .hero-slide {
@@ -38,9 +58,26 @@
             background-position: center;
         }
 
+        /* Swiper navigation */
         .swiper-button-next,
         .swiper-button-prev {
             color: white !important;
+            width: 48px !important;
+            height: 48px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-radius: 9999px !important;
+            transition: background 0.3s ease;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 18px !important;
+            font-weight: bold;
         }
 
         @media (max-width: 640px) {
@@ -51,8 +88,16 @@
             }
         }
 
+        .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.5) !important;
+            width: 10px !important;
+            height: 10px !important;
+        }
+
         .swiper-pagination-bullet-active {
-            background: #E84C3D !important;
+            background: #0d9488 !important;
+            width: 24px !important;
+            border-radius: 5px !important;
         }
 
         .line-clamp-2 {
@@ -93,23 +138,44 @@
         }
 
         .prose a {
-            color: #E84C3D;
+            color: #0d9488;
         }
 
         .prose img {
             border-radius: 0.5rem;
             margin: 1rem 0;
         }
+
+        /* Smooth transition for dark mode */
+        html.dark {
+            color-scheme: dark;
+        }
+
+        body,
+        nav,
+        footer,
+        section,
+        div,
+        article {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Navigation transition */
+        nav {
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
     </style>
     @stack('styles')
 </head>
 
-<body class="font-sans antialiased bg-gray-50">
-    {{-- Navigation --}}
+<body class="font-sans antialiased bg-white dark:bg-dark text-slate-800 dark:text-slate-200">
+    {{-- Navigation (Absolute positioned, transparent overlay) --}}
     @include('website.partials.nav')
 
     {{-- Page Content --}}
-    @yield('content')
+    <main>
+        @yield('content')
+    </main>
 
     {{-- Footer --}}
     @include('website.partials.footer')

@@ -3,60 +3,67 @@
 @section('title', 'About Us - ' . ($aboutUs->company_name ?? config('app.name')))
 
 @section('content')
-    <!-- Page Header -->
+    {{-- Page Header --}}
     @include('website.partials.page-header', ['title' => 'About Us', 'breadcrumb' => 'About Us'])
 
-    <!-- About Content -->
-    <section class="py-12 md:py-20 bg-white">
-        <div class="container mx-auto px-4">
+    {{-- About Content --}}
+    <section class="py-12 md:py-20 bg-white dark:bg-dark">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Image -->
+                {{-- Image --}}
                 <div class="relative">
                     @if($aboutUs?->logo)
-                        <div class="bg-gray-100 rounded-2xl p-8 flex items-center justify-center">
+                        <div
+                            class="bg-slate-100 dark:bg-dark-card rounded-2xl p-8 flex items-center justify-center border border-transparent dark:border-dark-border">
                             <img src="{{ Storage::url($aboutUs->logo) }}" alt="{{ $aboutUs->company_name }}"
-                                class="max-w-full max-h-80">
+                                class="max-w-full max-h-80 dark:brightness-0 dark:invert">
                         </div>
                     @else
-                        <div class="w-full h-[400px] bg-gray-200 rounded-xl flex items-center justify-center">
+                        <div
+                            class="w-full h-[400px] bg-slate-200 dark:bg-dark-card rounded-xl flex items-center justify-center border border-transparent dark:border-dark-border">
                             <div class="text-center">
                                 <div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                                     <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" />
                                     </svg>
                                 </div>
-                                <p class="text-2xl font-bold text-dark">{{ $aboutUs->company_name ?? 'Company' }}</p>
+                                <p class="text-2xl font-bold text-slate-900 dark:text-white">
+                                    {{ $aboutUs->company_name ?? 'Company' }}</p>
                             </div>
                         </div>
                     @endif
                 </div>
 
-                <!-- Content -->
+                {{-- Content --}}
                 <div>
                     <p class="text-primary font-semibold mb-2 text-sm tracking-widest">ABOUT COMPANY</p>
-                    <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6">{{ $aboutUs->company_name ?? 'About Us' }}
-                    </h2>
-                    <div class="prose text-gray-600 mb-8">
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">
+                        {{ $aboutUs->company_name ?? 'About Us' }}</h2>
+                    <div class="prose dark:prose-invert text-slate-600 dark:text-slate-300 mb-8 max-w-none">
                         {!! $aboutUs->description ?? '<p>Welcome to our company. We are dedicated to providing the best services and solutions for our clients.</p>' !!}
                     </div>
 
-                    <!-- Stats -->
+                    {{-- Stats --}}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div
+                            class="text-center p-4 bg-slate-50 dark:bg-dark-card rounded-lg border border-transparent dark:border-dark-border">
                             <p class="text-3xl font-bold text-primary">10+</p>
-                            <p class="text-sm text-gray-500">Years Experience</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Years Experience</p>
                         </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div
+                            class="text-center p-4 bg-slate-50 dark:bg-dark-card rounded-lg border border-transparent dark:border-dark-border">
                             <p class="text-3xl font-bold text-primary">500+</p>
-                            <p class="text-sm text-gray-500">Happy Clients</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Happy Clients</p>
                         </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div
+                            class="text-center p-4 bg-slate-50 dark:bg-dark-card rounded-lg border border-transparent dark:border-dark-border">
                             <p class="text-3xl font-bold text-primary">100+</p>
-                            <p class="text-sm text-gray-500">Projects Done</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Projects Done</p>
                         </div>
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div
+                            class="text-center p-4 bg-slate-50 dark:bg-dark-card rounded-lg border border-transparent dark:border-dark-border">
                             <p class="text-3xl font-bold text-primary">50+</p>
-                            <p class="text-sm text-gray-500">Team Members</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Team Members</p>
                         </div>
                     </div>
                 </div>
@@ -64,9 +71,9 @@
         </div>
     </section>
 
-    <!-- Contact Info Section -->
-    <section id="contact" class="py-12 md:py-20 bg-dark text-white">
-        <div class="container mx-auto px-4">
+    {{-- Contact Info Section --}}
+    <section id="contact" class="py-12 md:py-20 bg-slate-900 dark:bg-dark-card text-white">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-12">
                 <p class="text-primary font-semibold mb-2 text-sm tracking-widest">CONTACT US</p>
                 <h2 class="text-3xl md:text-4xl font-bold">Just Say Hello.</h2>
@@ -74,7 +81,8 @@
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @if($aboutUs?->phone)
-                    <div class="bg-white/5 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
+                    <div
+                        class="bg-white/5 dark:bg-dark rounded-xl p-6 text-center hover:bg-white/10 dark:hover:bg-dark-border transition-colors border border-transparent dark:border-dark-border">
                         <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -82,12 +90,13 @@
                             </svg>
                         </div>
                         <h4 class="font-bold text-primary mb-2">Call Now</h4>
-                        <p class="text-gray-300">{{ $aboutUs->phone }}</p>
+                        <p class="text-slate-300">{{ $aboutUs->phone }}</p>
                     </div>
                 @endif
 
                 @if($aboutUs?->email)
-                    <div class="bg-white/5 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
+                    <div
+                        class="bg-white/5 dark:bg-dark rounded-xl p-6 text-center hover:bg-white/10 dark:hover:bg-dark-border transition-colors border border-transparent dark:border-dark-border">
                         <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,12 +104,13 @@
                             </svg>
                         </div>
                         <h4 class="font-bold text-primary mb-2">Email</h4>
-                        <p class="text-gray-300">{{ $aboutUs->email }}</p>
+                        <p class="text-slate-300">{{ $aboutUs->email }}</p>
                     </div>
                 @endif
 
                 @if($aboutUs?->address)
-                    <div class="bg-white/5 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
+                    <div
+                        class="bg-white/5 dark:bg-dark rounded-xl p-6 text-center hover:bg-white/10 dark:hover:bg-dark-border transition-colors border border-transparent dark:border-dark-border">
                         <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -110,12 +120,13 @@
                             </svg>
                         </div>
                         <h4 class="font-bold text-primary mb-2">Address</h4>
-                        <p class="text-gray-300 text-sm">{{ $aboutUs->address }}</p>
+                        <p class="text-slate-300 text-sm">{{ $aboutUs->address }}</p>
                     </div>
                 @endif
 
                 @if($aboutUs?->whatsapp)
-                    <div class="bg-white/5 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
+                    <div
+                        class="bg-white/5 dark:bg-dark rounded-xl p-6 text-center hover:bg-white/10 dark:hover:bg-dark-border transition-colors border border-transparent dark:border-dark-border">
                         <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -124,19 +135,19 @@
                         </div>
                         <h4 class="font-bold text-primary mb-2">WhatsApp</h4>
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $aboutUs->whatsapp) }}" target="_blank"
-                            class="text-gray-300 hover:text-primary">Chat with us</a>
+                            class="text-slate-300 hover:text-primary transition-colors">Chat with us</a>
                     </div>
                 @endif
             </div>
 
-            <!-- Social Media -->
+            {{-- Social Media --}}
             @include('website.partials.social-links')
         </div>
     </section>
 
-    <!-- Map Section -->
+    {{-- Map Section --}}
     @if($aboutUs?->map_embed)
-        <section class="h-[400px]">
+        <section class="h-[400px] grayscale dark:opacity-75">
             {!! $aboutUs->map_embed !!}
         </section>
     @endif
