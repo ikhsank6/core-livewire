@@ -1,109 +1,172 @@
-{{-- Footer - Professional Modern Design --}}
-<footer class="bg-white dark:bg-dark border-t border-slate-200 dark:border-dark-border">
+{{-- Footer - Ultra Modern Professional Design --}}
+<footer class="relative bg-slate-50 dark:bg-dark-card overflow-hidden">
+    {{-- Curved Top --}}
+    <div class="absolute -top-1 left-0 right-0 z-0">
+        <svg class="w-full h-16 md:h-24" viewBox="0 0 1440 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0V60C240 20 480 0 720 0C960 0 1200 20 1440 60V0H0Z" 
+                  class="fill-white dark:fill-dark"/>
+        </svg>
+    </div>
+
+    {{-- Decorative Background Elements --}}
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-accent/5 rounded-full blur-3xl"></div>
+
+
     {{-- Main Footer Content --}}
-    <div class="max-w-7xl mx-auto px-4 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 py-20 lg:py-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
             {{-- Column 1: Services --}}
-            <div>
-                <h4 class="font-bold text-slate-900 dark:text-white mb-6">Event & Bootcamp</h4>
-                <div class="grid grid-cols-2 gap-x-8 gap-y-3">
-                    <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                        <li><a href="#" class="hover:text-primary transition-colors">Web Development</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Mobile Development</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">UI Design</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">UI Research</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Presentation</a></li>
+            <div class="lg:col-span-1">
+                <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+                    <span class="w-8 h-1 bg-primary rounded-full"></span>
+                    Event & Bootcamp
+                </h4>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                    <ul class="space-y-4">
+                        @foreach(['Web Development', 'Mobile Development', 'UI Design', 'UI Research', 'Presentation'] as $item)
+                            <li>
+                                <a href="#" class="group flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-all duration-300">
+                                    <span class="w-0 h-px bg-primary transition-all duration-300 group-hover:w-3"></span>
+                                    <span class="group-hover:translate-x-1 transition-transform duration-300">{{ $item }}</span>
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
-                    <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                        <li><a href="#" class="hover:text-primary transition-colors">Communication</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Video Production</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Digital Marketing</a></li>
-                        <li><a href="#" class="hover:text-primary transition-colors">Branding</a></li>
+                    <ul class="space-y-4">
+                        @foreach(['Communication', 'Video Production', 'Digital Marketing', 'Branding'] as $item)
+                            <li>
+                                <a href="#" class="group flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-all duration-300">
+                                    <span class="w-0 h-px bg-primary transition-all duration-300 group-hover:w-3"></span>
+                                    <span class="group-hover:translate-x-1 transition-transform duration-300">{{ $item }}</span>
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
 
             {{-- Column 2: About --}}
             <div>
-                <h4 class="font-bold text-slate-900 dark:text-white mb-6">About {{ $aboutUs->company_name ?? config('app.name') }}</h4>
-                <ul class="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                    <li><a href="{{ route('about') }}" class="hover:text-primary transition-colors">Admission Info</a></li>
-                    <li><a href="{{ route('news.index') }}" class="hover:text-primary transition-colors">Article</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Group & Referral Program</a></li>
-                    <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
+                <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+                    <span class="w-8 h-1 bg-primary rounded-full"></span>
+                    About Company
+                </h4>
+                <ul class="space-y-4">
+                    @foreach([
+                        ['label' => 'Admission Info', 'route' => route('about')],
+                        ['label' => 'Article', 'route' => route('news.index')],
+                        ['label' => 'Group & Referral Program', 'route' => '#'],
+                        ['label' => 'Careers', 'route' => '#']
+                    ] as $link)
+                        <li>
+                            <a href="{{ $link['route'] }}" class="group flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-all duration-300">
+                                <span class="w-0 h-px bg-primary transition-all duration-300 group-hover:w-3"></span>
+                                <span class="group-hover:translate-x-1 transition-transform duration-300">{{ $link['label'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 
-            {{-- Column 3: Contact --}}
-            <div class="lg:col-span-2">
-                <h4 class="font-bold text-slate-900 dark:text-white mb-6">Contact</h4>
-                <ul class="space-y-3 text-sm">
-                    @if($aboutUs?->email)
-                        <li>
-                            <a href="mailto:{{ $aboutUs->email }}" class="text-primary hover:underline">
-                                {{ $aboutUs->email }}
-                            </a>
-                        </li>
-                    @endif
-                    @if($aboutUs?->phone)
-                        <li>
-                            <a href="tel:{{ $aboutUs->phone }}" class="text-primary hover:underline">
-                                {{ $aboutUs->phone }}
-                            </a>
-                        </li>
-                    @endif
-                    @if($aboutUs?->address)
-                        <li class="text-slate-500 dark:text-slate-400 max-w-xs">
-                            {{ Str::limit($aboutUs->address, 80) }}
-                        </li>
-                    @else
-                        <li class="text-slate-500 dark:text-slate-400 max-w-xs">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </li>
-                    @endif
-                </ul>
+            {{-- Column 3: Contact & Newsletter --}}
+            <div class="lg:col-span-2 space-y-12">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+                            <span class="w-8 h-1 bg-primary rounded-full"></span>
+                            Contact Us
+                        </h4>
+                        <ul class="space-y-4">
+                            @if($aboutUs?->email)
+                                <li>
+                                    <a href="mailto:{{ $aboutUs->email }}" class="text-base font-semibold text-primary hover:text-teal-600 transition-colors flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        </div>
+                                        {{ $aboutUs->email }}
+                                    </a>
+                                </li>
+                            @endif
+                            @if($aboutUs?->phone)
+                                <li>
+                                    <a href="tel:{{ $aboutUs->phone }}" class="text-base font-semibold text-primary hover:text-teal-600 transition-colors flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                        </div>
+                                        {{ $aboutUs->phone }}
+                                    </a>
+                                </li>
+                            @endif
+                            <li class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-slate-200 dark:bg-dark flex items-center justify-center shrink-0">
+                                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                </div>
+                                <span class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed pt-2">
+                                    {{ $aboutUs->address ?? 'Jl. Jakarta, Indonesia' }}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+                            <span class="w-8 h-1 bg-primary rounded-full"></span>
+                            Follow Us
+                        </h4>
+                        <div class="flex flex-wrap gap-4">
+                            @foreach([
+                                ['icon' => 'instagram', 'url' => $aboutUs?->instagram, 'color' => 'bg-pink-500'],
+                                ['icon' => 'twitter', 'url' => $aboutUs?->twitter, 'color' => 'bg-slate-900'],
+                                ['icon' => 'linkedin', 'url' => $aboutUs?->linkedin, 'color' => 'bg-blue-600'],
+                                ['icon' => 'youtube', 'url' => $aboutUs?->youtube, 'color' => 'bg-red-600']
+                            ] as $social)
+                                @if($social['url'])
+                                    <a href="{{ $social['url'] }}" target="_blank" 
+                                       class="w-11 h-11 rounded-2xl flex items-center justify-center text-white {{ $social['color'] }} shadow-lg hover:scale-110 active:scale-95 transition-all duration-300">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            @if($social['icon'] == 'instagram') <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                                            @elseif($social['icon'] == 'twitter') <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                            @elseif($social['icon'] == 'linkedin') <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                            @elseif($social['icon'] == 'youtube') <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                            @endif
+                                        </svg>
+                                    </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
 
-                {{-- Social Icons --}}
-                <div class="flex items-center gap-3 mt-6">
-                    @if($aboutUs?->instagram)
-                        <a href="{{ $aboutUs->instagram }}" target="_blank" class="text-primary hover:text-primary/80 transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                            </svg>
-                        </a>
-                    @endif
-                    @if($aboutUs?->twitter)
-                        <a href="{{ $aboutUs->twitter }}" target="_blank" class="text-primary hover:text-primary/80 transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                            </svg>
-                        </a>
-                    @endif
-                    @if($aboutUs?->linkedin)
-                        <a href="{{ $aboutUs->linkedin }}" target="_blank" class="text-primary hover:text-primary/80 transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                            </svg>
-                        </a>
-                    @endif
-                    @if($aboutUs?->youtube)
-                        <a href="{{ $aboutUs->youtube }}" target="_blank" class="text-primary hover:text-primary/80 transition-colors">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                            </svg>
-                        </a>
-                    @endif
+                <div class="p-8 bg-white dark:bg-dark border border-slate-100 dark:border-dark-border rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-black/20">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-center md:text-left">
+                            <h5 class="text-xl font-bold text-slate-900 dark:text-white">Join our newsletter</h5>
+                            <p class="text-slate-500 dark:text-slate-400">Get the latest updates and special offers.</p>
+                        </div>
+                        <form class="flex w-full md:w-auto gap-2">
+                            <input type="email" placeholder="Email address" class="flex-1 md:w-64 px-5 py-3 rounded-2xl bg-slate-50 dark:bg-dark-card border border-slate-200 dark:border-dark-border focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-sm">
+                            <button type="submit" class="px-6 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-teal-600 transition-all shadow-lg shadow-primary/20">
+                                Subscribe
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Copyright Bar --}}
-    <div class="bg-slate-900 dark:bg-slate-950 py-4">
-        <div class="max-w-7xl mx-auto px-4 text-center">
+    {{-- Bottom Bar --}}
+    <div class="relative z-10 bg-slate-900 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-slate-400">
-                Copyright © {{ date('Y') }} {{ $aboutUs->company_name ?? config('app.name') }}. All Rights Reserved.
+                © {{ date('Y') }} <span class="text-white font-semibold">{{ $aboutUs->company_name ?? config('app.name') }}</span>. All Rights Reserved.
             </p>
+            <div class="flex items-center gap-6 text-sm text-slate-400">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+            </div>
         </div>
     </div>
 </footer>
