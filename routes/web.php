@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\LogoutAction;
 use App\Actions\SwitchRoleAction;
 use App\Actions\Website\ShowAboutPage;
 use App\Actions\Website\ShowHomePage;
@@ -55,13 +56,7 @@ Route::get('/auth/verify-email/{id}/{hash}', VerifyEmail::class)
 
 // Routes that need auth but NOT menu.access restriction
 Route::middleware(['auth'])->group(function () {
-    Route::get('/logout', function () {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-
-        return redirect()->route('auth.login');
-    })->name('logout');
+    Route::get('/logout', LogoutAction::class)->name('logout');
 
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/password/change', ChangePassword::class)->name('password.change');
