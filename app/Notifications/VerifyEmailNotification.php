@@ -19,7 +19,7 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
      */
     public function __construct()
     {
-        $this->onQueue('emails');
+        $this->onQueue('default');
     }
 
     /**
@@ -49,11 +49,14 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verify Your Email Address')
-            ->greeting('Hello '.$notifiable->name.'!')
-            ->line('Thank you for registering. Please click the button below to verify your email address.')
-            ->action('Verify Email Address', $verificationUrl)
-            ->line('If you did not create an account, no further action is required.')
-            ->salutation('Regards, '.config('app.name'));
+            ->subject('Verifikasi Alamat Email - '.config('app.name'))
+            ->view('emails.verify-email', [
+                'userName' => $notifiable->name,
+                'userEmail' => $notifiable->email,
+                'verificationUrl' => $verificationUrl,
+                'subject' => 'Verifikasi Alamat Email',
+                'title' => 'Verifikasi Alamat Email Anda',
+                'emailContent' => 'Terima kasih telah mendaftar. Silakan klik tombol di bawah untuk memverifikasi alamat email Anda.',
+            ]);
     }
 }
