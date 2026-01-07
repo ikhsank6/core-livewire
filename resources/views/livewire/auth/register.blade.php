@@ -6,7 +6,7 @@
             <div class="relative inline-flex mb-6">
                 <div class="absolute inset-0 bg-green-500/20 rounded-full blur-xl"></div>
                 <div
-                    class="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/30">
+                    class="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-green-400 to-green-600 shadow-lg shadow-green-500/30">
                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">

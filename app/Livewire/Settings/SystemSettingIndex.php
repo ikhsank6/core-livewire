@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Settings;
 
-use App\Forms\SystemSettingForm;
-use App\Models\SystemSetting;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -19,9 +17,16 @@ class SystemSettingIndex extends Component implements HasForms
 
     public ?array $data = [];
 
+    protected \App\Repositories\Contracts\SystemSettingRepositoryInterface $systemSettingRepository;
+
+    public function boot(\App\Repositories\Contracts\SystemSettingRepositoryInterface $systemSettingRepository): void
+    {
+        $this->systemSettingRepository = $systemSettingRepository;
+    }
+
     public function mount(): void
     {
-        $setting = SystemSetting::first();
+        $setting = $this->systemSettingRepository->getSettings();
         if ($setting) {
             $this->form->fill($setting->toArray());
         } else {
@@ -32,7 +37,7 @@ class SystemSettingIndex extends Component implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->schema(SystemSettingForm::schema())
+            ->schema(\App\Forms\SystemSettingForm::schema())
             ->statePath('data');
     }
 
@@ -40,15 +45,7 @@ class SystemSettingIndex extends Component implements HasForms
     {
         $data = $this->form->getState();
 
-        $setting = SystemSetting::first();
-        if ($setting) {
-            $setting->update($data);
-        } else {
-            SystemSetting::create($data);
-        }
-
-        // Clear cache explicitly (also cleared by model events)
-        SystemSetting::clearCache();
+        $this->systemSettingRepository->updateSettings($data);
 
         $this->dispatch('notify', text: 'System settings updated successfully.', variant: 'success');
     }

@@ -200,7 +200,7 @@ class AboutUsIndex extends Component implements HasForms
         return view('livewire.about-us.index', [
             'items' => $items,
             'hasRecord' => $items->total() > 0,
-            'firstRecord' => $items->getCollection()->first(),
+            'firstRecord' => $items->items()[0] ?? null,
         ]);
     }
 }

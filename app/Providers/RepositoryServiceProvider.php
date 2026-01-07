@@ -11,12 +11,14 @@ use App\Repositories\Contracts\NewsCategoryRepositoryInterface;
 use App\Repositories\Contracts\NewsRepositoryInterface;
 use App\Repositories\Contracts\NotificationRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\SystemSettingRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\MenuRepository;
 use App\Repositories\NewsCategoryRepository;
 use App\Repositories\NewsRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\SystemSettingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,6 +38,7 @@ class RepositoryServiceProvider extends ServiceProvider
         NewsCategoryRepositoryInterface::class => NewsCategoryRepository::class,
         NewsRepositoryInterface::class => NewsRepository::class,
         AboutUsRepositoryInterface::class => AboutUsRepository::class,
+        SystemSettingRepositoryInterface::class => SystemSettingRepository::class,
     ];
 
     /**

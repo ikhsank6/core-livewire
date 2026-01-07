@@ -2,95 +2,20 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
-    {{-- Immediate theme application to prevent FOUC (Flash of Unstyled Content) --}}
-    <script>
-        (function () {
-            const theme = localStorage.getItem('theme') || 'light';
-            if (theme === 'dark') document.documentElement.classList.add('dark');
-        })();
-    </script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('partials.fouc-prevention')
+    @include('partials.meta-base')
 
     <title>{{ $title ?? $aboutUs->company_name ?? config('app.name', 'Laravel') }}</title>
 
-    @if($settings?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings->favicon) }}">
-    @endif
+    @include('partials.favicon')
+    @include('partials.fonts')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800,900&display=swap" rel="stylesheet" />
+    @include('partials.theme-scripts', ['includeSidebarState' => false])
 
-    <!-- Alpine Theme Store - for theme state management -->
-    <script data-navigate-once>
-        // Apply theme immediately on every navigation (before Alpine loads)
-        (function () {
-            const theme = localStorage.getItem('theme') || 'light';
-            document.documentElement.classList.toggle('dark', theme === 'dark');
-        })();
-
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('theme', {
-                value: localStorage.getItem('theme') || 'light',
-
-                init() {
-                    Alpine.effect(() => {
-                        const isDark = this.value === 'dark';
-                        document.documentElement.classList.toggle('dark', isDark);
-                        localStorage.setItem('theme', this.value);
-                    });
-                },
-
-                get isDark() {
-                    return this.value === 'dark';
-                },
-
-                toggle() {
-                    this.value = this.isDark ? 'light' : 'dark';
-                }
-            });
-        });
-
-        // Ensure store exists and is synced after Livewire navigation
-        document.addEventListener('livewire:navigated', () => {
-            const storedTheme = localStorage.getItem('theme') || 'light';
-
-            if (!Alpine.store('theme')) {
-                Alpine.store('theme', {
-                    value: storedTheme,
-                    get isDark() {
-                        return this.value === 'dark';
-                    },
-                    toggle() {
-                        this.value = this.isDark ? 'light' : 'dark';
-                        const isDark = this.value === 'dark';
-                        document.documentElement.classList.toggle('dark', isDark);
-                        localStorage.setItem('theme', this.value);
-                    }
-                });
-            } else {
-                // Sync store with localStorage
-                if (Alpine.store('theme').value !== storedTheme) {
-                    Alpine.store('theme').value = storedTheme;
-                }
-            }
-
-            // Always ensure DOM class is correct
-            const isDark = storedTheme === 'dark';
-            document.documentElement.classList.toggle('dark', isDark);
-        });
-    </script>
-
-    <!-- Styles & Scripts -->
-    @filamentStyles
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.filament-assets')
+    @include('partials.alpine-cloak')
 
     <style>
-        [x-cloak] {
-            display: none !important;
-        }
 
         /* Auth button styling */
         .auth-btn-primary {
@@ -270,57 +195,7 @@
     @fluxScripts
     @filamentScripts
 
-    {{-- Toast Notifications --}}
-    <div wire:ignore class="fixed top-5 right-5 pointer-events-none" style="z-index: 999999;">
-        <div x-data="{ 
-                    toasts: [],
-                    add(data) {
-                        const payload = data.detail || data;
-                        const text = typeof payload === 'string' ? payload : (payload.text || '');
-                        const variant = payload.variant || 'success';
-                        
-                        if (!text) return;
-                        
-                        const id = Date.now() + Math.random();
-                        this.toasts.push({ id, text, variant });
-                        
-                        setTimeout(() => {
-                            this.toasts = this.toasts.filter(t => t.id !== id);
-                        }, 5000);
-                    }
-                }" x-init="
-                    @if(session('success')) add({ text: '{{ session('success') }}', variant: 'success' }); @endif
-                    @if(session('error')) add({ text: '{{ session('error') }}', variant: 'danger' }); @endif
-                " @notify.window="add($event.detail)" class="flex flex-col gap-3 items-end">
-            <template x-for="toast in toasts" :key="toast.id">
-                <div x-transition:enter="transition ease-out duration-300 transform"
-                    x-transition:enter-start="-translate-y-4 opacity-0 scale-95"
-                    x-transition:enter-end="translate-y-0 opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="pointer-events-auto w-[350px] p-4 rounded-xl shadow-2xl border-l-4 flex items-center justify-between gap-4 bg-white dark:bg-slate-900/90 backdrop-blur-xl text-slate-800 dark:text-white"
-                    :class="{ 'border-green-500': toast.variant === 'success', 'border-red-500': toast.variant === 'danger' }">
-                    <div class="flex items-center gap-3">
-                        <template x-if="toast.variant === 'success'">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </template>
-                        <template x-if="toast.variant === 'danger'">
-                            <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </template>
-                        <span class="text-sm font-semibold" x-text="toast.text"></span>
-                    </div>
-                    <button @click="toasts = toasts.filter(t => t.id !== toast.id)"
-                        class="text-slate-400 hover:text-slate-600 dark:hover:text-white">&times;</button>
-                </div>
-            </template>
-        </div>
-    </div>
+    @include('partials.toast-notifications')
 </body>
 
 </html>

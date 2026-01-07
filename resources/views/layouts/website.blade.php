@@ -8,20 +8,14 @@
 
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @include('partials.meta-base')
     <title>@yield('title', $aboutUs->company_name ?? config('app.name'))</title>
     <meta name="description" content="@yield('description', $aboutUs->description ?? '')">
     <meta name="keywords" content="@yield('keywords', $settings->meta_keywords_string ?? '')">
     <meta name="author" content="{{ $settings->meta_author ?? '' }}">
 
-    @if($settings?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings->favicon) }}">
-    @endif
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800,900&display=swap" rel="stylesheet" />
+    @include('partials.favicon')
+    @include('partials.fonts')
 
     <!-- Tailwind & Alpine -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,11 +45,9 @@
         }
     </script>
 
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
+    @include('partials.alpine-cloak')
 
+    <style>
         /* Grid pattern for dark mode */
         .dark .grid-pattern {
             background-image:

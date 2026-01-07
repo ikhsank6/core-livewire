@@ -51,8 +51,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Share cached system settings and about us with all views
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
-            $view->with('settings', \App\Models\SystemSetting::getCached());
-            $view->with('aboutUs', \App\Models\AboutUs::getCached());
+            $systemSettingRepo = app(\App\Repositories\Contracts\SystemSettingRepositoryInterface::class);
+            $aboutUsRepo = app(\App\Repositories\Contracts\AboutUsRepositoryInterface::class);
+
+            $view->with('settings', $systemSettingRepo->getCachedSettings());
+            $view->with('aboutUs', $aboutUsRepo->getCached());
         });
     }
 

@@ -76,7 +76,7 @@
                             <a href="{{ route('dashboard') }}"
                                 class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                                 :class="{ 
-                                       'text-white bg-gradient-to-r from-primary to-teal-600 shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30': scrolled, 
+                                       'text-white bg-linear-to-r from-primary to-teal-600 shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30': scrolled, 
                                        'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
                                    }">
                                 <span class="relative z-10 flex items-center gap-2">
@@ -100,7 +100,7 @@
                             <a href="{{ route('auth.register') }}"
                                 class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                                 :class="{ 
-                                       'text-white bg-gradient-to-r from-accent to-orange-500 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/30': scrolled, 
+                                       'text-white bg-linear-to-r from-accent to-orange-500 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/30': scrolled, 
                                        'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
                                    }">
                                 <span class="relative z-10 flex items-center gap-2">
@@ -205,7 +205,7 @@
             <div class="border-t border-slate-200/50 dark:border-white/10 mt-3 pt-4 px-1 space-y-2">
                 @auth
                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-primary to-teal-600 rounded-xl shadow-md shadow-primary/25">
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-linear-to-r from-primary to-teal-600 rounded-xl shadow-md shadow-primary/25">
                         Dashboard
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -218,7 +218,7 @@
                         Sign In
                     </a>
                     <a href="{{ route('auth.register') }}"
-                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-accent to-orange-500 rounded-xl shadow-md shadow-orange-500/25">
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-linear-to-r from-accent to-orange-500 rounded-xl shadow-md shadow-orange-500/25">
                         Get Started
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

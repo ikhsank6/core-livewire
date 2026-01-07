@@ -18,6 +18,11 @@ class AboutUsRepository extends BaseRepository implements AboutUsRepositoryInter
         return $this->model->active()->first();
     }
 
+    public function getCached(): ?AboutUs
+    {
+        return $this->model::getCached();
+    }
+
     public function searchByTerm(?string $term, int $perPage = 10): LengthAwarePaginator
     {
         $query = $this->model->newQuery();
