@@ -10,9 +10,7 @@
 <head>
     @include('partials.meta-base')
     <title>@yield('title', $aboutUs->company_name ?? config('app.name'))</title>
-    <meta name="description" content="@yield('description', $aboutUs->description ?? '')">
-    <meta name="keywords" content="@yield('keywords', $settings->meta_keywords_string ?? '')">
-    <meta name="author" content="{{ $settings->meta_author ?? '' }}">
+    @include('partials.meta-og')
 
     @include('partials.favicon')
     @include('partials.fonts')
