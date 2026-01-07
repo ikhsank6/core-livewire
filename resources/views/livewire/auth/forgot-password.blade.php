@@ -29,22 +29,17 @@
         </div>
     @endif
 
-    <form wire:submit="sendResetLink" class="space-y-6">
+    <form wire:submit="sendResetLink" class="space-y-6" novalidate>
         {{-- Email --}}
-        <div class="space-y-2">
-            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                Email address
-            </label>
-            <flux:input wire:model="email" type="email" autocomplete="email" required
-                placeholder="Enter your email address" />
+        <flux:field>
+            <flux:label>Email address</flux:label>
+            <flux:input wire:model="email" type="email" autocomplete="email" placeholder="Enter your email address" />
             <flux:error name="email" />
-        </div>
+        </flux:field>
 
         {{-- Submit Button --}}
         <div class="pt-2">
-            <button type="submit"
-                class="auth-btn-primary w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-white transition-all duration-300 hover:shadow-lg">
-                <flux:icon.loading wire:loading class="w-5 h-5 animate-spin" />
+            <flux:button type="submit" class="auth-btn-primary w-full">
                 <span wire:loading.remove class="flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,7 +48,7 @@
                     Send Reset Link
                 </span>
                 <span wire:loading>Sending...</span>
-            </button>
+            </flux:button>
         </div>
 
         {{-- Back to Login --}}

@@ -59,53 +59,43 @@
             </p>
         </div>
 
-        <form wire:submit="register" class="space-y-5">
+        <form wire:submit="register" class="space-y-5" novalidate>
             {{-- Full Name --}}
-            <div class="space-y-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Full Name
-                </label>
-                <flux:input wire:model="name" type="text" autocomplete="name" required placeholder="Enter your full name" />
+            <flux:field>
+                <flux:label>Full Name</flux:label>
+                <flux:input wire:model="name" type="text" autocomplete="name" placeholder="Enter your full name" />
                 <flux:error name="name" />
-            </div>
+            </flux:field>
 
             {{-- Email --}}
-            <div class="space-y-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Email address
-                </label>
-                <flux:input wire:model="email" type="email" autocomplete="email" required placeholder="Enter your email" />
+            <flux:field>
+                <flux:label>Email address</flux:label>
+                <flux:input wire:model="email" type="email" autocomplete="email" placeholder="Enter your email" />
                 <flux:error name="email" />
-            </div>
+            </flux:field>
 
             {{-- Password --}}
-            <div class="space-y-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Password
-                </label>
-                <flux:input wire:model="password" type="password" viewable autocomplete="new-password" required
+            <flux:field>
+                <flux:label>Password</flux:label>
+                <flux:input wire:model="password" type="password" viewable autocomplete="new-password"
                     placeholder="Create a password" />
                 <flux:error name="password" />
-            </div>
+            </flux:field>
 
             {{-- Confirm Password --}}
-            <div class="space-y-2">
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                    Confirm Password
-                </label>
-                <flux:input wire:model="password_confirmation" type="password" viewable autocomplete="new-password" required
+            <flux:field>
+                <flux:label>Confirm Password</flux:label>
+                <flux:input wire:model="password_confirmation" type="password" viewable autocomplete="new-password"
                     placeholder="Confirm your password" />
                 <flux:error name="password_confirmation" />
-            </div>
+            </flux:field>
 
             {{-- Submit Button --}}
             <div class="pt-3">
-                <button type="submit"
-                    class="auth-btn-primary w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-white transition-all duration-300 hover:shadow-lg">
-                    <flux:icon.loading wire:loading class="w-5 h-5 animate-spin" />
+                <flux:button type="submit" class="auth-btn-primary w-full">
                     <span wire:loading.remove>Create Account</span>
                     <span wire:loading>Creating account...</span>
-                </button>
+                </flux:button>
             </div>
         </form>
 

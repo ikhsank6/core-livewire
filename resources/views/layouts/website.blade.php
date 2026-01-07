@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }"
-    x-init="$watch('darkMode', val => localStorage.setItem('theme', val ? 'dark' : 'light'))"
-    :class="{ 'dark': darkMode }">
+<html lang="id" class="scroll-smooth" x-data="{ 
+    theme: localStorage.getItem('theme') || 'light',
+    get isDark() {
+        return this.theme === 'dark';
+    }
+}" x-init="$watch('theme', val => localStorage.setItem('theme', val))" :class="{ 'dark': isDark }">
+
 
 <head>
     <meta charset="utf-8">

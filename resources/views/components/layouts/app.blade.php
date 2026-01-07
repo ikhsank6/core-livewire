@@ -3,9 +3,7 @@
 <script>
     (function () {
         const theme = localStorage.getItem('theme') || 'light';
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        }
+        if (theme === 'dark') document.documentElement.classList.add('dark');
     })();
 </script>
 
@@ -44,25 +42,10 @@
                 value: localStorage.getItem('theme') || 'light',
 
                 init() {
-                    // Ensure dark class is set on init
-                    document.documentElement.classList.toggle('dark', this.value === 'dark');
-
                     Alpine.effect(() => {
                         const isDark = this.value === 'dark';
                         document.documentElement.classList.toggle('dark', isDark);
-                        if (window.$flux) window.$flux.appearance = this.value;
                         localStorage.setItem('theme', this.value);
-                    });
-
-                    // Re-apply on Livewire navigation
-                    document.addEventListener('livewire:navigating', () => {
-                        // Set immediately before navigation starts
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
-                    });
-
-                    document.addEventListener('livewire:navigated', () => {
-                        // Ensure it's still applied after navigation completes
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
                     });
                 },
 
@@ -95,7 +78,8 @@
                     },
                     toggle() {
                         this.value = this.isDark ? 'light' : 'dark';
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
+                        const isDark = this.value === 'dark';
+                        document.documentElement.classList.toggle('dark', isDark);
                         localStorage.setItem('theme', this.value);
                     }
                 });
@@ -255,20 +239,19 @@
                 <flux:separator />
 
                 <div x-data="{
-                        isDark: localStorage.getItem('theme') === 'dark',
+                        get isDark() {
+                            return $store.theme ? $store.theme.isDark : (localStorage.getItem('theme') === 'dark');
+                        },
                         toggle() {
-                            this.isDark = !this.isDark;
-                            const theme = this.isDark ? 'dark' : 'light';
-                            localStorage.setItem('theme', theme);
-                            document.documentElement.classList.toggle('dark', this.isDark);
-                            if (window.$flux) window.$flux.appearance = theme;
-                            // Sync with store if available
-                            if ($store.theme) $store.theme.value = theme;
+                            if ($store.theme) {
+                                $store.theme.toggle();
+                            } else {
+                                const newTheme = this.isDark ? 'light' : 'dark';
+                                localStorage.setItem('theme', newTheme);
+                                document.documentElement.classList.toggle('dark', newTheme === 'dark');
+                            }
                         }
-                    }" x-init="
-                        // Sync from store if available
-                        $watch('$store.theme.value', value => { if(value) isDark = value === 'dark'; });
-                    " x-on:mousedown.stop x-on:click.stop x-on:mouseup.stop x-on:keydown.stop
+                    }" x-on:mousedown.stop x-on:click.stop x-on:mouseup.stop x-on:keydown.stop
                     class="flex items-center justify-between px-3 py-2 outline-hidden">
                     <div class="flex items-center gap-2">
                         {{-- Sun Icon (Light Mode) --}}

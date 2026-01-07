@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth" id="html-root">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 
 <head>
-    <!-- Theme Initialization - MUST be first to prevent flash -->
+    {{-- Immediate theme application to prevent FOUC (Flash of Unstyled Content) --}}
     <script>
         (function () {
-            var theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'dark') document.documentElement.classList.add('dark');
         })();
     </script>
@@ -32,23 +32,10 @@
                 value: localStorage.getItem('theme') || 'light',
 
                 init() {
-                    // Ensure dark class is set on init
-                    document.documentElement.classList.toggle('dark', this.value === 'dark');
-
                     Alpine.effect(() => {
                         const isDark = this.value === 'dark';
                         document.documentElement.classList.toggle('dark', isDark);
-                        if (window.$flux) window.$flux.appearance = this.value;
                         localStorage.setItem('theme', this.value);
-                    });
-
-                    // Re-apply on Livewire navigation
-                    document.addEventListener('livewire:navigating', () => {
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
-                    });
-
-                    document.addEventListener('livewire:navigated', () => {
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
                     });
                 },
 
@@ -62,28 +49,39 @@
             });
         });
 
-        // Ensure store exists after Livewire navigation
+        // Ensure store exists and is synced after Livewire navigation
         document.addEventListener('livewire:navigated', () => {
+            const storedTheme = localStorage.getItem('theme') || 'light';
+
             if (!Alpine.store('theme')) {
                 Alpine.store('theme', {
-                    value: localStorage.getItem('theme') || 'light',
+                    value: storedTheme,
                     get isDark() {
                         return this.value === 'dark';
                     },
                     toggle() {
                         this.value = this.isDark ? 'light' : 'dark';
-                        document.documentElement.classList.toggle('dark', this.value === 'dark');
+                        const isDark = this.value === 'dark';
+                        document.documentElement.classList.toggle('dark', isDark);
                         localStorage.setItem('theme', this.value);
                     }
                 });
+            } else {
+                // Sync store with localStorage
+                if (Alpine.store('theme').value !== storedTheme) {
+                    Alpine.store('theme').value = storedTheme;
+                }
             }
+
+            // Always ensure DOM class is correct
+            const isDark = storedTheme === 'dark';
+            document.documentElement.classList.toggle('dark', isDark);
         });
     </script>
 
     <!-- Styles & Scripts -->
     @filamentStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @fluxAppearance
 
     <style>
         [x-cloak] {
@@ -172,22 +170,18 @@
     </div>
 
     {{-- Content --}}
-    <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8" x-data="{ 
-            darkMode: document.documentElement.classList.contains('dark'),
-            toggleTheme() {
-                this.darkMode = !this.darkMode;
-                const theme = this.darkMode ? 'dark' : 'light';
-                localStorage.setItem('theme', theme);
-                document.documentElement.classList.toggle('dark', this.darkMode);
-                if (window.Alpine && Alpine.store('theme')) Alpine.store('theme').value = theme;
-                window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: theme }));
+    <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8" x-data="{
+            get isDark() {
+                return $store.theme ? $store.theme.isDark : (localStorage.getItem('theme') === 'dark');
             },
-            init() {
-                if (window.Alpine && Alpine.store('theme')) {
-                    this.darkMode = Alpine.store('theme').value === 'dark';
+            toggle() {
+                if ($store.theme) {
+                    $store.theme.toggle();
+                } else {
+                    const newTheme = this.isDark ? 'light' : 'dark';
+                    localStorage.setItem('theme', newTheme);
+                    document.documentElement.classList.toggle('dark', newTheme === 'dark');
                 }
-                this.$watch('$store.theme.value', value => { if (value) this.darkMode = value === 'dark' });
-                window.addEventListener('storage', (e) => { if (e.key === 'theme') this.darkMode = e.newValue === 'dark' });
             }
         }">
         <div class="w-full max-w-md space-y-8">
@@ -222,14 +216,14 @@
 
                 {{-- Theme Toggle Inside Card --}}
                 <div class="flex justify-end mb-6 -mt-2 -mr-2">
-                    <button @click="toggleTheme()" class="group relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95
+                    <button @click="toggle()" class="group relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95
                             bg-slate-100 dark:bg-slate-700/80 
                             border border-slate-200 dark:border-slate-600/50 
                             hover:bg-slate-200 dark:hover:bg-slate-600
                             shadow-sm hover:shadow-md"
-                        :title="darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+                        :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
                         {{-- Sun Icon (shown in dark mode) --}}
-                        <svg x-show="darkMode" x-cloak x-transition:enter="transition ease-out duration-200"
+                        <svg x-show="isDark" x-cloak x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0 rotate-90 scale-0"
                             x-transition:enter-end="opacity-100 rotate-0 scale-100" class="w-5 h-5 text-amber-400"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +231,7 @@
                                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                         {{-- Moon Icon (shown in light mode) --}}
-                        <svg x-show="!darkMode" x-transition:enter="transition ease-out duration-200"
+                        <svg x-show="!isDark" x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0 -rotate-90 scale-0"
                             x-transition:enter-end="opacity-100 rotate-0 scale-100" class="w-5 h-5 text-slate-500"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">

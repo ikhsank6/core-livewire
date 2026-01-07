@@ -8,29 +8,27 @@
         </p>
     </div>
 
-    <form wire:submit="resetPassword" class="space-y-6">
+    <form wire:submit="resetPassword" class="space-y-6" novalidate>
         <flux:field>
             <flux:label>Email address</flux:label>
-            <flux:input wire:model="email" type="email" autocomplete="email" required readonly />
+            <flux:input wire:model="email" type="email" autocomplete="email" readonly />
             <flux:error name="email" />
         </flux:field>
 
         <flux:field>
             <flux:label>New Password</flux:label>
-            <flux:input wire:model="password" type="password" viewable autocomplete="new-password" required />
+            <flux:input wire:model="password" type="password" viewable autocomplete="new-password" />
             <flux:error name="password" />
         </flux:field>
 
         <flux:field>
             <flux:label>Confirm New Password</flux:label>
-            <flux:input wire:model="password_confirmation" type="password" viewable autocomplete="new-password"
-                required />
+            <flux:input wire:model="password_confirmation" type="password" viewable autocomplete="new-password" />
             <flux:error name="password_confirmation" />
         </flux:field>
 
         <!-- Submit -->
-        <flux:button type="submit" variant="primary" class="w-full">
-            <flux:icon.loading wire:loading class="mr-2" />
+        <flux:button type="submit" class="auth-btn-primary w-full">
             <span wire:loading.remove>Reset Password</span>
             <span wire:loading>Resetting...</span>
         </flux:button>
