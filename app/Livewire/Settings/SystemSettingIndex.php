@@ -5,6 +5,7 @@ namespace App\Livewire\Settings;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -38,16 +39,22 @@ class SystemSettingIndex extends Component implements HasForms
     {
         return $form
             ->schema(\App\Forms\SystemSettingForm::schema())
-            ->statePath('data');
+            ->statePath('data')
+            ->columns(1);
     }
 
     public function save(): void
     {
         $data = $this->form->getState();
-
-        $this->systemSettingRepository->updateSettings($data);
-
-        $this->dispatch('notify', text: 'System settings updated successfully.', variant: 'success');
+        DB::beginTransaction();
+        try {
+            $this->systemSettingRepository->updateSettings($data);
+            DB::commit();
+            $this->dispatch('notify', text: 'System settings updated successfully.', variant: 'success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+        }
     }
 
     public function render()
