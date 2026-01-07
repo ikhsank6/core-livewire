@@ -74,38 +74,21 @@
                     <div class="flex items-center gap-2">
                         @auth
                             <a href="{{ route('dashboard') }}"
-                                class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
-                                :class="{ 
-                                       'text-white bg-linear-to-r from-primary to-teal-600 shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30': scrolled, 
-                                       'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
-                                   }">
+                                class="group relative px-6 py-2.5 text-sm font-bold text-white bg-orange-500 rounded-xl transition-all duration-300 transform hover:scale-[1.05] active:scale-[0.98] shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40">
                                 <span class="relative z-10 flex items-center gap-2">
-                                    Dashboard
-                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                                     </svg>
+                                    Dashboard
                                 </span>
                             </a>
                         @else
                             <a href="{{ route('auth.login') }}"
-                                class="px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-                                :class="{ 
-                                       'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10': scrolled, 
-                                       'text-white/90 hover:text-white hover:bg-white/10': !scrolled 
-                                   }">
-                                Sign In
-                            </a>
-                            <a href="{{ route('auth.register') }}"
-                                class="group relative px-5 py-2 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
-                                :class="{ 
-                                       'text-white bg-linear-to-r from-accent to-orange-500 shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/30': scrolled, 
-                                       'text-slate-900 bg-white shadow-lg hover:shadow-xl': !scrolled 
-                                   }">
+                                class="group relative px-6 py-2.5 text-sm font-bold text-white bg-orange-500 rounded-xl transition-all duration-300 transform hover:scale-[1.05] active:scale-[0.98] shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40">
                                 <span class="relative z-10 flex items-center gap-2">
-                                    Get Started
-                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5"
+                                    Sign In
+                                    <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -206,11 +189,11 @@
                 @auth
                     <a href="{{ route('dashboard') }}"
                         class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-linear-to-r from-primary to-teal-600 rounded-xl shadow-md shadow-primary/25">
-                        Dashboard
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                         </svg>
+                        Dashboard
                     </a>
                 @else
                     <a href="{{ route('auth.login') }}"
@@ -218,8 +201,8 @@
                         Sign In
                     </a>
                     <a href="{{ route('auth.register') }}"
-                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-linear-to-r from-accent to-orange-500 rounded-xl shadow-md shadow-orange-500/25">
-                        Get Started
+                        class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-bold text-white bg-orange-500 rounded-xl shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all">
+                        Get started now
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13 7l5 5m0 0l-5 5m5-5H6" />
