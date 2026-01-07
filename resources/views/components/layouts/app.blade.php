@@ -97,7 +97,7 @@
             </button>
 
             @isset($breadcrumbs)
-                <flux:separator vertical variant="subtle" class="mx-6 h-5" />
+                <div class="w-6"></div>
 
                 <flux:breadcrumbs>
                     {{ $breadcrumbs }}

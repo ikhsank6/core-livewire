@@ -44,7 +44,7 @@
                     <flux:radio value="board" icon="squares-2x2" />
                 </flux:radio.group>
             </div>
-            <div class="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden md:block mx-1"></div>
+
         @endif
 
         @if ($showPageSize)
