@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 | Authentication Routes
 |--------------------------------------------------------------------------
+| These routes are protected by rate limiting to prevent brute force attacks.
+| Rate limit: 10 requests per minute per IP address for login/register.
 */
 
-Route::middleware('guest')->prefix('auth')->name('auth.')->group(function () {
+Route::middleware(['guest', 'throttle:website-forms'])->prefix('auth')->name('auth.')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
     Route::get('/forgot-password', ForgotPassword::class)->name('password.request');

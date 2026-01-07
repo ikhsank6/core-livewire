@@ -7,8 +7,11 @@ use App\Policies\MenuPolicy;
 use App\Services\MenuService;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -46,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
             'warning' => Color::Amber,
         ]);
 
+        $this->configureRateLimiting();
+
         $this->registerPolicies();
         $this->registerGates();
 
@@ -56,6 +61,27 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('settings', $systemSettingRepo->getCachedSettings());
             $view->with('aboutUs', $aboutUsRepo->getCached());
+        });
+    }
+
+    /**
+     * Configure the rate limiters for the application.
+     */
+    protected function configureRateLimiting(): void
+    {
+        // Rate limit for public website routes (60 requests per minute per IP)
+        RateLimiter::for('website', function (Request $request) {
+            return Limit::perMinute(60)->by($request->ip());
+        });
+
+        // Stricter rate limit for form submissions (10 requests per minute per IP)
+        RateLimiter::for('website-forms', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
+        });
+
+        // Rate limit for API-like endpoints (30 requests per minute per IP)
+        RateLimiter::for('website-api', function (Request $request) {
+            return Limit::perMinute(30)->by($request->ip());
         });
     }
 
