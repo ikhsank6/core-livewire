@@ -116,6 +116,9 @@ class AboutUsIndex extends Component implements HasForms
                 $this->dispatch('notify', text: 'About Us created successfully.', variant: 'success');
             }
 
+            // Clear cache explicitly (also cleared by model events)
+            AboutUs::clearCache();
+
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
@@ -171,6 +174,9 @@ class AboutUsIndex extends Component implements HasForms
             DB::commit();
 
             $this->dispatch('notify', text: 'About Us deleted successfully.', variant: 'success');
+
+            // Clear cache explicitly (also cleared by model events)
+            AboutUs::clearCache();
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');

@@ -12,7 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
+    <title>{{ $title ?? $aboutUs->company_name ?? config('app.name', 'Laravel') }}</title>
+
+    @if($settings?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings->favicon) }}">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -107,7 +111,9 @@
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <div class="h-16 flex items-center px-6 shrink-0">
-            <flux:brand href="/" logo="https://fluxui.dev/img/demo/logo.png" name="Metronic" />
+            <flux:brand href="/"
+                logo="{{ $aboutUs?->logo ? Storage::url($aboutUs->logo) : 'https://fluxui.dev/img/demo/logo.png' }}"
+                name="{{ $aboutUs?->company_name ?? 'Metronic' }}" />
         </div>
 
         <flux:navlist>

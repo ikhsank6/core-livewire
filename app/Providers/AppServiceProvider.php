@@ -48,6 +48,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
         $this->registerGates();
+
+        // Share cached system settings and about us with all views
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $view->with('settings', \App\Models\SystemSetting::getCached());
+            $view->with('aboutUs', \App\Models\AboutUs::getCached());
+        });
     }
 
     /**

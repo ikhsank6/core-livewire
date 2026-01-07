@@ -60,4 +60,7 @@ Route::middleware(['auth', 'menu.access'])->group(function () {
 
     // Load Master Data Module
     require base_path('routes/modules/master_data.php');
+
+    // Load Settings Module
+    require base_path('routes/modules/settings.php');
 });

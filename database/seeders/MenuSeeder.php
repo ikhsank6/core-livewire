@@ -106,6 +106,24 @@ class MenuSeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'name' => 'Settings',
+                'slug' => 'settings',
+                'icon' => 'cog-8-tooth',
+                'route' => null,
+                'order' => 4,
+                'is_active' => true,
+                'children' => [
+                    [
+                        'name' => 'System',
+                        'slug' => 'system-settings',
+                        'icon' => 'server',
+                        'route' => 'settings.system.index',
+                        'order' => 1,
+                        'is_active' => true,
+                    ],
+                ],
+            ],
         ];
 
         foreach ($menus as $menuData) {

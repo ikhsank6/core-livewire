@@ -13,7 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'Laravel') }}</title>
+    <title>{{ $title ?? $aboutUs->company_name ?? config('app.name', 'Laravel') }}</title>
+
+    @if($settings?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings->favicon) }}">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -192,18 +196,23 @@
                     <div
                         class="absolute inset-0 bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-500">
                     </div>
-                    <div
-                        class="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-lg shadow-teal-500/30">
-                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                    </div>
+                    @if($aboutUs?->logo)
+                        <img src="{{ Storage::url($aboutUs->logo) }}" alt="Logo"
+                            class="relative w-16 h-16 rounded-2xl object-cover shadow-lg ring-1 ring-white/20">
+                    @else
+                        <div
+                            class="relative flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-lg shadow-teal-500/30">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                    @endif
                 </div>
                 {{-- App Name --}}
                 <h1
                     class="mt-6 text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white transition-colors duration-300">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ $aboutUs->company_name ?? config('app.name', 'Laravel') }}
                 </h1>
             </div>
 

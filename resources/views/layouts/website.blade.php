@@ -11,7 +11,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', $aboutUs->company_name ?? config('app.name'))</title>
-    <meta name="description" content="@yield('description', '')">
+    <meta name="description" content="@yield('description', $aboutUs->description ?? '')">
+    <meta name="keywords" content="@yield('keywords', $settings->meta_keywords_string ?? '')">
+    <meta name="author" content="{{ $settings->meta_author ?? '' }}">
+
+    @if($settings?->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($settings->favicon) }}">
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
