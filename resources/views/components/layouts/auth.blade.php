@@ -16,18 +16,24 @@
     @include('partials.alpine-cloak')
 
     <style>
-
         /* Auth button styling */
         .auth-btn-primary {
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%) !important;
+            background: linear-gradient(135deg, #ff8235 0%, #f96107 100%) !important;
             color: #ffffff !important;
-            font-weight: 600 !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
             border-radius: 0.75rem !important;
             padding: 0.875rem 1.5rem !important;
             font-size: 0.9375rem !important;
             transition: all 0.3s ease !important;
             box-shadow: 0 4px 14px -3px rgba(249, 115, 22, 0.5) !important;
             border: none !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .auth-btn-primary span {
+            color: #ffffff !important;
         }
 
         .auth-btn-primary:hover {
