@@ -122,6 +122,14 @@ class MenuSeeder extends Seeder
                         'order' => 1,
                         'is_active' => true,
                     ],
+                    [
+                        'name' => 'Logs',
+                        'slug' => 'logs',
+                        'icon' => 'document-magnifying-glass',
+                        'route' => 'settings.log.index',
+                        'order' => 2,
+                        'is_active' => true,
+                    ],
                 ],
             ],
         ];

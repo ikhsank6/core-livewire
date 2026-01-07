@@ -87,5 +87,9 @@ class AppServiceProvider extends ServiceProvider
 
             return $user->role->menus()->where('menus.id', $menu->id)->exists();
         });
+
+        Gate::define('viewLogViewer', function ($user) {
+            return $user->role && $user->role->slug === 'super-admin';
+        });
     }
 }
