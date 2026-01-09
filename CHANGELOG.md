@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.8.5] - 2026-01-09
+
+### Changed
+
+-   Improved form validation UX by displaying errors directly under input fields instead of notification toasts
+-   Refined email verification template with temporary credentials positioned for better visibility
+-   Optimized password strength UI positioning to appear below validation errors for better guidance
+
+---
+
 ## [v1.8.4] - 2026-01-09
 
 ### Added
