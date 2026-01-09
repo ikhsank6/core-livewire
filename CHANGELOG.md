@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.8.4] - 2026-01-09
+
+### Added
+
+-   Standardized password validation rules following NIST/OWASP recommendations
+-   Real-time password strength meter UI component with color-coded feedback
+-   Interactive password requirement checklist for registration, reset, and change password flows
+-   Automatic secure password generation (16 characters) for administrative user creation
+-   Temporary password delivery integrated into the verification email for admin-created users
+
+### Changed
+
+-   Increased minimum password length to 12 characters for enhanced security
+-   Simplified "Create User" modal by removing manual password entry for administrators
+-   Default account status for admin-created users changed to "Inactive" to trigger credential delivery
+
 ## [v1.8.3] - 2026-01-07
 
 ### Added

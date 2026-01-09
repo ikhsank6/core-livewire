@@ -20,6 +20,7 @@ A comprehensive Laravel 11 + Livewire 3 application featuring a dynamic role-bas
 -   Full authentication flow (Login, Register, Forgot Password, Reset Password)
 -   Email verification with custom branded templates
 -   Queued email notifications
+-   Standardized password validation (NIST/OWASP) with real-time strength indicators
 -   Rate limiting protection on public and auth routes
 -   Role-based access control (RBAC)
 
@@ -54,7 +55,7 @@ A comprehensive Laravel 11 + Livewire 3 application featuring a dynamic role-bas
 
 ### 👥 Master Data Management
 
--   **User Management**: CRUD with avatar, role assignment, activation status
+-   **User Management**: CRUD with auto-generated secure passwords, avatar, and role assignment
 -   **Role Management**: Create roles and assign menu access
 -   **Menu Management**: Dynamic menu builder with drag-and-drop
 
@@ -63,6 +64,7 @@ A comprehensive Laravel 11 + Livewire 3 application featuring a dynamic role-bas
 -   Modern glassmorphism design
 -   Dark mode support throughout
 -   Reusable UI components (buttons, tables, cards, modals)
+-   Real-time password strength component
 -   Toast notifications
 -   Empty state components
 -   Pagination with "Jump to Page"
