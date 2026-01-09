@@ -13,11 +13,20 @@ use Livewire\Component;
 #[Title('Change Password')]
 class ChangePassword extends Component
 {
+    use \App\Livewire\Concerns\WithPasswordValidation;
+
     #[Rule('required|current_password')]
     public string $current_password = '';
 
-    #[Rule('required|min:8|confirmed')]
     public string $password = '';
+
+    public function rules()
+    {
+        return [
+            'current_password' => 'required|current_password',
+            'password' => $this->getPasswordRules(),
+        ];
+    }
 
     public string $password_confirmation = '';
 

@@ -12,14 +12,24 @@ use Livewire\Component;
 #[Title('Register')]
 class Register extends Component
 {
+    use \App\Livewire\Concerns\WithPasswordValidation;
+
     #[Rule('required|string|max:255')]
     public string $name = '';
 
     #[Rule('required|email|unique:users,email')]
     public string $email = '';
 
-    #[Rule('required|min:8|confirmed')]
     public string $password = '';
+
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => $this->getPasswordRules(),
+        ];
+    }
 
     public string $password_confirmation = '';
 

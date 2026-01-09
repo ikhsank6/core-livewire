@@ -24,13 +24,6 @@ class UserForm
                 ->maxLength(255)
                 ->placeholder('john@example.com'),
 
-            TextInput::make('password')
-                ->password()
-                ->revealable()
-                ->dehydrated(fn ($state) => filled($state))
-                ->required(fn (string $context): bool => $context === 'create')
-                ->placeholder('••••••••'),
-
             Select::make('roles')
                 ->options(\App\Models\Role::pluck('name', 'id'))
                 ->multiple()
@@ -75,7 +68,7 @@ class UserForm
                     1 => 'success',
                     0 => 'danger',
                 ])
-                ->default(1)
+                ->default(0)
                 ->extraAttributes(['class' => 'premium-toggle-group'])
                 ->inline(),
         ];

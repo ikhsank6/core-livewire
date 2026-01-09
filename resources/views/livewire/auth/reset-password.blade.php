@@ -17,7 +17,10 @@
 
         <flux:field>
             <flux:label>New Password</flux:label>
-            <flux:input wire:model="password" type="password" viewable autocomplete="new-password" />
+            <flux:input wire:model.live="password" type="password" viewable autocomplete="new-password" />
+
+            <x-password-strength :strength="$this->passwordStrength" :requirements="$this->passwordRequirements" />
+
             <flux:error name="password" />
         </flux:field>
 

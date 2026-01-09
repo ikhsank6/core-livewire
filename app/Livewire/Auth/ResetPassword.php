@@ -16,14 +16,23 @@ use Livewire\Component;
 #[Title('Reset Password')]
 class ResetPassword extends Component
 {
+    use \App\Livewire\Concerns\WithPasswordValidation;
+
     #[Locked]
     public string $token = '';
 
     #[Rule('required|email')]
     public string $email = '';
 
-    #[Rule('required|min:8|confirmed')]
     public string $password = '';
+
+    public function rules()
+    {
+        return [
+            'email' => 'required|email',
+            'password' => $this->getPasswordRules(),
+        ];
+    }
 
     public string $password_confirmation = '';
 

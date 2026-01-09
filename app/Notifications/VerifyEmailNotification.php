@@ -14,11 +14,14 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
 {
     use Queueable;
 
+    public ?string $password;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(?string $password = null)
     {
+        $this->password = $password;
         $this->onQueue('default');
     }
 
@@ -53,6 +56,7 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
             ->view('emails.verify-email', [
                 'userName' => $notifiable->name,
                 'userEmail' => $notifiable->email,
+                'password' => $this->password,
                 'verificationUrl' => $verificationUrl,
                 'subject' => 'Verifikasi Alamat Email',
                 'title' => 'Verifikasi Alamat Email Anda',

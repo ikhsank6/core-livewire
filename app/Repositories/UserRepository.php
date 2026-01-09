@@ -10,6 +10,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -55,10 +56,16 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userData, $roleIds, $defaultRoleId) {
             $userData = $this->handleEmailVerificationOnCreate($userData);
 
+            $password = null;
+            if (! isset($userData['password'])) {
+                $password = Str::password(16);
+                $userData['password'] = Hash::make($password);
+            }
+
             $user = $this->model->create($userData);
             $user->syncRoles($roleIds, $defaultRoleId);
 
-            $this->sendVerificationIfInactive($user, $userData['is_active'] ?? false);
+            $this->sendVerificationIfInactive($user, $userData['is_active'] ?? false, $password);
 
             return $user->fresh(['role', 'roles']);
         });
@@ -219,10 +226,10 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     /**
      * Send email verification notification if user is inactive.
      */
-    private function sendVerificationIfInactive(User|\Illuminate\Database\Eloquent\Model $user, bool $isActive): void
+    private function sendVerificationIfInactive(User|\Illuminate\Database\Eloquent\Model $user, bool $isActive, ?string $password = null): void
     {
         if (! $isActive && ! $user->email_verified_at) {
-            $user->sendEmailVerificationNotification();
+            $user->sendEmailVerificationNotification($password);
         }
     }
 
