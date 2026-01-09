@@ -37,9 +37,9 @@ class Register extends Component
 
     public function register(UserRepositoryInterface $userRepository): void
     {
-        try {
-            $this->validate();
+        $this->validate();
 
+        try {
             $userRepository->register([
                 'name' => $this->name,
                 'email' => $this->email,

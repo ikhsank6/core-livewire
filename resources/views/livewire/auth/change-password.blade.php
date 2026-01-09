@@ -31,10 +31,10 @@
                     <flux:label>New Password</flux:label>
                     <flux:input wire:model.live="password" type="password" viewable placeholder="••••••••" />
 
+                    <flux:error name="password" />
+
                     <x-password-strength :strength="$this->passwordStrength"
                         :requirements="$this->passwordRequirements" />
-
-                    <flux:error name="password" />
                 </flux:field>
 
                 <!-- Confirm New Password -->

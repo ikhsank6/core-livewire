@@ -80,9 +80,9 @@
                 <flux:input wire:model.live="password" type="password" viewable autocomplete="new-password"
                     placeholder="Create a password" />
 
-                <x-password-strength :strength="$this->passwordStrength" :requirements="$this->passwordRequirements" />
-
                 <flux:error name="password" />
+
+                <x-password-strength :strength="$this->passwordStrength" :requirements="$this->passwordRequirements" />
             </flux:field>
 
             {{-- Confirm Password --}}
