@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
-use Livewire\Attributes\Rule;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -21,7 +20,6 @@ class ResetPassword extends Component
     #[Locked]
     public string $token = '';
 
-    #[Rule('required|email')]
     public string $email = '';
 
     public string $password = '';
@@ -31,6 +29,7 @@ class ResetPassword extends Component
         return [
             'email' => 'required|email',
             'password' => $this->getPasswordRules(),
+            'password_confirmation' => 'required',
         ];
     }
 
