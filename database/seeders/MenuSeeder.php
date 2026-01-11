@@ -130,6 +130,14 @@ class MenuSeeder extends Seeder
                         'order' => 2,
                         'is_active' => true,
                     ],
+                    [
+                        'name' => 'Jobs',
+                        'slug' => 'jobs',
+                        'icon' => 'queue-list',
+                        'route' => 'settings.job.index',
+                        'order' => 3,
+                        'is_active' => true,
+                    ],
                 ],
             ],
         ];
