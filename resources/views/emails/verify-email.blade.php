@@ -57,6 +57,10 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <p style="font-size: 12px; color: #D32F2F; margin: 8px 0 0 0; line-height: 1.4;">
+                                    *Demi keamanan, harap segera ubah password Anda setelah berhasil melakukan login untuk
+                                    pertama kali.
+                                </p>
                             </td>
                         </tr>
                     @endisset
