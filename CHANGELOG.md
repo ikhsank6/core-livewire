@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.9.0] - 2026-01-11
+
+### Added
+
+-   `SecurityHeaders` middleware for automated protection against common web attacks (referrers, frame options, etc.)
+-   Host Header Injection protection via `trustHosts` whitelist configuration in `bootstrap/app.php`
+
+---
+
+## [v1.8.6] - 2026-01-11
+
+### Added
+
+-   New Jobs Management UI for handling and retrying `failed_jobs`
+-   Individual and bulk retry functionality for queue jobs
+-   Expandable exception details and JSON payload inspection in Jobs UI
+-   New Jobs management menu integrated into Settings module
+
+### Changed
+
+-   Updated `MenuSeeder` and `RoleMenuSeeder` to include administrative Jobs access
+
+---
+
 ## [v1.8.5] - 2026-01-09
 
 ### Changed
