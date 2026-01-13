@@ -7,14 +7,17 @@
     <x-ui.card title="Failed Jobs" description="Manage and retry background jobs that have failed.">
         <x-slot name="headerAction">
             <div class="flex items-center gap-3">
-                <flux:button wire:click="$refresh" variant="ghost" icon="arrow-path" size="sm" class="h-10! w-10! flex items-center justify-center rounded-xl! border border-zinc-200! dark:border-zinc-700! shadow-sm!" tooltip="Refresh List" />
+                <flux:button wire:click="$refresh" variant="ghost" icon="arrow-path" size="sm"
+                    class="h-10! w-10! flex items-center justify-center rounded-xl! border border-zinc-200! dark:border-zinc-700! shadow-sm!"
+                    tooltip="Refresh List" />
                 @if($failedJobs->total() > 0)
-                    <flux:button wire:click="retryAll" wire:loading.attr="disabled" wire:target="retryAll" variant="primary" icon="arrow-path" size="sm"
-                        class="h-10! rounded-xl!">
+                    <flux:button wire:click="retryAll" wire:loading.attr="disabled" wire:target="retryAll" variant="primary"
+                        icon="arrow-path" size="sm" class="h-10! rounded-xl!">
                         Retry All
                     </flux:button>
                     <flux:button wire:confirm="Are you sure you want to delete all failed jobs?" wire:click="deleteAll"
-                        wire:loading.attr="disabled" wire:target="deleteAll" variant="danger" icon="trash" size="sm" class="h-10! rounded-xl!">
+                        wire:loading.attr="disabled" wire:target="deleteAll" variant="danger" icon="trash" size="sm"
+                        class="h-10! rounded-xl!">
                         Clear All
                     </flux:button>
                 @endif
@@ -62,7 +65,8 @@
 
                                 <button @click="expanded = !expanded"
                                     class="mt-2 text-metronic-primary hover:opacity-80 text-[10px] font-bold uppercase text-left flex items-center gap-1">
-                                    <flux:icon :name="expanded ? 'chevron-up' : 'chevron-down'" size="xs" />
+                                    <flux:icon name="chevron-up" x-show="expanded" size="xs" x-cloak />
+                                    <flux:icon name="chevron-down" x-show="!expanded" size="xs" x-cloak />
                                     <span x-text="expanded ? 'Hide Exception' : 'Show Full Exception'"></span>
                                 </button>
 
@@ -82,11 +86,13 @@
                         </x-ui.table.td>
                         <x-ui.table.td shrink>
                             <div class="flex items-center justify-end gap-2">
-                                <flux:button wire:click="retry({{ $job->id }})" wire:loading.attr="disabled" wire:target="retry({{ $job->id }})" variant="ghost" icon="arrow-path" size="sm"
+                                <flux:button wire:click="retry({{ $job->id }})" wire:loading.attr="disabled"
+                                    wire:target="retry({{ $job->id }})" variant="ghost" icon="arrow-path" size="sm"
                                     tooltip="Retry Job"
                                     class="text-emerald-600 hover:bg-emerald-50! dark:hover:bg-emerald-900/20!" />
                                 <flux:button wire:confirm="Are you sure you want to delete this failed job?"
-                                    wire:click="delete({{ $job->id }})" wire:loading.attr="disabled" wire:target="delete({{ $job->id }})" variant="ghost" icon="trash" size="sm"
+                                    wire:click="delete({{ $job->id }})" wire:loading.attr="disabled"
+                                    wire:target="delete({{ $job->id }})" variant="ghost" icon="trash" size="sm"
                                     tooltip="Delete Job"
                                     class="text-rose-600 hover:bg-rose-50! dark:hover:bg-rose-900/20!" />
                             </div>
