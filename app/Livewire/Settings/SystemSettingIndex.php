@@ -46,13 +46,14 @@ class SystemSettingIndex extends Component implements HasForms
     public function save(): void
     {
         $data = $this->form->getState();
-        DB::beginTransaction();
+
         try {
-            $this->systemSettingRepository->updateSettings($data);
-            DB::commit();
+            DB::transaction(function () use ($data) {
+                $this->systemSettingRepository->updateSettings($data);
+            });
+
             $this->dispatch('notify', text: 'System settings updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

@@ -89,49 +89,39 @@ class CarouselIndex extends Component implements HasForms
         $data = $this->form->getState();
         $data['updated_by'] = Auth::id();
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->carouselRepository->update($this->record->id, $data);
+            DB::transaction(function () use ($data) {
+                if ($this->record) {
+                    $this->carouselRepository->update($this->record->id, $data);
+                } else {
+                    $data['created_by'] = Auth::id();
+                    $this->carouselRepository->create($data);
+                }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Carousel updated successfully.', variant: 'success');
-            } else {
-                $data['created_by'] = Auth::id();
-                $this->carouselRepository->create($data);
-
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Carousel created successfully.', variant: 'success');
-            }
-
+            $message = $this->record ? 'Carousel updated successfully.' : 'Carousel created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(Carousel $carousel): void
     {
-        DB::beginTransaction();
-
         try {
-            // Delete image file
-            if ($carousel->image) {
-                Storage::disk('public')->delete($carousel->image);
-            }
+            DB::transaction(function () use ($carousel) {
+                // Delete image file
+                if ($carousel->image) {
+                    Storage::disk('public')->delete($carousel->image);
+                }
 
-            $this->carouselRepository->delete($carousel->id);
-
-            DB::commit();
+                $this->carouselRepository->delete($carousel->id);
+            });
 
             $this->dispatch('notify', text: 'Carousel deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -148,16 +138,13 @@ class CarouselIndex extends Component implements HasForms
 
     public function updateOrder(array $orderedIds): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->carouselRepository->updateOrder($orderedIds);
-
-            DB::commit();
+            DB::transaction(function () use ($orderedIds) {
+                $this->carouselRepository->updateOrder($orderedIds);
+            });
 
             $this->dispatch('notify', text: 'Carousel order updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

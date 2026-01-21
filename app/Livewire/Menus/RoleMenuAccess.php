@@ -88,24 +88,23 @@ class RoleMenuAccess extends Component
             return;
         }
 
-        DB::beginTransaction();
-
         try {
-            $role = $this->roleRepository->findOrFail($this->selectedRoleId);
-            $this->roleRepository->syncMenus($this->selectedRoleId, $this->selectedMenus);
+            $role = DB::transaction(function () {
+                $role = $this->roleRepository->findOrFail($this->selectedRoleId);
+                $this->roleRepository->syncMenus($this->selectedRoleId, $this->selectedMenus);
 
-            // Clear menu cache for this role
-            $menuService = app(MenuService::class);
-            $menuService->clearMenuCache($this->selectedRoleId);
+                // Clear menu cache for this role
+                $menuService = app(MenuService::class);
+                $menuService->clearMenuCache($this->selectedRoleId);
 
-            DB::commit();
+                return $role;
+            });
 
             $this->dispatch('notify', text: 'Menu access updated successfully for '.$role->name, variant: 'success');
 
             // Refresh the page to update sidebar (layout uses MenuService directly)
             $this->js('setTimeout(() => window.location.reload(), 1000)');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

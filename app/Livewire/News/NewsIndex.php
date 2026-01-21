@@ -3,6 +3,7 @@
 namespace App\Livewire\News;
 
 use App\Forms\NewsForm;
+use App\Livewire\Concerns\HasTableView;
 use App\Models\News;
 use App\Repositories\Contracts\NewsRepositoryInterface;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -16,15 +17,14 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Livewire\Concerns\HasTableView;
 
 #[Layout('components.layouts.app')]
 #[Title('News')]
 class NewsIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -89,49 +89,39 @@ class NewsIndex extends Component implements HasForms
         $data = $this->form->getState();
         $data['updated_by'] = Auth::id();
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->newsRepository->update($this->record->id, $data);
+            DB::transaction(function () use ($data) {
+                if ($this->record) {
+                    $this->newsRepository->update($this->record->id, $data);
+                } else {
+                    $data['created_by'] = Auth::id();
+                    $this->newsRepository->create($data);
+                }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'News updated successfully.', variant: 'success');
-            } else {
-                $data['created_by'] = Auth::id();
-                $this->newsRepository->create($data);
-
-                DB::commit();
-
-                $this->dispatch('notify', text: 'News created successfully.', variant: 'success');
-            }
-
+            $message = $this->record ? 'News updated successfully.' : 'News created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(News $news): void
     {
-        DB::beginTransaction();
-
         try {
-            // Delete image file
-            if ($news->image) {
-                Storage::disk('public')->delete($news->image);
-            }
+            DB::transaction(function () use ($news) {
+                // Delete image file
+                if ($news->image) {
+                    Storage::disk('public')->delete($news->image);
+                }
 
-            $this->newsRepository->delete($news->id);
-
-            DB::commit();
+                $this->newsRepository->delete($news->id);
+            });
 
             $this->dispatch('notify', text: 'News deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

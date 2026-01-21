@@ -20,9 +20,9 @@ use Livewire\WithPagination;
 #[Title('Roles')]
 class RoleIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -87,43 +87,33 @@ class RoleIndex extends Component implements HasForms
         // Validate form first - this will show errors under each field
         $data = $this->form->getState();
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->roleRepository->update($this->record->id, $data);
+            DB::transaction(function () use ($data) {
+                if ($this->record) {
+                    $this->roleRepository->update($this->record->id, $data);
+                } else {
+                    $this->roleRepository->create($data);
+                }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Role updated successfully.', variant: 'success');
-            } else {
-                $this->roleRepository->create($data);
-
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Role created successfully.', variant: 'success');
-            }
-
+            $message = $this->record ? 'Role updated successfully.' : 'Role created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(Role $role): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->roleRepository->delete($role->id);
-
-            DB::commit();
+            DB::transaction(function () use ($role) {
+                $this->roleRepository->delete($role->id);
+            });
 
             $this->dispatch('notify', text: 'Role deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

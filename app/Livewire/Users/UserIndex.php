@@ -23,9 +23,9 @@ use Livewire\WithPagination;
 #[Title('Users')]
 class UserIndex extends Component implements HasForms
 {
+    use HasTableView;
     use InteractsWithForms;
     use WithPagination;
-    use HasTableView;
 
     #[Url]
     public $search = '';
@@ -122,62 +122,54 @@ class UserIndex extends Component implements HasForms
             unset($data['password']);
         }
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->userRepository->updateWithRoles(
-                    $this->record->id,
-                    $data,
-                    $roleIds,
-                    $defaultRoleId
-                );
+            $isUpdate = (bool) $this->record;
 
-                DB::commit();
+            DB::transaction(function () use ($data, $roleIds, $defaultRoleId, $isUpdate) {
+                if ($isUpdate) {
+                    $this->userRepository->updateWithRoles(
+                        $this->record->id,
+                        $data,
+                        $roleIds,
+                        $defaultRoleId
+                    );
+                } else {
+                    $user = $this->userRepository->createWithRoles($data, $roleIds, $defaultRoleId);
 
-                $this->dispatch('notify', text: 'User updated successfully.', variant: 'success');
-            } else {
-                $user = $this->userRepository->createWithRoles($data, $roleIds, $defaultRoleId);
+                    // Send notification to Super Admin
+                    $superAdminRole = $this->roleRepository->findBySlug('super-admin');
 
-                // Send notification to Super Admin
-                $superAdminRole = $this->roleRepository->findBySlug('super-admin');
-
-                if ($superAdminRole) {
-                    Notification::create([
-                        'from_role_id' => Auth::user()->role_id,
-                        'to_role_id' => $superAdminRole->id,
-                        'message' => 'New user "'.$user->name.'" has been created by '.Auth::user()->name.'.',
-                        'url' => null,
-                        'id_reference' => $user->id,
-                        'read' => false,
-                    ]);
+                    if ($superAdminRole) {
+                        Notification::create([
+                            'from_role_id' => Auth::user()->role_id,
+                            'to_role_id' => $superAdminRole->id,
+                            'message' => 'New user "'.$user->name.'" has been created by '.Auth::user()->name.'.',
+                            'url' => null,
+                            'id_reference' => $user->id,
+                            'read' => false,
+                        ]);
+                    }
                 }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'User created successfully.', variant: 'success');
-            }
-
+            $message = $isUpdate ? 'User updated successfully.' : 'User created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(User $user): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->userRepository->delete($user->id);
-
-            DB::commit();
+            DB::transaction(function () use ($user) {
+                $this->userRepository->delete($user->id);
+            });
 
             $this->dispatch('notify', text: 'User deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

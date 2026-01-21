@@ -98,23 +98,18 @@ class AboutUsIndex extends Component implements HasForms
             }
         }
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->aboutUsRepository->update($this->record->id, $data);
+            DB::transaction(function () use ($data) {
+                if ($this->record) {
+                    $this->aboutUsRepository->update($this->record->id, $data);
+                } else {
+                    $data['created_by'] = Auth::id();
+                    $this->aboutUsRepository->create($data);
+                }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'About Us updated successfully.', variant: 'success');
-            } else {
-                $data['created_by'] = Auth::id();
-                $this->aboutUsRepository->create($data);
-
-                DB::commit();
-
-                $this->dispatch('notify', text: 'About Us created successfully.', variant: 'success');
-            }
+            $message = $this->record ? 'About Us updated successfully.' : 'About Us created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
 
             // Clear cache explicitly (also cleared by model events)
             AboutUs::clearCache();
@@ -122,7 +117,6 @@ class AboutUsIndex extends Component implements HasForms
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -161,24 +155,21 @@ class AboutUsIndex extends Component implements HasForms
 
     public function delete(AboutUs $aboutUs): void
     {
-        DB::beginTransaction();
-
         try {
-            // Delete logo file
-            if ($aboutUs->logo) {
-                Storage::disk('public')->delete($aboutUs->logo);
-            }
+            DB::transaction(function () use ($aboutUs) {
+                // Delete logo file
+                if ($aboutUs->logo) {
+                    Storage::disk('public')->delete($aboutUs->logo);
+                }
 
-            $this->aboutUsRepository->delete($aboutUs->id);
-
-            DB::commit();
+                $this->aboutUsRepository->delete($aboutUs->id);
+            });
 
             $this->dispatch('notify', text: 'About Us deleted successfully.', variant: 'success');
 
             // Clear cache explicitly (also cleared by model events)
             AboutUs::clearCache();
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

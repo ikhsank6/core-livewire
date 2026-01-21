@@ -89,43 +89,33 @@ class MenuIndex extends Component implements HasForms
         // Validate form first - this will show errors under each field
         $data = $this->form->getState();
 
-        DB::beginTransaction();
-
         try {
-            if ($this->record) {
-                $this->menuRepository->update($this->record->id, $data);
+            DB::transaction(function () use ($data) {
+                if ($this->record) {
+                    $this->menuRepository->update($this->record->id, $data);
+                } else {
+                    $this->menuRepository->create($data);
+                }
+            });
 
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Menu updated successfully.', variant: 'success');
-            } else {
-                $this->menuRepository->create($data);
-
-                DB::commit();
-
-                $this->dispatch('notify', text: 'Menu created successfully.', variant: 'success');
-            }
-
+            $message = $this->record ? 'Menu updated successfully.' : 'Menu created successfully.';
+            $this->dispatch('notify', text: $message, variant: 'success');
             $this->showModal = false;
             $this->dispatch('refresh');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
 
     public function delete(Menu $menu): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->menuRepository->delete($menu->id);
-
-            DB::commit();
+            DB::transaction(function () use ($menu) {
+                $this->menuRepository->delete($menu->id);
+            });
 
             $this->dispatch('notify', text: 'Menu deleted successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -135,16 +125,13 @@ class MenuIndex extends Component implements HasForms
      */
     public function updateOrder(array $orderedIds): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->menuRepository->updateOrder($orderedIds);
-
-            DB::commit();
+            DB::transaction(function () use ($orderedIds) {
+                $this->menuRepository->updateOrder($orderedIds);
+            });
 
             $this->dispatch('notify', text: 'Menu order updated successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }
@@ -154,16 +141,13 @@ class MenuIndex extends Component implements HasForms
      */
     public function updateParent(int $menuId, ?int $newParentId): void
     {
-        DB::beginTransaction();
-
         try {
-            $this->menuRepository->updateParent($menuId, $newParentId);
-
-            DB::commit();
+            DB::transaction(function () use ($menuId, $newParentId) {
+                $this->menuRepository->updateParent($menuId, $newParentId);
+            });
 
             $this->dispatch('notify', text: 'Menu moved successfully.', variant: 'success');
         } catch (\Exception $e) {
-            DB::rollBack();
             $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
         }
     }

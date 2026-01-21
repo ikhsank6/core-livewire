@@ -32,24 +32,24 @@ class NotificationBell extends Component
 
     public function markAsRead(string $uuid)
     {
-        DB::beginTransaction();
-
         try {
             $notification = $this->notificationRepository->findByUuid($uuid);
 
-            if ($notification && $notification->to_role_id == Auth::user()->role_id) {
-                $this->notificationRepository->markAsRead($notification->id, Auth::user()->role_id);
+            $redirectUrl = DB::transaction(function () use ($notification) {
+                if ($notification && $notification->to_role_id == Auth::user()->role_id) {
+                    $this->notificationRepository->markAsRead($notification->id, Auth::user()->role_id);
 
-                DB::commit();
-
-                if ($notification->url) {
-                    return redirect($notification->url);
+                    return $notification->url;
                 }
-            } else {
-                DB::commit();
+
+                return null;
+            });
+
+            if ($redirectUrl) {
+                return redirect($redirectUrl);
             }
         } catch (\Exception $e) {
-            DB::rollBack();
+            // Silent fail for notification bell
         }
     }
 
