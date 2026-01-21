@@ -7,12 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.10.1] - 2026-01-21
+
+### Changed
+
+- Redesigned toast notifications with a modern monochromatic light theme
+- Enhanced toast notifications with titles and new variants (`warning`, `info`)
+- Simplified toast UI by removing internal action buttons for a minimalist look
+- Optimized theme-aware styling for Light Mode and Dark Mode
+
+---
+
+## [v1.10.0] - 2026-01-21
+
+### Refactored
+
+- Implemented `DB::transaction()` for atomic database operations across all core Livewire components
+- Improved data integrity and reliability by ensuring automatic rollback on failures in News, Users, Menus, Roles, and Settings modules
+
+---
+
+## [v1.9.1] - 2026-01-13
+
+### Fixed
+
+- Fixed bug in settings job management UI
+- Added rate limiting to the change password flow for enhanced security
+- Implemented environment-based default timezone configuration
+- Added user guidance message on the email verification view
+
+---
+
 ## [v1.9.0] - 2026-01-11
 
 ### Added
 
--   `SecurityHeaders` middleware for automated protection against common web attacks (referrers, frame options, etc.)
--   Host Header Injection protection via `trustHosts` whitelist configuration in `bootstrap/app.php`
+- `SecurityHeaders` middleware for automated protection against common web attacks (referrers, frame options, etc.)
+- Host Header Injection protection via `trustHosts` whitelist configuration in `bootstrap/app.php`
 
 ---
 
@@ -20,14 +51,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   New Jobs Management UI for handling and retrying `failed_jobs`
--   Individual and bulk retry functionality for queue jobs
--   Expandable exception details and JSON payload inspection in Jobs UI
--   New Jobs management menu integrated into Settings module
+- New Jobs Management UI for handling and retrying `failed_jobs`
+- Individual and bulk retry functionality for queue jobs
+- Expandable exception details and JSON payload inspection in Jobs UI
+- New Jobs management menu integrated into Settings module
 
 ### Changed
 
--   Updated `MenuSeeder` and `RoleMenuSeeder` to include administrative Jobs access
+- Updated `MenuSeeder` and `RoleMenuSeeder` to include administrative Jobs access
 
 ---
 
@@ -35,9 +66,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Improved form validation UX by displaying errors directly under input fields instead of notification toasts
--   Refined email verification template with temporary credentials positioned for better visibility
--   Optimized password strength UI positioning to appear below validation errors for better guidance
+- Improved form validation UX by displaying errors directly under input fields instead of notification toasts
+- Refined email verification template with temporary credentials positioned for better visibility
+- Optimized password strength UI positioning to appear below validation errors for better guidance
 
 ---
 
@@ -45,31 +76,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Standardized password validation rules following NIST/OWASP recommendations
--   Real-time password strength meter UI component with color-coded feedback
--   Interactive password requirement checklist for registration, reset, and change password flows
--   Automatic secure password generation (16 characters) for administrative user creation
--   Temporary password delivery integrated into the verification email for admin-created users
+- Standardized password validation rules following NIST/OWASP recommendations
+- Real-time password strength meter UI component with color-coded feedback
+- Interactive password requirement checklist for registration, reset, and change password flows
+- Automatic secure password generation (16 characters) for administrative user creation
+- Temporary password delivery integrated into the verification email for admin-created users
 
 ### Changed
 
--   Increased minimum password length to 12 characters for enhanced security
--   Simplified "Create User" modal by removing manual password entry for administrators
--   Default account status for admin-created users changed to "Inactive" to trigger credential delivery
+- Increased minimum password length to 12 characters for enhanced security
+- Simplified "Create User" modal by removing manual password entry for administrators
+- Default account status for admin-created users changed to "Inactive" to trigger credential delivery
 
 ## [v1.8.3] - 2026-01-07
 
 ### Added
 
--   New Blade email templates with modern Tokopedia-style design
--   Custom email layout component with company branding
--   Open Graph and Twitter Card meta tags for social sharing
+- New Blade email templates with modern Tokopedia-style design
+- Custom email layout component with company branding
+- Open Graph and Twitter Card meta tags for social sharing
 
 ### Changed
 
--   Updated email verification notification to use custom template
--   Updated password reset notification to use custom template
--   Queue changed from 'emails' to 'default'
+- Updated email verification notification to use custom template
+- Updated password reset notification to use custom template
+- Queue changed from 'emails' to 'default'
 
 ---
 
@@ -77,13 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Rate limiting for public website routes (60 req/min/IP)
--   Rate limiting for authentication routes (10 req/min/IP)
--   Rate limiter configuration in AppServiceProvider
+- Rate limiting for public website routes (60 req/min/IP)
+- Rate limiting for authentication routes (10 req/min/IP)
+- Rate limiter configuration in AppServiceProvider
 
 ### Security
 
--   Protection against brute force attacks on login/register pages
+- Protection against brute force attacks on login/register pages
 
 ---
 
@@ -91,8 +122,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Removed separator components
--   Simplified spacing with simple div elements
+- Removed separator components
+- Simplified spacing with simple div elements
 
 ---
 
@@ -100,9 +131,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Integrated Opcodes Log Viewer package
--   Dedicated Log Viewer UI with file selection and search
--   New menu entry for log viewing
+- Integrated Opcodes Log Viewer package
+- Dedicated Log Viewer UI with file selection and search
+- New menu entry for log viewing
 
 ---
 
@@ -110,12 +141,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   SystemSetting repository pattern implementation
--   New `x-ui.card` component for consistent card layouts
+- SystemSetting repository pattern implementation
+- New `x-ui.card` component for consistent card layouts
 
 ### Changed
 
--   Refactored UI with new partials structure
+- Refactored UI with new partials structure
 
 ---
 
@@ -123,11 +154,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   System settings management module
--   SEO metadata configuration (keywords, author)
--   Favicon configuration
--   Google Analytics code injection
--   Dedicated settings UI
+- System settings management module
+- SEO metadata configuration (keywords, author)
+- Favicon configuration
+- Google Analytics code injection
+- Dedicated settings UI
 
 ---
 
@@ -135,9 +166,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Centralized theme switching logic
--   Removed redundant Livewire navigation handlers
--   Streamlined Alpine store integration
+- Centralized theme switching logic
+- Removed redundant Livewire navigation handlers
+- Streamlined Alpine store integration
 
 ---
 
@@ -145,8 +176,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   Replaced basic scroll indicator with enhanced animated design
--   Added smooth scroll functionality
+- Replaced basic scroll indicator with enhanced animated design
+- Added smooth scroll functionality
 
 ---
 
@@ -154,11 +185,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Enhanced footer dark mode styling
+- Enhanced footer dark mode styling
 
 ### Changed
 
--   Updated backgrounds, borders, and text colors for dark mode
+- Updated backgrounds, borders, and text colors for dark mode
 
 ---
 
@@ -166,9 +197,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Redesigned footer layout
--   Extracted logo to a dedicated partial
--   Removed home page CTA section
+- Redesigned footer layout
+- Extracted logo to a dedicated partial
+- Removed home page CTA section
 
 ---
 
@@ -176,8 +207,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Redesigned news index page with featured article layout
--   Enhanced news card styling
+- Redesigned news index page with featured article layout
+- Enhanced news card styling
 
 ---
 
@@ -185,9 +216,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Extracted user email verification into helper methods
--   Extracted avatar management into UserRepository
--   Extracted role validation into private helper methods
+- Extracted user email verification into helper methods
+- Extracted avatar management into UserRepository
+- Extracted role validation into private helper methods
 
 ---
 
@@ -195,9 +226,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Extracted website routes into dedicated module
--   Extracted CMS routes into dedicated module
--   Extracted master data routes into dedicated module
+- Extracted website routes into dedicated module
+- Extracted CMS routes into dedicated module
+- Extracted master data routes into dedicated module
 
 ---
 
@@ -205,7 +236,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Extracted authentication routes into dedicated module file
+- Extracted authentication routes into dedicated module file
 
 ---
 
@@ -213,13 +244,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Dark mode support for website
--   AOS (Animate on Scroll) animations
--   Redesigned website pages
+- Dark mode support for website
+- AOS (Animate on Scroll) animations
+- Redesigned website pages
 
 ### Removed
 
--   Livewire-based landing page
+- Livewire-based landing page
 
 ---
 
@@ -227,8 +258,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   New UI button components (delete, ghost, view, check actions)=
--   Refactored notification index to use new button components
+- New UI button components (delete, ghost, view, check actions)=
+- Refactored notification index to use new button components
 
 ---
 
@@ -236,11 +267,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Reusable UI button components library
+- Reusable UI button components library
 
 ### Changed
 
--   Refactored all Livewire index views to use UI components
+- Refactored all Livewire index views to use UI components
 
 ---
 
@@ -248,8 +279,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Drag and drop functionality for menu parent changes
--   Drag and drop reordering within menu index
+- Drag and drop functionality for menu parent changes
+- Drag and drop reordering within menu index
 
 ---
 
@@ -257,8 +288,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Improved dark mode sidebar styling
--   Updated text colors, hover effects, and active states
+- Improved dark mode sidebar styling
+- Updated text colors, hover effects, and active states
 
 ---
 
@@ -266,8 +297,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Drag-and-drop reordering for menu items
--   Updated icon helper text link
+- Drag-and-drop reordering for menu items
+- Updated icon helper text link
 
 ---
 
@@ -275,8 +306,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   `HasTableView` concern for view toggling
--   Table/Card view toggle for index pages
+- `HasTableView` concern for view toggling
+- Table/Card view toggle for index pages
 
 ---
 
@@ -284,9 +315,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Menu icons display in list view
--   Enhanced menu form with icon and order helper text
--   Dynamic prefix for menu fields
+- Menu icons display in list view
+- Enhanced menu form with icon and order helper text
+- Dynamic prefix for menu fields
 
 ---
 
@@ -294,12 +325,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Initial website frontend
--   Home page with hero carousel
--   About page with company info
--   News listing and detail pages
--   New website action classes
--   Repository updates for website data
+- Initial website frontend
+- Home page with hero carousel
+- About page with company info
+- News listing and detail pages
+- New website action classes
+- Repository updates for website data
 
 ---
 
@@ -307,9 +338,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Adjusted modal positioning to align to top
--   Added vertical padding to modals
--   Removed max height constraints
+- Adjusted modal positioning to align to top
+- Added vertical padding to modals
+- Removed max height constraints
 
 ---
 
@@ -317,12 +348,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Soft deletes for all models
--   Enhanced menu routing with new service
+- Soft deletes for all models
+- Enhanced menu routing with new service
 
 ### Changed
 
--   Updated UI form toggles
+- Updated UI form toggles
 
 ---
 
@@ -330,11 +361,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   News management module
--   News categories management
--   Carousel management with drag-and-drop
--   About Us management
--   Landing page functionality
+- News management module
+- News categories management
+- Carousel management with drag-and-drop
+- About Us management
+- Landing page functionality
 
 ---
 
@@ -342,8 +373,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Metronic color variables
--   Tooltips for improved UI/UX
+- Metronic color variables
+- Tooltips for improved UI/UX
 
 ---
 
@@ -351,9 +382,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   UUID support for core models
--   Audit columns (created_by, updated_by)
--   Global delete confirmation modal
+- UUID support for core models
+- Audit columns (created_by, updated_by)
+- Global delete confirmation modal
 
 ---
 
@@ -361,9 +392,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Enhanced form validation with pre-transaction checks
--   Disabled browser validation
--   Improved error styling
+- Enhanced form validation with pre-transaction checks
+- Disabled browser validation
+- Improved error styling
 
 ---
 
@@ -371,8 +402,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Implemented repository pattern for data access
--   Created repositories for User, Role, Menu, Notification
+- Implemented repository pattern for data access
+- Created repositories for User, Role, Menu, Notification
 
 ---
 
@@ -380,12 +411,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Login rate limiting
+- Login rate limiting
 
 ### Fixed
 
--   Alpine.js store persistence across Livewire navigations
--   Refined notification handling
+- Alpine.js store persistence across Livewire navigations
+- Refined notification handling
 
 ---
 
@@ -393,11 +424,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Queued password reset notifications
+- Queued password reset notifications
 
 ### Fixed
 
--   Standardized password reset routes
+- Standardized password reset routes
 
 ---
 
@@ -405,7 +436,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Email verification for user registration
+- Email verification for user registration
 
 ---
 
@@ -413,8 +444,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Dynamic menu access management with `wire:model.live`
--   Enhanced parent/child selection logic for menus
+- Dynamic menu access management with `wire:model.live`
+- Enhanced parent/child selection logic for menus
 
 ---
 
@@ -422,8 +453,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Filtered notification bell to show only unread
--   Enhanced empty state UI
+- Filtered notification bell to show only unread
+- Enhanced empty state UI
 
 ---
 
@@ -431,9 +462,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Notification system with bell component
--   Notification index view
--   Database transactions to authentication components
+- Notification system with bell component
+- Notification index view
+- Database transactions to authentication components
 
 ---
 
@@ -441,7 +472,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   Added icon for remove photo button in profile
+- Added icon for remove photo button in profile
 
 ---
 
@@ -449,8 +480,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   Improved user name and role display in header
--   Enhanced profile dropdown
+- Improved user name and role display in header
+- Enhanced profile dropdown
 
 ---
 
@@ -458,8 +489,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   UI styling improvements on profile
--   User count display on role management
+- UI styling improvements on profile
+- User count display on role management
 
 ---
 
@@ -467,8 +498,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
--   Improved search UI in tables
--   Enhanced dropdown page styling
+- Improved search UI in tables
+- Enhanced dropdown page styling
 
 ---
 
@@ -476,7 +507,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--   Minor updates and fixes
+- Minor updates and fixes
 
 ---
 
@@ -484,14 +515,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Initial release
--   Laravel 11 + Livewire 3 foundation
--   Authentication system (Login, Register, Forgot Password)
--   Dynamic role-based sidebar menu
--   User management CRUD
--   Role management with menu assignment
--   Menu management with hierarchical structure
--   FluxUI and Filament Forms integration
--   TailwindCSS styling
--   AlpineJS interactivity
--   SQLite database support
+- Initial release
+- Laravel 11 + Livewire 3 foundation
+- Authentication system (Login, Register, Forgot Password)
+- Dynamic role-based sidebar menu
+- User management CRUD
+- Role management with menu assignment
+- Menu management with hierarchical structure
+- FluxUI and Filament Forms integration
+- TailwindCSS styling
+- AlpineJS interactivity
+- SQLite database support
