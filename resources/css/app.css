@@ -774,7 +774,7 @@ a,
 }
 
 /* ============================================
-   NOTIFICATION TOAST ANIMATIONS
+   NOTIFICATION TOAST - MODERN MONOCHROMATIC
    ============================================ */
 
 @keyframes shrink-width {
@@ -788,6 +788,251 @@ a,
 
 .animate-shrink-width {
     animation: shrink-width linear forwards;
+}
+
+/* ===== TOAST BASE CONTAINER ===== */
+.toast-container {
+    backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   LIGHT MODE - Soft pastel backgrounds
+   ============================================ */
+
+/* ===== SUCCESS TOAST - Green ===== */
+.toast-success {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 1.5px solid #6ee7b7;
+    box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.3);
+}
+
+.toast-success .toast-title {
+    color: #065f46;
+}
+
+.toast-success .toast-message {
+    color: #047857;
+}
+
+.toast-success .toast-icon-wrapper {
+    color: #10b981;
+}
+
+.toast-success .toast-close-btn {
+    color: #065f46;
+}
+
+.toast-success .toast-progress-bg {
+    background: rgba(16, 185, 129, 0.2);
+}
+
+.toast-success .toast-progress-bar {
+    background: #10b981;
+}
+
+/* ===== DANGER TOAST - Red/Pink ===== */
+.toast-danger {
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    border: 1.5px solid #fca5a5;
+    box-shadow: 0 10px 40px -10px rgba(239, 68, 68, 0.3);
+}
+
+.toast-danger .toast-title {
+    color: #991b1b;
+}
+
+.toast-danger .toast-message {
+    color: #b91c1c;
+}
+
+.toast-danger .toast-icon-wrapper {
+    color: #ef4444;
+}
+
+.toast-danger .toast-close-btn {
+    color: #991b1b;
+}
+
+.toast-danger .toast-progress-bg {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.toast-danger .toast-progress-bar {
+    background: #ef4444;
+}
+
+/* ===== WARNING TOAST - Orange/Amber ===== */
+.toast-warning {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 1.5px solid #fcd34d;
+    box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.3);
+}
+
+.toast-warning .toast-title {
+    color: #92400e;
+}
+
+.toast-warning .toast-message {
+    color: #b45309;
+}
+
+.toast-warning .toast-icon-wrapper {
+    color: #f59e0b;
+}
+
+.toast-warning .toast-close-btn {
+    color: #92400e;
+}
+
+.toast-warning .toast-progress-bg {
+    background: rgba(245, 158, 11, 0.2);
+}
+
+.toast-warning .toast-progress-bar {
+    background: #f59e0b;
+}
+
+/* ===== INFO TOAST - Blue ===== */
+.toast-info {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1.5px solid #93c5fd;
+    box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.3);
+}
+
+.toast-info .toast-title {
+    color: #1e40af;
+}
+
+.toast-info .toast-message {
+    color: #1d4ed8;
+}
+
+.toast-info .toast-icon-wrapper {
+    color: #3b82f6;
+}
+
+.toast-info .toast-close-btn {
+    color: #1e40af;
+}
+
+.toast-info .toast-progress-bg {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.toast-info .toast-progress-bar {
+    background: #3b82f6;
+}
+
+/* ============================================
+   DARK MODE - Rich saturated backgrounds
+   ============================================ */
+
+/* ===== SUCCESS TOAST - Dark Green ===== */
+.dark .toast-success {
+    background: linear-gradient(135deg, #065f46 0%, #064e3b 100%);
+    border: 1.5px solid #10b981;
+    box-shadow: 0 20px 50px -15px rgba(16, 185, 129, 0.4);
+}
+
+.dark .toast-success .toast-title {
+    color: #6ee7b7;
+}
+
+.dark .toast-success .toast-message {
+    color: #a7f3d0;
+}
+
+.dark .toast-success .toast-icon-wrapper {
+    color: #34d399;
+}
+
+.dark .toast-success .toast-close-btn {
+    color: #6ee7b7;
+}
+
+.dark .toast-success .toast-progress-bg {
+    background: rgba(16, 185, 129, 0.3);
+}
+
+/* ===== DANGER TOAST - Dark Red/Pink ===== */
+.dark .toast-danger {
+    background: linear-gradient(135deg, #881337 0%, #6b0f26 100%);
+    border: 1.5px solid #fb7185;
+    box-shadow: 0 20px 50px -15px rgba(244, 63, 94, 0.4);
+}
+
+.dark .toast-danger .toast-title {
+    color: #fda4af;
+}
+
+.dark .toast-danger .toast-message {
+    color: #fecdd3;
+}
+
+.dark .toast-danger .toast-icon-wrapper {
+    color: #fb7185;
+}
+
+.dark .toast-danger .toast-close-btn {
+    color: #fda4af;
+}
+
+.dark .toast-danger .toast-progress-bg {
+    background: rgba(244, 63, 94, 0.3);
+}
+
+/* ===== WARNING TOAST - Dark Orange/Amber ===== */
+.dark .toast-warning {
+    background: linear-gradient(135deg, #78350f 0%, #5c2c0a 100%);
+    border: 1.5px solid #f59e0b;
+    box-shadow: 0 20px 50px -15px rgba(245, 158, 11, 0.4);
+}
+
+.dark .toast-warning .toast-title {
+    color: #fcd34d;
+}
+
+.dark .toast-warning .toast-message {
+    color: #fde68a;
+}
+
+.dark .toast-warning .toast-icon-wrapper {
+    color: #fbbf24;
+}
+
+.dark .toast-warning .toast-close-btn {
+    color: #fcd34d;
+}
+
+.dark .toast-warning .toast-progress-bg {
+    background: rgba(245, 158, 11, 0.3);
+}
+
+/* ===== INFO TOAST - Dark Blue ===== */
+.dark .toast-info {
+    background: linear-gradient(135deg, #1e3a5f 0%, #172554 100%);
+    border: 1.5px solid #3b82f6;
+    box-shadow: 0 20px 50px -15px rgba(59, 130, 246, 0.4);
+}
+
+.dark .toast-info .toast-title {
+    color: #93c5fd;
+}
+
+.dark .toast-info .toast-message {
+    color: #bfdbfe;
+}
+
+.dark .toast-info .toast-icon-wrapper {
+    color: #60a5fa;
+}
+
+.dark .toast-info .toast-close-btn {
+    color: #93c5fd;
+}
+
+.dark .toast-info .toast-progress-bg {
+    background: rgba(59, 130, 246, 0.3);
 }
 
 /* ============================================
