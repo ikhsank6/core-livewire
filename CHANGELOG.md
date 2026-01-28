@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.11.0] - 2026-01-28
+
+### Added
+
+- Centralized Media Management system with dedicated `medias` table and `Media` model
+- Implemented `MediaRepository` for unified file upload, synchronization, and deletion across the application
+- Integrated `media_id` relationships into `User`, `Carousel`, `News`, `AboutUs`, and `SystemSetting` models for robust file tracking
+- Automatic MIME type detection, UUID generation, and file size tracking for all media assets
+
+### Refactored
+
+- Migrated legacy image management to use the new `MediaRepository` in multiple repositories
+- Optimized file cleanup logic to ensure physical files are removed upon media record deletion
+
+### Fixed
+
+- Resolved "Undefined method 'mimeType'" error by improving filesystem path handling in `MediaRepository`
+
+---
+
 ## [v1.10.1] - 2026-01-21
 
 ### Changed
