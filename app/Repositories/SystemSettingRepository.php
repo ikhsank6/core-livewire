@@ -27,6 +27,11 @@ class SystemSettingRepository extends BaseRepository implements SystemSettingRep
     {
         $setting = $this->getSettings();
 
+        if (isset($data['favicon'])) {
+            $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->syncFromPath($data['favicon'], $setting?->media_id);
+            $data['media_id'] = $media?->id;
+        }
+
         if ($setting) {
             $setting->update($data);
         } else {

@@ -19,12 +19,21 @@ class News extends Model
         'excerpt',
         'content',
         'image',
+        'media_id',
         'published_at',
         'is_featured',
         'is_active',
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Get the media associated with the news image.
+     */
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class);
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

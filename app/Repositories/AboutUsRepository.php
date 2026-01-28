@@ -13,6 +13,45 @@ class AboutUsRepository extends BaseRepository implements AboutUsRepositoryInter
         parent::__construct($model);
     }
 
+    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+            if (isset($data['logo'])) {
+                $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->syncFromPath($data['logo']);
+                $data['media_id'] = $media?->id;
+            }
+
+            return parent::create($data);
+        });
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id, $data) {
+            $record = $this->findOrFail($id);
+
+            if (isset($data['logo'])) {
+                $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->syncFromPath($data['logo'], $record->media_id);
+                $data['media_id'] = $media?->id;
+            }
+
+            return parent::update($id, $data);
+        });
+    }
+
+    public function delete(int $id): bool
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id) {
+            $record = $this->findOrFail($id);
+
+            if ($record->media_id) {
+                app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->deleteMedia($record->media_id);
+            }
+
+            return parent::delete($id);
+        });
+    }
+
     public function getActive(): ?AboutUs
     {
         return $this->model->active()->first();

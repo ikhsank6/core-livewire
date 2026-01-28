@@ -111,14 +111,7 @@ class CarouselIndex extends Component implements HasForms
     public function delete(Carousel $carousel): void
     {
         try {
-            DB::transaction(function () use ($carousel) {
-                // Delete image file
-                if ($carousel->image) {
-                    Storage::disk('public')->delete($carousel->image);
-                }
-
-                $this->carouselRepository->delete($carousel->id);
-            });
+            $this->carouselRepository->delete($carousel->id);
 
             $this->dispatch('notify', text: 'Carousel deleted successfully.', variant: 'success');
         } catch (\Exception $e) {

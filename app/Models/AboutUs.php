@@ -35,10 +35,19 @@ class AboutUs extends Model
         'map_embed',
         'map_url',
         'logo',
+        'media_id',
         'is_active',
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Get the media associated with the logo.
+     */
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class);
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

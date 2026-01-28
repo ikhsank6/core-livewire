@@ -45,9 +45,18 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id', // Active role
         'is_active',
         'avatar',
+        'media_id',
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Get the media associated with the user avatar.
+     */
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -14,6 +14,45 @@ class NewsRepository extends BaseRepository implements NewsRepositoryInterface
         parent::__construct($model);
     }
 
+    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+            if (isset($data['image'])) {
+                $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->syncFromPath($data['image']);
+                $data['media_id'] = $media?->id;
+            }
+
+            return parent::create($data);
+        });
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id, $data) {
+            $record = $this->findOrFail($id);
+
+            if (isset($data['image'])) {
+                $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->syncFromPath($data['image'], $record->media_id);
+                $data['media_id'] = $media?->id;
+            }
+
+            return parent::update($id, $data);
+        });
+    }
+
+    public function delete(int $id): bool
+    {
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id) {
+            $record = $this->findOrFail($id);
+
+            if ($record->media_id) {
+                app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->deleteMedia($record->media_id);
+            }
+
+            return parent::delete($id);
+        });
+    }
+
     public function getPublished(int $perPage = 10): LengthAwarePaginator
     {
         return $this->model

@@ -15,6 +15,7 @@ class Carousel extends Model
         'title',
         'description',
         'image',
+        'media_id',
         'button_text',
         'button_link',
         'order',
@@ -22,6 +23,14 @@ class Carousel extends Model
         'created_by',
         'updated_by',
     ];
+
+    /**
+     * Get the media associated with the carousel image.
+     */
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class);
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

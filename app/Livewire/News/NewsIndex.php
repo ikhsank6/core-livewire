@@ -111,14 +111,7 @@ class NewsIndex extends Component implements HasForms
     public function delete(News $news): void
     {
         try {
-            DB::transaction(function () use ($news) {
-                // Delete image file
-                if ($news->image) {
-                    Storage::disk('public')->delete($news->image);
-                }
-
-                $this->newsRepository->delete($news->id);
-            });
+            $this->newsRepository->delete($news->id);
 
             $this->dispatch('notify', text: 'News deleted successfully.', variant: 'success');
         } catch (\Exception $e) {

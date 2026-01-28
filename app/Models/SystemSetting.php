@@ -13,10 +13,19 @@ class SystemSetting extends Model
 
     protected $fillable = [
         'favicon',
+        'media_id',
         'meta_keywords',
         'meta_author',
         'google_analytics_code',
     ];
+
+    /**
+     * Get the media associated with the favicon.
+     */
+    public function media(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Media::class);
+    }
 
     protected $casts = [
         'meta_keywords' => 'array',

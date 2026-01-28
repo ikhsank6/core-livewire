@@ -39,6 +39,7 @@ class RepositoryServiceProvider extends ServiceProvider
         NewsRepositoryInterface::class => NewsRepository::class,
         AboutUsRepositoryInterface::class => AboutUsRepository::class,
         SystemSettingRepositoryInterface::class => SystemSettingRepository::class,
+        \App\Repositories\Contracts\MediaRepositoryInterface::class => \App\Repositories\MediaRepository::class,
     ];
 
     /**

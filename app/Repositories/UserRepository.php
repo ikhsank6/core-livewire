@@ -107,12 +107,20 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userId, $file) {
             $user = $this->findOrFail($userId);
 
-            $this->removeAvatarFile($user);
+            // Delete old media if exists
+            if ($user->media_id) {
+                app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->deleteMedia($user->media_id);
+            }
 
-            $avatarPath = $file->store(self::AVATAR_PATH, self::STORAGE_DISK);
-            $user->update(['avatar' => $avatarPath]);
+            // Create new media
+            $media = app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->upload($file, self::AVATAR_PATH);
 
-            return $avatarPath;
+            $user->update([
+                'avatar' => $media->filename,
+                'media_id' => $media->id,
+            ]);
+
+            return $media->filename;
         });
     }
 
@@ -124,9 +132,14 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return DB::transaction(function () use ($userId) {
             $user = $this->findOrFail($userId);
 
-            $this->removeAvatarFile($user);
+            if ($user->media_id) {
+                app(\App\Repositories\Contracts\MediaRepositoryInterface::class)->deleteMedia($user->media_id);
+            }
 
-            return $user->update(['avatar' => null]);
+            return $user->update([
+                'avatar' => null,
+                'media_id' => null,
+            ]);
         });
     }
 

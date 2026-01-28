@@ -156,14 +156,7 @@ class AboutUsIndex extends Component implements HasForms
     public function delete(AboutUs $aboutUs): void
     {
         try {
-            DB::transaction(function () use ($aboutUs) {
-                // Delete logo file
-                if ($aboutUs->logo) {
-                    Storage::disk('public')->delete($aboutUs->logo);
-                }
-
-                $this->aboutUsRepository->delete($aboutUs->id);
-            });
+            $this->aboutUsRepository->delete($aboutUs->id);
 
             $this->dispatch('notify', text: 'About Us deleted successfully.', variant: 'success');
 
