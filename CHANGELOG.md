@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented reusable base error layout (`errors/layout.blade.php`) with responsive typography and dot-pattern background
 - Added dynamic cloud animations and custom SVG illustrations for interactive error pages
 - Integrated centralized "Go Back" navigation for all error views
+- Implemented standardized pagination and per-page selector for Notifications module
 
 ### Security
 

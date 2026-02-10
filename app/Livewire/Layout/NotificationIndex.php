@@ -22,6 +22,14 @@ class NotificationIndex extends Component
     #[Url]
     public string $filter = 'all'; // all, unread, read
 
+    #[Url]
+    public int $perPage = 10;
+
+    public function updatedPerPage(): void
+    {
+        $this->resetPage();
+    }
+
     protected NotificationRepositoryInterface $notificationRepository;
 
     public function boot(NotificationRepositoryInterface $notificationRepository): void
@@ -92,7 +100,7 @@ class NotificationIndex extends Component
             'notifications' => $this->notificationRepository->getPaginatedForRole(
                 Auth::user()->role_id,
                 $this->filter === 'all' ? null : $this->filter,
-                15
+                $this->perPage
             ),
         ]);
     }

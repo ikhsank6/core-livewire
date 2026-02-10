@@ -16,6 +16,22 @@
             </div>
 
             <div class="flex items-center gap-2">
+                <flux:dropdown>
+                    <flux:button variant="ghost"
+                        class="h-10! px-3! min-w-[80px] rounded-xl! border border-zinc-200! dark:border-zinc-700! text-zinc-800! dark:text-white! font-bold! bg-white! dark:bg-zinc-900! shadow-sm!"
+                        icon="list-bullet" icon-trailing="chevron-down">
+                        {{ $perPage }}
+                    </flux:button>
+                    <flux:menu class="min-w-32">
+                        <flux:menu.radio.group wire:model.live="perPage">
+                            <flux:menu.radio value="10">10 Rows</flux:menu.radio>
+                            <flux:menu.radio value="25">25 Rows</flux:menu.radio>
+                            <flux:menu.radio value="50">50 Rows</flux:menu.radio>
+                            <flux:menu.radio value="100">100 Rows</flux:menu.radio>
+                        </flux:menu.radio.group>
+                    </flux:menu>
+                </flux:dropdown>
+
                 @if($this->unreadCount > 0)
                     <x-ui.button.ghost wire:click="markAllAsRead" label="Mark all as read" icon="check-badge" />
                 @endif
@@ -111,8 +127,7 @@
                                 tooltip="Buka Tautan" />
                         @endif
 
-                        <x-ui.button.delete :uuid="$notification->id" 
-                            tooltip="Hapus Notifikasi" 
+                        <x-ui.button.delete :uuid="$notification->id" tooltip="Hapus Notifikasi"
                             message="Apakah Anda yakin ingin menghapus notifikasi ini?" />
                     </div>
                 </div>
@@ -147,10 +162,8 @@
         </div>
 
         {{-- Pagination --}}
-        @if($notifications->hasPages())
-            <div class="mt-6">
-                {{ $notifications->links() }}
-            </div>
-        @endif
+        <div class="mt-6">
+            <x-ui.pagination :paginator="$notifications" />
+        </div>
     </div>
 </div>
