@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v1.11.1] - 2026-02-10
+
+### Added
+
+- Redesigned 404, 403, and 500 error pages with modern, minimalist, and dynamic UI
+- Implemented reusable base error layout (`errors/layout.blade.php`) with responsive typography and dot-pattern background
+- Added dynamic cloud animations and custom SVG illustrations for interactive error pages
+- Integrated centralized "Go Back" navigation for all error views
+
+### Security
+
+- Conducted comprehensive security and dependency audit
+- Identified high-severity vulnerability in `axios` (fix recommended via `npm audit fix`)
+- Verified application environment security and debug configurations
+
+---
+
 ## [v1.11.0] - 2026-01-28
 
 ### Added
