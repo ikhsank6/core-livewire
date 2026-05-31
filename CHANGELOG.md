@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v2.1.0] - 2026-05-31
+
+### Added
+
+- Integrated Highcharts JS visualization module on the Admin Dashboard to display dynamic user distribution
+- Implemented a premium, Flowbite-inspired Welcome Alert banner at the top of the dashboard, custom-tailored with responsive light/dark mode styles using premium hex colors and subtle icons
+
+### Changed
+
+- Refined Dashboard Donut Chart layout by setting pie chart size to `75%` and shifting the center to `45%` to prevent overlap with legend items
+- Realigned the absolute-positioned Donut center total text (`22 Total`) to perfectly match the shifted chart center
+- Removed redundant percentage pills from the dashboard chart panel for a cleaner, more minimalist design
+
+---
+
+## [v2.0.0] - 2026-05-15
+
+### Added
+
+- Created 3 new reusable core concerns under `app/Livewire/Concerns/` to standardize common component operations:
+  - `WithNotifications.php` for standard multi-variant toast notifications (`notifySuccess`, `notifyError`, `notifyWarning`, `attempt`)
+  - `WithSearchablePagination.php` for centralized searchable and paginated index controls
+  - `WithRateLimiting.php` for securing administrative actions against high-frequency hits
+- Integrated new `WithNotifications` and `WithRateLimiting` traits into `Profile.php` and `ChangePassword.php` core components
+
+### Changed
+
+- Standardized all button elements across the application to utilize consistent, fully rounded (`rounded-full`) borders (affecting 8 core button components, modals, delete-confirmation dialogs, and layout controls)
+- Refactored `ChangePassword` and `Profile` views to replace standard links and legacy buttons with new rounded-pill styled action controls (adding left-arrow cancel icons, shields, and active loading indicators)
+
+---
+
 ## [v1.11.1] - 2026-02-10
 
 ### Added

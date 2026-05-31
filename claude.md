@@ -30,7 +30,7 @@ app/
 │   ├── Auth/          # Login, Register, ForgotPassword, ResetPassword, VerifyEmail, Profile, ChangePassword
 │   ├── AboutUs/       # AboutUsIndex
 │   ├── Carousels/     # CarouselIndex
-│   ├── Concerns/      # Shared traits (HasTableView, WithPasswordValidation)
+│   ├── Concerns/      # Shared traits (HasTableView, WithPasswordValidation, WithNotifications, WithSearchablePagination, WithRateLimiting)
 │   ├── Layout/        # NotificationBell, NotificationIndex, Sidebar
 │   ├── Menus/         # MenuIndex, RoleMenuAccess
 │   ├── News/          # NewsIndex
@@ -313,11 +313,34 @@ class SomeIndex extends Component implements HasForms
 
 ### Notification Pattern (Livewire Events)
 
+Terdapat dua cara pengiriman notifikasi:
+
+**1. Dispatch event langsung (legacy/manual):**
 ```php
-// Dispatch notification event
 $this->dispatch('notify', text: 'Success message', variant: 'success');
 $this->dispatch('notify', text: 'Error message', variant: 'danger');
 ```
+
+**2. Via `WithNotifications` concern (direkomendasikan):**
+```php
+use App\Livewire\Concerns\WithNotifications;
+
+class SomePage extends Component
+{
+    use WithNotifications;
+
+    public function save(): void
+    {
+        $this->attempt(
+            fn() => $this->someRepo->create($this->data),
+            'Data berhasil disimpan.',
+            'Gagal menyimpan data.'
+        );
+    }
+}
+```
+
+Method tersedia: `notifySuccess()`, `notifyError()`, `notifyWarning()`, `attempt(callable, successMsg, errorMsg)`.
 
 ### Modal Pattern
 
@@ -336,6 +359,16 @@ Modal state dikelola via `$showModal` property. Form di-reset saat modal ditutup
 ### Flowbite & Tailwind CSS (Admin Layout)
 
 Layout admin utama (sidebar, header/navbar, responsive shell) menggunakan **Flowbite** dengan Alpine.js untuk interaktivitas dinamis (sidebar collapse, mobile drawer, profile dropdown). CSS dan JS saat ini di-load via CDN karena keterbatasan DNS internet lokal.
+
+### Highcharts (Dashboard Visualization)
+
+Dashboard admin menggunakan **Highcharts** (^12.6.0) untuk menampilkan grafik distribusi pengguna dalam format Donut Chart yang premium. Library di-install via npm dan di-import melalui `resources/js/app.js`, kemudian di-expose secara global via `window.Highcharts` agar dapat diakses dari inline script Blade.
+
+**Pattern inisialisasi chart:**
+- Chart JS ditulis di blok `<script>` di luar komponen Livewire agar tidak terganggu siklus re-render
+- Container chart menggunakan `wire:ignore` untuk mencegah Livewire menimpa DOM chart
+- Dukungan re-init setelah Livewire SPA navigation via `document.addEventListener('livewire:navigated', buildChart)`
+- Chart reflow dipanggil via `window.reflowUserChart()` saat Alpine.js panel di-expand/collapse
 
 ### Livewire Flux
 
@@ -508,6 +541,7 @@ Saat menambahkan module/fitur CRUD baru, ikuti langkah berikut:
 | `opcodesio/log-viewer` | ^3.21 | Log viewer UI (restricted to super-admin) |
 | `tailwindcss` | ^4.0.0 | Utility-first CSS framework |
 | `vite` | ^7.0.7 | Frontend build tool |
+| `highcharts` | ^12.6.0 (npm) | Interactive JavaScript charting library |
 
 ### Dev Dependencies
 
