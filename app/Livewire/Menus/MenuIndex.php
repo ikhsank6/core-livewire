@@ -152,6 +152,12 @@ class MenuIndex extends Component implements HasForms
         }
     }
 
+    public function reload(): void
+    {
+        $this->search = '';
+        $this->resetPage();
+    }
+
     public function updatedSearch()
     {
         $this->resetPage();

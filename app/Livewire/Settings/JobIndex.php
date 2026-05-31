@@ -21,6 +21,12 @@ class JobIndex extends Component
 
     public $perPage = 10;
 
+    public function reload(): void
+    {
+        $this->search = '';
+        $this->resetPage();
+    }
+
     public function updatedSearch()
     {
         $this->resetPage();

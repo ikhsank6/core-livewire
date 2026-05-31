@@ -8,7 +8,7 @@
 ## 🏗️ Project Overview
 
 **Nama**: Laravel Livewire CMS Platform
-**Stack**: Laravel 12 + Livewire 3 + Flux UI + Filament Forms + Tailwind CSS 4 + Vite 7
+**Stack**: Laravel 12 + Livewire 3 + Flowbite (Admin Layout) + Flux UI + Filament Forms + Tailwind CSS 4 + Vite 7
 **Database**: SQLite (development), bisa di-swap ke MySQL/PostgreSQL
 **PHP**: >= 8.2
 **Tipe Aplikasi**: Content Management System (CMS) dengan role-based access control (RBAC), public-facing website, dan admin panel yang dibangun sepenuhnya dengan Livewire full-page components.
@@ -333,9 +333,13 @@ Modal state dikelola via `$showModal` property. Form di-reset saat modal ditutup
 - Filament preset di-include via `tailwind.config.js`
 - Dark mode menggunakan `selector` strategy
 
+### Flowbite & Tailwind CSS (Admin Layout)
+
+Layout admin utama (sidebar, header/navbar, responsive shell) menggunakan **Flowbite** dengan Alpine.js untuk interaktivitas dinamis (sidebar collapse, mobile drawer, profile dropdown). CSS dan JS saat ini di-load via CDN karena keterbatasan DNS internet lokal.
+
 ### Livewire Flux
 
-Package `livewire/flux` (v2.10) menyediakan komponen UI premium untuk Livewire.
+Package `livewire/flux` (v2.10) menyediakan komponen UI premium untuk Livewire, yang masih digunakan pada level page elements (seperti breadcrumbs, badges, form inputs, dll.).
 
 ### Custom UI Components (`views/components/ui/`)
 
@@ -499,6 +503,7 @@ Saat menambahkan module/fitur CRUD baru, ikuti langkah berikut:
 | `laravel/framework` | ^12.0 | Core framework |
 | `livewire/livewire` | ^3.0 | Full-page reactive components |
 | `livewire/flux` | ^2.10 | Premium Livewire UI components |
+| `flowbite` | ^2.3.0 (CDN) | Admin panel layout and components |
 | `filament/forms` | ^3.0 | Form builder (schema-only, bukan panel) |
 | `opcodesio/log-viewer` | ^3.21 | Log viewer UI (restricted to super-admin) |
 | `tailwindcss` | ^4.0.0 | Utility-first CSS framework |

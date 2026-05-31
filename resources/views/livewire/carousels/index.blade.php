@@ -1,17 +1,24 @@
 <x-slot name="breadcrumbs">
     <flux:breadcrumbs.item>CMS</flux:breadcrumbs.item>
-    <flux:breadcrumbs.item>Carousels</flux:breadcrumbs.item>
+    <flux:breadcrumbs.item>Carousel</flux:breadcrumbs.item>
 </x-slot>
 <div>
-    <x-ui.card title="Carousels" description="Manage homepage carousel/slider images.">
+    <x-ui.card title="Carousel" description="Kelola gambar carousel / slider halaman utama">
 
         <x-slot name="headerAction">
-            <x-ui.button.add label="Tambah Carousel" tooltip="Tambah Gambar Baru" />
+            <x-ui.button.add label="Tambah" tooltip="Tambah Gambar Baru" />
         </x-slot>
 
         <x-ui.table :paginator="$carousels" :view="$view">
             <x-slot name="header">
-                <x-ui.table.header search="search" :showFilters="false" :showBulk="false" :showColumns="false"
+                <x-ui.table.header
+                    search="search"
+                    searchPlaceholder="Cari judul carousel..."
+                    :showFilters="false"
+                    :showBulk="false"
+                    :showColumns="false"
+                    :showPageSize="false"
+                    :showReload="true"
                     :showViewToggle="true" />
             </x-slot>
 
@@ -138,9 +145,9 @@
                                         <x-ui.badge variant="neutral" class="font-mono">#{{ $carousel->order }}</x-ui.badge>
                                     </td>
                                     <td class="px-4 py-4">
-                                        <x-ui.badge :variant="$carousel->is_active ? 'success' : 'danger'"
+                                        <x-ui.badge :variant="$carousel->is_active ? 'info' : 'danger'"
                                             class="uppercase text-[9px] tracking-tighter">
-                                            {{ $carousel->is_active ? 'YES' : 'NO' }}
+                                            {{ $carousel->is_active ? 'Aktif' : 'Nonaktif' }}
                                         </x-ui.badge>
                                     </td>
                                     <td class="px-4 py-4 text-sm whitespace-nowrap">
@@ -238,7 +245,7 @@
                             <div class="space-y-3 mb-5">
                                 <div class="flex items-center justify-between text-xs">
                                     <span class="text-zinc-500">Status</span>
-                                    <x-ui.badge :variant="$carousel->is_active ? 'success' : 'danger'" class="px-1.5 py-0">
+                                    <x-ui.badge :variant="$carousel->is_active ? 'info' : 'danger'" class="px-1.5 py-0">
                                         {{ $carousel->is_active ? 'Active' : 'Inactive' }}
                                     </x-ui.badge>
                                 </div>
@@ -264,16 +271,19 @@
             </x-slot>
 
             <x-slot name="footer">
-                <x-ui.pagination :paginator="$carousels" />
+                <x-ui.pagination :paginator="$carousels" perPage="perPage" />
             </x-slot>
         </x-ui.table>
     </x-ui.card>
 
-    <!-- Edit/Create Modal -->
-    <x-ui.modal wire:model="showModal" :title="$record ? 'Edit Carousel' : 'Create Carousel'" formId="carousel-form"
+    <x-ui.modal wire:model="showModal" :title="$record ? 'Edit Carousel' : 'Tambah Carousel'" formId="carousel-form"
         maxWidth="3xl">
-        <form wire:submit="save" id="carousel-form" novalidate>
-            {{ $this->form }}
-        </form>
+        @if($showModal)
+            <form wire:submit="save" id="carousel-form" novalidate>
+                {{ $this->form }}
+            </form>
+        @else
+            <x-ui.modal-skeleton :rows="4" />
+        @endif
     </x-ui.modal>
 </div>

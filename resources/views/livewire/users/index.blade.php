@@ -81,7 +81,7 @@
                                 @if(!$user->email_verified_at)
                                     <x-ui.button.resend-activation :uuid="$user->uuid" />
                                 @endif
-                                <x-ui.button.view icon="eye" wire:click="edit('{{ $user->uuid }}')" tooltip="Lihat Detail User" />
+                                <x-ui.button.view icon="eye" wire:click="edit('{{ $user->uuid }}')" x-on:click="$dispatch('crud-modal-open')" tooltip="Lihat Detail User" />
                                 <x-ui.button.edit :uuid="$user->uuid" tooltip="Edit Data User" />
                                 <x-ui.button.delete :uuid="$user->uuid" :name="$user->name" tooltip="Hapus Data User"
                                     :message="'Apakah Anda yakin ingin menghapus user ' . $user->name . '?'" />
@@ -144,7 +144,7 @@
                                 @if(!$user->email_verified_at)
                                     <x-ui.button.resend-activation :uuid="$user->uuid" />
                                 @endif
-                                <x-ui.button.view icon="eye" wire:click="edit('{{ $user->uuid }}')" tooltip="Lihat Detail User" />
+                                <x-ui.button.view icon="eye" wire:click="edit('{{ $user->uuid }}')" x-on:click="$dispatch('crud-modal-open')" tooltip="Lihat Detail User" />
                                 <x-ui.button.edit :uuid="$user->uuid" tooltip="Edit Data User" />
                                 <x-ui.button.delete :uuid="$user->uuid" :name="$user->name" tooltip="Hapus Data User"
                                     :message="'Apakah Anda yakin ingin menghapus user ' . $user->name . '?'" />
@@ -166,8 +166,12 @@
 
     <!-- Edit/Create Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit User' : 'Tambah User'" formId="user-form">
-        <form wire:submit="save" id="user-form" novalidate>
-            {{ $this->form }}
-        </form>
+        @if($showModal)
+            <form wire:submit="save" id="user-form" novalidate>
+                {{ $this->form }}
+            </form>
+        @else
+            <x-ui.modal-skeleton :rows="5" />
+        @endif
     </x-ui.modal>
 </div>

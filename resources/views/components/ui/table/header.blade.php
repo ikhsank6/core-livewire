@@ -7,14 +7,16 @@
     'showColumns' => true,
     'showPageSize' => true,
     'showViewToggle' => false,
+    'showReload' => false,
+    'searchPlaceholder' => 'Search...',
 ])
 
 <div {{ $attributes->class(['flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 pt-1']) }}>
     {{-- Left: Elegant Search --}}
     <div class="flex flex-1 items-center gap-2 max-w-sm">
-        <flux:input 
+        <flux:input
             wire:model.live.debounce.300ms="{{ $search }}"
-            placeholder="Search..." 
+            :placeholder="$searchPlaceholder"
             icon="magnifying-glass"
             clearable
             class="flex-1"
@@ -23,6 +25,12 @@
 
     {{-- Right: Integrated Actions --}}
     <div class="flex items-center gap-2">
+        @if ($showReload)
+            <flux:button wire:click="reload" icon="arrow-path" variant="ghost" class="h-10! px-3! rounded-xl! border border-zinc-200! dark:border-zinc-700! text-zinc-700! dark:text-zinc-300! font-semibold! text-sm! shadow-sm!">
+                Muat Ulang
+            </flux:button>
+        @endif
+
         @if ($showFilters)
             <flux:button icon="funnel" variant="ghost" class="h-10! w-10! flex items-center justify-center border-zinc-200! dark:border-zinc-700! rounded-xl!" />
         @endif

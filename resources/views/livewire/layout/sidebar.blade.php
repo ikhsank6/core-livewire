@@ -80,7 +80,10 @@
                 @else
                     <!-- Dropdown/Nested Menu -->
                     <?php $hasActiveChild = collect($menu['children'])->contains('route', $currentRoute); ?>
-                    <div x-data="{ expanded: {{ $hasActiveChild ? 'true' : 'false' }} }" class="relative group">
+                     <div x-data="{ expanded: {!! $hasActiveChild ? 'true' : 'false' !!} }"
+                        data-has-active="{!! $hasActiveChild ? 'true' : 'false' !!}"
+                        x-on:livewire:navigated.window="expanded = ($el.getAttribute('data-has-active') === 'true')"
+                        class="relative group">
 
                         <button
                             @click="if(sidebarCollapsed) { sidebarCollapsed = false; setTimeout(() => expanded = true, 300); } else { expanded = !expanded }"

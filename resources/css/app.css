@@ -47,224 +47,22 @@
 }
 
 /* ============================================
-   LIGHT MODE - Metronic Clean White Theme
+   LIGHT MODE - Core Page Styles
    ============================================ */
 
-/* Light Mode - Root backgrounds */
 body,
 html {
     background-color: #f9f9f9;
     color: #1b1c22;
 }
 
-/* Light Mode - Sidebar */
-aside,
-[data-flux-sidebar] {
-    background-color: #ffffff;
-    border-right: 1px solid #e8e8e8;
-    box-shadow: none;
-}
-
-/* Light Mode - Sidebar text colors */
-aside a,
-aside span,
-aside div:not([data-flux-navlist-item]),
-aside svg,
-[data-flux-sidebar] a,
-[data-flux-sidebar] span,
-[data-flux-sidebar] svg {
-    color: #4b5675;
-}
-
-/* Light Mode - Active navigation item */
-aside [aria-current="page"],
-[data-flux-sidebar] [aria-current="page"] {
-    background-color: #f1f1f4;
-    border-radius: 0.5rem;
-}
-
-aside [aria-current="page"] *,
-[data-flux-sidebar] [aria-current="page"] * {
-    color: #1b84ff;
-    font-weight: 600;
-}
-
-/* Light Mode - Hover effects */
-aside a:hover,
-[data-flux-sidebar] a:hover {
-    background-color: #f1f1f4;
-    color: #1b84ff;
-}
-
-/* Light Mode - Sidebar Headings */
-aside [data-flux-heading],
-[data-flux-sidebar] [data-flux-heading],
-aside h2 {
-    color: #99a1b7;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-}
-
-/* Light Mode - Cards */
-.premium-table-container,
-.metronic-card {
-    background-color: #ffffff !important;
-    border: 1px solid #e8e8e8 !important;
-    border-radius: 0.75rem !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
-}
-
-/* Light Mode - Input fields */
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-    background-color: #f9f9f9 !important;
-    border: 1px solid #e8e8e8 !important;
-    color: #1b1c22 !important;
-    border-radius: 0.5rem !important;
-}
-
-input:not([type="checkbox"]):not([type="radio"]):focus,
-select:focus,
-textarea:focus {
-    border-color: #1b84ff !important;
-    box-shadow: 0 0 0 3px rgba(27, 132, 255, 0.1) !important;
-    outline: none !important;
-}
-
-/* Light Mode - Buttons */
-button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn) {
-    background-color: #f1f1f4 !important;
-    color: #4b5675 !important;
-    border: none !important;
-}
-
-button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn):hover {
-    background-color: #e8e8e8 !important;
-    color: #1b1c22 !important;
-}
-
-/* ============================================
-   DARK MODE - Metronic Deep Dark Theme
-   ============================================ */
-
-/* Dark Mode - Root backgrounds */
+/* Dark Mode - Core Page Styles */
 .dark body,
 .dark html {
-    background-color: #1b1c22;
+    background-color: #111827;
     color: #ffffff;
 }
 
-/* Dark Mode - Sidebar */
-.dark aside,
-.dark [data-flux-sidebar] {
-    background-color: #1e1e2d;
-    border-right: 1px solid #2d2d3a;
-    box-shadow: none;
-}
-
-/* Dark Mode - Sidebar text */
-.dark aside a,
-.dark aside button,
-.dark aside span,
-.dark aside div,
-.dark aside svg,
-.dark [data-flux-sidebar] a,
-.dark [data-flux-sidebar] button,
-.dark [data-flux-sidebar] span,
-.dark [data-flux-sidebar] svg,
-.dark [data-flux-sidebar] [data-flux-navlist-item],
-.dark [data-flux-sidebar] [data-flux-heading],
-.dark [data-flux-sidebar] [data-flux-brand] {
-    color: #ffffff !important;
-}
-
-/* Dark Mode - Active navigation item */
-.dark aside [aria-current="page"],
-.dark [data-flux-sidebar] [aria-current="page"] {
-    background-color: #252532;
-    border-radius: 0.5rem;
-}
-
-.dark aside [aria-current="page"] *,
-.dark [data-flux-sidebar] [aria-current="page"] * {
-    color: #1b84ff;
-    font-weight: 600;
-}
-
-/* Dark Mode - Hover effects */
-.dark aside a:hover:not([aria-current="page"]),
-.dark [data-flux-sidebar] a:hover:not([aria-current="page"]),
-.dark [data-flux-sidebar] button:hover,
-.dark [data-flux-sidebar] [data-flux-navlist-item]:hover,
-.dark [data-flux-sidebar] a:hover *,
-.dark [data-flux-sidebar] button:hover * {
-    background-color: #252532;
-    color: #1b84ff !important;
-}
-
-/* Dark Mode - Sidebar Headings */
-.dark aside [data-flux-heading],
-.dark [data-flux-sidebar] [data-flux-heading],
-.dark aside h2 {
-    color: #ffffff !important;
-    opacity: 0.9;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-}
-
-/* Dark Mode - Cards */
-.dark .premium-table-container,
-.dark .metronic-card {
-    background-color: #1e1e2d !important;
-    border: 1px solid #2d2d3a !important;
-    border-radius: 0.75rem !important;
-    box-shadow: none !important;
-}
-
-/* Dark Mode - Input fields */
-.dark input:not([type="checkbox"]):not([type="radio"]),
-.dark select,
-.dark textarea {
-    background-color: #1b1c22 !important;
-    border: 1px solid #2d2d3a !important;
-    color: #ffffff !important;
-    border-radius: 0.5rem !important;
-}
-
-.dark input:not([type="checkbox"]):not([type="radio"]):focus,
-.dark select:focus,
-.dark textarea:focus {
-    border-color: #1b84ff !important;
-    box-shadow: 0 0 0 3px rgba(27, 132, 255, 0.15) !important;
-    outline: none !important;
-}
-
-/* Dark Mode - Buttons */
-.dark
-    button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ):not(.bg-blue-600):not(.bg-blue-700):not(.cancel-btn) {
-    background-color: #252532 !important;
-    color: #6d6d80 !important;
-    border: none !important;
-}
-
-.dark
-    button:not(.btn-primary):not(.bg-indigo-600):not(.bg-red-600):not(
-        .bg-green-600
-    ):hover {
-    background-color: #2d2d3a !important;
-    color: #ffffff !important;
-}
 
 /* ============================================
    METRONIC COMPONENT STYLES
@@ -774,265 +572,16 @@ a,
 }
 
 /* ============================================
-   NOTIFICATION TOAST - MODERN MONOCHROMATIC
+   NOTIFICATION TOAST
    ============================================ */
 
 @keyframes shrink-width {
-    from {
-        width: 100%;
-    }
-    to {
-        width: 0%;
-    }
+    from { width: 100%; }
+    to   { width: 0%; }
 }
 
 .animate-shrink-width {
     animation: shrink-width linear forwards;
-}
-
-/* ===== TOAST BASE CONTAINER ===== */
-.toast-container {
-    backdrop-filter: blur(10px);
-}
-
-/* ============================================
-   LIGHT MODE - Soft pastel backgrounds
-   ============================================ */
-
-/* ===== SUCCESS TOAST - Green ===== */
-.toast-success {
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-    border: 1.5px solid #6ee7b7;
-    box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.3);
-}
-
-.toast-success .toast-title {
-    color: #065f46;
-}
-
-.toast-success .toast-message {
-    color: #047857;
-}
-
-.toast-success .toast-icon-wrapper {
-    color: #10b981;
-}
-
-.toast-success .toast-close-btn {
-    color: #065f46;
-}
-
-.toast-success .toast-progress-bg {
-    background: rgba(16, 185, 129, 0.2);
-}
-
-.toast-success .toast-progress-bar {
-    background: #10b981;
-}
-
-/* ===== DANGER TOAST - Red/Pink ===== */
-.toast-danger {
-    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
-    border: 1.5px solid #fca5a5;
-    box-shadow: 0 10px 40px -10px rgba(239, 68, 68, 0.3);
-}
-
-.toast-danger .toast-title {
-    color: #991b1b;
-}
-
-.toast-danger .toast-message {
-    color: #b91c1c;
-}
-
-.toast-danger .toast-icon-wrapper {
-    color: #ef4444;
-}
-
-.toast-danger .toast-close-btn {
-    color: #991b1b;
-}
-
-.toast-danger .toast-progress-bg {
-    background: rgba(239, 68, 68, 0.2);
-}
-
-.toast-danger .toast-progress-bar {
-    background: #ef4444;
-}
-
-/* ===== WARNING TOAST - Orange/Amber ===== */
-.toast-warning {
-    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-    border: 1.5px solid #fcd34d;
-    box-shadow: 0 10px 40px -10px rgba(245, 158, 11, 0.3);
-}
-
-.toast-warning .toast-title {
-    color: #92400e;
-}
-
-.toast-warning .toast-message {
-    color: #b45309;
-}
-
-.toast-warning .toast-icon-wrapper {
-    color: #f59e0b;
-}
-
-.toast-warning .toast-close-btn {
-    color: #92400e;
-}
-
-.toast-warning .toast-progress-bg {
-    background: rgba(245, 158, 11, 0.2);
-}
-
-.toast-warning .toast-progress-bar {
-    background: #f59e0b;
-}
-
-/* ===== INFO TOAST - Blue ===== */
-.toast-info {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    border: 1.5px solid #93c5fd;
-    box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.3);
-}
-
-.toast-info .toast-title {
-    color: #1e40af;
-}
-
-.toast-info .toast-message {
-    color: #1d4ed8;
-}
-
-.toast-info .toast-icon-wrapper {
-    color: #3b82f6;
-}
-
-.toast-info .toast-close-btn {
-    color: #1e40af;
-}
-
-.toast-info .toast-progress-bg {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-.toast-info .toast-progress-bar {
-    background: #3b82f6;
-}
-
-/* ============================================
-   DARK MODE - Rich saturated backgrounds
-   ============================================ */
-
-/* ===== SUCCESS TOAST - Dark Green ===== */
-.dark .toast-success {
-    background: linear-gradient(135deg, #065f46 0%, #064e3b 100%);
-    border: 1.5px solid #10b981;
-    box-shadow: 0 20px 50px -15px rgba(16, 185, 129, 0.4);
-}
-
-.dark .toast-success .toast-title {
-    color: #6ee7b7;
-}
-
-.dark .toast-success .toast-message {
-    color: #a7f3d0;
-}
-
-.dark .toast-success .toast-icon-wrapper {
-    color: #34d399;
-}
-
-.dark .toast-success .toast-close-btn {
-    color: #6ee7b7;
-}
-
-.dark .toast-success .toast-progress-bg {
-    background: rgba(16, 185, 129, 0.3);
-}
-
-/* ===== DANGER TOAST - Dark Red/Pink ===== */
-.dark .toast-danger {
-    background: linear-gradient(135deg, #881337 0%, #6b0f26 100%);
-    border: 1.5px solid #fb7185;
-    box-shadow: 0 20px 50px -15px rgba(244, 63, 94, 0.4);
-}
-
-.dark .toast-danger .toast-title {
-    color: #fda4af;
-}
-
-.dark .toast-danger .toast-message {
-    color: #fecdd3;
-}
-
-.dark .toast-danger .toast-icon-wrapper {
-    color: #fb7185;
-}
-
-.dark .toast-danger .toast-close-btn {
-    color: #fda4af;
-}
-
-.dark .toast-danger .toast-progress-bg {
-    background: rgba(244, 63, 94, 0.3);
-}
-
-/* ===== WARNING TOAST - Dark Orange/Amber ===== */
-.dark .toast-warning {
-    background: linear-gradient(135deg, #78350f 0%, #5c2c0a 100%);
-    border: 1.5px solid #f59e0b;
-    box-shadow: 0 20px 50px -15px rgba(245, 158, 11, 0.4);
-}
-
-.dark .toast-warning .toast-title {
-    color: #fcd34d;
-}
-
-.dark .toast-warning .toast-message {
-    color: #fde68a;
-}
-
-.dark .toast-warning .toast-icon-wrapper {
-    color: #fbbf24;
-}
-
-.dark .toast-warning .toast-close-btn {
-    color: #fcd34d;
-}
-
-.dark .toast-warning .toast-progress-bg {
-    background: rgba(245, 158, 11, 0.3);
-}
-
-/* ===== INFO TOAST - Dark Blue ===== */
-.dark .toast-info {
-    background: linear-gradient(135deg, #1e3a5f 0%, #172554 100%);
-    border: 1.5px solid #3b82f6;
-    box-shadow: 0 20px 50px -15px rgba(59, 130, 246, 0.4);
-}
-
-.dark .toast-info .toast-title {
-    color: #93c5fd;
-}
-
-.dark .toast-info .toast-message {
-    color: #bfdbfe;
-}
-
-.dark .toast-info .toast-icon-wrapper {
-    color: #60a5fa;
-}
-
-.dark .toast-info .toast-close-btn {
-    color: #93c5fd;
-}
-
-.dark .toast-info .toast-progress-bg {
-    background: rgba(59, 130, 246, 0.3);
 }
 
 /* ============================================
@@ -1055,36 +604,63 @@ a,
 }
 
 /* ============================================
-   FILAMENT FORMS - RED VALIDATION ERRORS
+   FILAMENT FORMS - VALIDATION ERRORS (uniform with auth form)
    ============================================ */
 
-/* Make validation error messages RED */
-.fi-fo-field-wrp-error-message,
-.fi-fo-field-wrp p[class*="text-danger"],
-.fi-fo-field-wrp .text-danger-600,
-.custom-modal-body .fi-fo-field-wrp-error-message,
-[data-validation-error],
-p.fi-fo-field-wrp-error-message {
-    color: #f8285a !important;
-    font-size: 0.875rem !important;
-    font-weight: 500 !important;
-    margin-top: 0.375rem !important;
+/* Error message: flex + icon + xs font — matches auth form style */
+p.fi-fo-field-wrp-error-message,
+[data-validation-error] {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+    font-weight: 400 !important;
+    color: #dc2626 !important;
+    margin-top: 6px !important;
 }
 
-/* Add red border to inputs with errors */
-.fi-fo-field-wrp-error input,
-.fi-fo-field-wrp-error select,
-.fi-fo-field-wrp-error textarea,
-.fi-fo-field-wrp:has(.fi-fo-field-wrp-error-message) input,
-.fi-fo-field-wrp:has(.fi-fo-field-wrp-error-message) select,
-.fi-fo-field-wrp:has(.fi-fo-field-wrp-error-message) textarea {
-    border-color: #f8285a !important;
-    box-shadow: 0 0 0 1px rgba(248, 40, 90, 0.2) !important;
+.dark p.fi-fo-field-wrp-error-message,
+.dark [data-validation-error] {
+    color: #f87171 !important;
 }
 
-/* Ensure error messages in dark mode are visible */
-.dark .fi-fo-field-wrp-error-message,
-.dark .fi-fo-field-wrp p[class*="text-danger"],
-.dark .fi-fo-field-wrp .text-danger-600 {
-    color: #ff6b8a !important;
+/* Exclamation-circle icon before the error text (light mode) */
+p.fi-fo-field-wrp-error-message::before,
+[data-validation-error]::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23dc2626'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Icon for dark mode — lighter red */
+.dark p.fi-fo-field-wrp-error-message::before,
+.dark [data-validation-error]::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f87171'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Input wrapper error state: soft red border instead of Filament's heavy ring */
+.fi-input-wrp[class*="ring-danger"],
+.fi-input-wrp[class*="focus-within:ring-danger"] {
+    --tw-ring-color: transparent !important;
+    box-shadow: none !important;
+    border-color: #fca5a5 !important;
+}
+
+/* Fallback: any input inside an error field wrapper gets a subtle red border */
+.fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
+.fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
+    border-color: #fca5a5 !important;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08) !important;
+}
+
+.dark .fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
+.dark .fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
+    border-color: #b91c1c !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }

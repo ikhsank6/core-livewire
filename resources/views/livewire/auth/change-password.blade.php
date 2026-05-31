@@ -1,7 +1,3 @@
-<x-slot name="breadcrumbs">
-    <flux:breadcrumbs.item>Change Password</flux:breadcrumbs.item>
-</x-slot>
-
 <div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="mb-8">

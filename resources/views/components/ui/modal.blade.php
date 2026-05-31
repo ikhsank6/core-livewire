@@ -22,11 +22,15 @@ $maxWidthClass = [
 @endphp
 
 <div
-    x-data="{ 
-        show: @if($attributes->wire('model')->value()) @entangle($attributes->wire('model')) @else false @endif 
+    x-data="{
+        show: @if($attributes->wire('model')->value()) @entangle($attributes->wire('model')) @else false @endif
     }"
     x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
     x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
+    @if($attributes->wire('model')->value())
+        x-on:crud-modal-open.window="show = true"
+        x-on:crud-modal-close.window="show = false"
+    @endif
     x-show="show"
     class="fixed inset-0 z-50"
     style="display: none;"
