@@ -67,7 +67,7 @@ $maxWidthClass = [
                     <h3 class="text-lg font-bold text-zinc-900 dark:text-white truncate">
                         {{ $title }}
                     </h3>
-                    <button @click="show = false" class="p-2 -mr-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all shrink-0" type="button">
+                    <button @click="show = false" class="p-2 -mr-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-all shrink-0" type="button">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
@@ -86,11 +86,11 @@ $maxWidthClass = [
                     {{ $footer }}
                 @else
                     <button type="button" @click.prevent="show = false" wire:click="{{ $cancelClick }}"
-                        class="h-10 px-5 inline-flex items-center justify-center rounded-lg text-sm font-bold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 hover:text-zinc-900 border border-zinc-200 transition-all duration-200 cursor-pointer dark:text-zinc-400 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 dark:hover:text-white dark:border-zinc-700 shadow-none">
+                        class="h-10 px-5 inline-flex items-center justify-center rounded-full text-sm font-bold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 hover:text-zinc-900 border border-zinc-200 transition-all duration-200 cursor-pointer dark:text-zinc-400 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 dark:hover:text-white dark:border-zinc-700 shadow-none">
                         Cancel
                     </button>
                     <button type="submit" @if($formId) form="{{ $formId }}" @endif
-                        class="h-10 px-6 inline-flex items-center justify-center gap-2 rounded-lg text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
+                        class="h-10 px-6 inline-flex items-center justify-center gap-2 rounded-full text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-none"
                         wire:loading.attr="disabled">
                         <svg wire:loading class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

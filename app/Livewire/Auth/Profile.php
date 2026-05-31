@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\Concerns\WithNotifications;
 use App\Models\Role;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
@@ -17,6 +18,7 @@ use Livewire\WithFileUploads;
 class Profile extends Component
 {
     use WithFileUploads;
+    use WithNotifications;
 
     public string $name = '';
 
@@ -47,9 +49,9 @@ class Profile extends Component
 
         try {
             $userRepository->update(Auth::id(), ['name' => $this->name]);
-            $this->dispatch('notify', text: 'Name updated successfully.', variant: 'success');
+            $this->notifySuccess('Name updated successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 
@@ -64,9 +66,9 @@ class Profile extends Component
 
         try {
             $userRepository->update(Auth::id(), ['email' => $this->email]);
-            $this->dispatch('notify', text: 'Email updated successfully.', variant: 'success');
+            $this->notifySuccess('Email updated successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 
@@ -84,9 +86,9 @@ class Profile extends Component
             $this->currentAvatar = $avatarPath;
             $this->reset('avatar');
 
-            $this->dispatch('notify', text: 'Photo updated successfully.', variant: 'success');
+            $this->notifySuccess('Photo updated successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 
@@ -98,9 +100,9 @@ class Profile extends Component
         try {
             $userRepository->deleteAvatar(Auth::id());
             $this->currentAvatar = null;
-            $this->dispatch('notify', text: 'Photo removed successfully.', variant: 'success');
+            $this->notifySuccess('Photo removed successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 
@@ -114,13 +116,13 @@ class Profile extends Component
                 // Clear menu cache to reflect new role
                 $menuService->clearMenuCache($roleId);
 
-                $this->dispatch('notify', text: 'Role switched successfully.', variant: 'success');
+                $this->notifySuccess('Role switched successfully.');
                 $this->js('window.location.reload()');
             } else {
-                $this->dispatch('notify', text: 'Unauthorized role switch.', variant: 'danger');
+                $this->notifyError('Unauthorized role switch.');
             }
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 
@@ -135,9 +137,9 @@ class Profile extends Component
             // Refresh the user instance relationship to update the UI
             Auth::user()->load('roles');
 
-            $this->dispatch('notify', text: 'Default role updated successfully.', variant: 'success');
+            $this->notifySuccess('Default role updated successfully.');
         } catch (\Exception $e) {
-            $this->dispatch('notify', text: 'Error: '.$e->getMessage(), variant: 'danger');
+            $this->notifyError('Error: '.$e->getMessage());
         }
     }
 

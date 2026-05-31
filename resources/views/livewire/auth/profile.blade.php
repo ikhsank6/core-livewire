@@ -111,7 +111,7 @@
                 
                 <!-- Edit Icon -->
                 <button x-show="!editing" @click="editing = true; $nextTick(() => $refs.nameInput?.focus())" type="button"
-                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
+                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                     </svg>
@@ -119,7 +119,7 @@
                 
                 <!-- Save Icon -->
                 <button x-show="editing" x-cloak @click="$wire.updateName(); editing = false" type="button"
-                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-all">
+                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-full transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -161,7 +161,7 @@
                 
                 <!-- Edit Icon -->
                 <button x-show="!editing" @click="editing = true; $nextTick(() => $refs.emailInput?.focus())" type="button"
-                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-all">
+                    class="p-2 text-zinc-400 hover:text-indigo-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                     </svg>
@@ -169,7 +169,7 @@
                 
                 <!-- Save Icon -->
                 <button x-show="editing" x-cloak @click="$wire.updateEmail(); editing = false" type="button"
-                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-all">
+                    class="p-2 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-full transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -197,7 +197,7 @@
                     @foreach(auth()->user()->roles as $r)
                         @php $isDefault = $r->pivot->is_default; @endphp
                         <button type="button" wire:click="setDefaultRole({{ $r->id }})"
-                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all {{ $isDefault ? 'bg-amber-500 text-white shadow-lg' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-dashed border-zinc-300 dark:border-zinc-600' }}">
+                            class="px-4 py-2 rounded-full text-sm font-medium transition-all {{ $isDefault ? 'bg-amber-500 text-white shadow-lg' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-dashed border-zinc-300 dark:border-zinc-600' }}">
                             <div class="flex items-center gap-2">
                                 @if($isDefault)
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

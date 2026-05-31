@@ -587,11 +587,11 @@
 
         <x-slot name="footer">
             <button type="button" x-on:click="show = false"
-                class="flex-1 inline-flex justify-center rounded-lg px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                class="flex-1 inline-flex justify-center rounded-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 Batal
             </button>
             <a href="{{ route('logout') }}"
-                class="flex-1 inline-flex justify-center items-center rounded-lg px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
+                class="flex-1 inline-flex justify-center items-center rounded-full px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
                 Ya, Logout
             </a>
         </x-slot>

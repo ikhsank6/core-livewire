@@ -40,11 +40,11 @@
         <div
             class="bg-zinc-50 dark:bg-zinc-900/50 px-6 py-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-row gap-3">
             <button type="button" x-on:click="show = false"
-                class="flex-1 inline-flex justify-center rounded-lg px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
+                class="flex-1 inline-flex justify-center rounded-full px-4 py-2.5 bg-zinc-100 dark:bg-zinc-800 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
                 Batal
             </button>
             <button type="button" x-on:click="Livewire.find(componentId).call(action, id); show = false"
-                class="flex-1 inline-flex justify-center items-center rounded-lg px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
+                class="flex-1 inline-flex justify-center items-center rounded-full px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
                 Ya, Hapus
             </button>
         </div>

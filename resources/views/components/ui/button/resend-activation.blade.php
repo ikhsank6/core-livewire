@@ -14,7 +14,7 @@
             'wire:click' => $target,
             'wire:loading.attr' => 'disabled',
             'wire:target' => $target,
-            'class' => 'p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-100 dark:hover:bg-amber-900/20 rounded-lg transition-all active:scale-95 disabled:opacity-50'
+            'class' => 'p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-100 dark:hover:bg-amber-900/20 rounded-full transition-all active:scale-95 disabled:opacity-50'
         ]) }}>
             <div class="relative w-4 h-4 flex items-center justify-center">
                 <div wire:loading.remove wire:target="{{ $target }}">
