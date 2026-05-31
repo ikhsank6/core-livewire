@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="h-full antialiased bg-gray-50 dark:bg-gray-900">
+<body class="min-h-full antialiased bg-gray-50 dark:bg-gray-900">
 
     {{-- Theme toggle (top right) --}}
     <div class="fixed top-4 right-4 z-50" x-data="{

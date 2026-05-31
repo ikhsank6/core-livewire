@@ -58,7 +58,7 @@ html {
 
 /* Dark Mode - Core Page Styles */
 .dark body,
-.dark html {
+html.dark {
     background-color: #111827;
     color: #ffffff;
 }
