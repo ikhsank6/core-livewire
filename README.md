@@ -1,6 +1,6 @@
 # Laravel Livewire CMS Platform
 
-> **v2.3.0** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, unified blue brand styling across public website buttons, and daily rotated logging.
+> **v2.3.1** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, a reusable autocomplete select component, advanced user filtering, bulk email verification, and IP/location-aware email notifications.
 
 ## 🚀 Tech Stack
 
@@ -79,8 +79,9 @@ A fully redesigned public-facing website with a dedicated Aveit-inspired design 
 - Collapsible sidebar with **fixed-position tooltips** (no overflow clipping)
 - Dark mode throughout admin panel
 - Toast notifications (success, danger, warning, info)
-- Reusable components: modals, tables, cards, badges, pagination, empty states
+- Reusable components: modals, tables, cards, badges, pagination, empty states, **autocomplete select** (`<x-ui.select>` — single/multiple + searchable)
 - Real-time password strength indicator
+- Filter modals with URL-persisted state and active-filter badge counters
 
 ### 🔔 In-App Notifications
 
@@ -249,6 +250,14 @@ php artisan migrate:fresh --seed  # Reset database
 ---
 
 ## 📋 Changelog
+
+### v2.3.1
+- **Global Autocomplete Select** (`<x-ui.select>`): Komponen select reusable berbasis Tailwind + Alpine.js — mendukung single & multiple, search/autocomplete bawaan, clearable (per-item & "Hapus semua"), checkbox untuk multiple / checkmark untuk single, dan dark mode. Terima Eloquent collection, array `['value','label']`, atau custom `value-key`/`label-key`.
+- **User Filtering**: Filter pengguna via modal — Status (single) & Role (multiple), URL-persisted, badge counter jumlah filter aktif di tombol Filter. Tombol Filter ditempatkan di sebelah kanan input search (slot `searchAction` baru di table header).
+- **Bulk Resend Verification Email**: Checkbox per-baris (hanya user belum terverifikasi) + select-all, dengan toolbar aksi "Kirim Verifikasi" yang muncul kontekstual saat ada pilihan.
+- **Email Notifications — IP & Lokasi**: Email reset password & verifikasi kini menampilkan Alamat IP + Lokasi (geo-lookup via `ip-api.com`, IP lokal ditandai "Lokal / Development"). IP di-capture di constructor (sebelum job di-queue).
+- **Email Branding**: Warna email diselaraskan ke brand biru (`#3a6cf4`); fix logo email tidak load (`url(Storage::url($logo))`).
+- **Profile & Change Password Layout**: Profile cards dibuat berdampingan (Personal Info 3/5 + Roles 2/5); Change Password mengikuti lebar penuh layout admin.
 
 ### v2.3.0
 - **Public Website Button & Color Harmonization**: Unified button styling across public views (navbar, hero, and CTA sections) using brand primary blue (`#3a6cf4`) instead of orange clashing colors.

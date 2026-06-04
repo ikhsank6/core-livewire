@@ -2,14 +2,14 @@
 
 > File ini adalah sumber utama konteks bagi AI assistant (Claude, Gemini, dll.) ketika bekerja dengan codebase ini.
 > Ditulis dari perspektif **Senior Fullstack Engineer** yang memahami setiap lapisan arsitektur.
-> **Versi dokumen**: v2.2.1
+> **Versi dokumen**: v2.3.1
 
 ---
 
 ## 🏗️ Project Overview
 
 **Nama**: Laravel Livewire CMS Platform
-**Versi**: 2.2.1
+**Versi**: 2.3.1
 **Stack**: Laravel 12 + Livewire 3 + Tailwind CSS 4 + Vite 7 + Alpine.js 3
 **Database**: SQLite (development), bisa di-swap ke MySQL/PostgreSQL
 **PHP**: >= 8.2
@@ -283,7 +283,29 @@ plugins: [
 
 ### Custom UI Components (`views/components/ui/`)
 
-`modal`, `table/`, `card`, `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`
+`modal`, `table/` (+ `table/header` dengan slot `searchAction` & `extraActions`), `card`, `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`, `select`
+
+#### `<x-ui.select>` — Autocomplete Select (global, reusable)
+
+Komponen select berbasis **Tailwind + Alpine.js** (BUKAN Flux/native `<select>`). Mendukung single & multiple, search/autocomplete bawaan, clearable.
+
+```blade
+{{-- Single --}}
+<x-ui.select model="filterStatus" placeholder="Semua Status"
+    :options="[['value' => 'active', 'label' => 'Aktif'], ...]" />
+
+{{-- Multiple (Eloquent collection) --}}
+<x-ui.select model="selectedRoles" :options="$roles" :multiple="true" />
+
+{{-- Custom key mapping --}}
+<x-ui.select model="cat" :options="$categories" value-key="slug" label-key="title" />
+```
+
+**Penting**:
+- `model` adalah **nama properti Livewire sebagai string** — komponen membaca/menulis via `$wire['<model>']` di Alpine. Untuk multiple, properti Livewire harus bertipe `array`; untuk single, `string`/`?int`.
+- Options diterima sebagai: Eloquent collection (default key `id`/`name`), array `[['value','label'], ...]`, atau dengan `value-key`/`label-key` custom.
+- Single → checkmark di kanan item; Multiple → checkbox + badge per pilihan + footer "Hapus semua".
+- Search header pakai pola command-palette (icon + input borderless sebagai flex siblings, BUKAN absolute-positioned — hindari overlap).
 
 ---
 
@@ -370,6 +392,14 @@ $this->attempt(
 - SMTP via Mailtrap (development)
 - In-App Notifications via model `Notification` custom: `from_role_id`, `to_role_id`, `message`, `url`, `read`
 
+### Email Templates (`views/emails/` + `components/emails/layout`)
+
+- Layout email pakai brand biru `#3a6cf4` → `#2451d6` (selaras website). Bukan hijau lagi.
+- **IP & Lokasi**: `VerifyEmailNotification` & `ResetPasswordQueued` menampilkan Alamat IP + Lokasi.
+  - IP **HARUS** di-capture di `__construct()` via `request()->ip()` — karena notification di-queue, request context hilang saat job dieksekusi worker.
+  - `resolveLocation()` dipanggil di `toMail()` (saat job jalan, boleh hit API eksternal `ip-api.com`, timeout 5s, silent fail). IP lokal/private → "Lokal / Development".
+- **Logo email**: gunakan `url(\Illuminate\Support\Facades\Storage::url($logo))` — BUKAN `url('storage/' . $logo)`. Pastikan `APP_URL` benar agar logo bisa di-load email client.
+
 ---
 
 ## 🔒 Security
@@ -450,6 +480,15 @@ Tooltip sidebar admin menggunakan `position: fixed` dengan koordinat Alpine `@mo
 Website public: `--color-primary: #3a6cf4` (blue)
 Admin panel: menggunakan Metronic primary `#1b84ff` via `app.css`
 Keduanya tidak boleh dicampur.
+
+### 13. Alpine `<template x-if>` Tidak Bisa Nested
+Alpine TIDAK mendukung nested `<template x-if>`. Pecah jadi kondisi gabungan: `x-if="multiple && val.length > 0"`, `x-if="multiple && val.length === 0"`, dst. (lihat `components/ui/select.blade.php`). Untuk `x-show` di dropdown gunakan `style="display:none"` (bukan hanya `x-cloak`) agar tidak flash sebelum Alpine siap.
+
+### 14. Capture IP Sebelum Queue
+Notification/job yang butuh data request (IP, user-agent) **HARUS** menangkapnya di `__construct()` saat masih dalam HTTP context. Saat job dieksekusi queue worker, `request()` sudah kosong. Lihat `ResetPasswordQueued` & `VerifyEmailNotification`.
+
+### 15. Filter Pattern di Index Component
+Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persist ke URL) + `pendingX` (state sementara di modal). `openFilterModal()` copy `filterX→pendingX`, `applyFilters()` copy balik `pendingX→filterX` lalu `resetPage()`. Repository sediakan method `searchWithFilters(...)`. Lihat `UserIndex`.
 
 ---
 
