@@ -25,6 +25,9 @@
 
     {{-- Right: Integrated Actions --}}
     <div class="flex items-center gap-2">
+        {{-- Slot for extra contextual actions (e.g. bulk buttons) --}}
+        {{ $extraActions ?? '' }}
+
         @if ($showReload)
             <flux:button wire:click="reload" icon="arrow-path" variant="ghost" class="h-10! px-3! rounded-xl! border border-zinc-200! dark:border-zinc-700! text-zinc-700! dark:text-zinc-300! font-semibold! text-sm! shadow-sm!">
                 Muat Ulang

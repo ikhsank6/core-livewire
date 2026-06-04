@@ -39,6 +39,10 @@ class UserIndex extends Component implements HasForms
 
     public $showModal = false;
 
+    public array $selectedUsers = [];
+
+    public bool $selectAll = false;
+
     protected UserRepositoryInterface $userRepository;
 
     protected RoleRepositoryInterface $roleRepository;
@@ -193,9 +197,69 @@ class UserIndex extends Component implements HasForms
         }
     }
 
+    public function updatedSelectAll(bool $value): void
+    {
+        if ($value) {
+            $this->selectedUsers = User::whereNull('email_verified_at')
+                ->when($this->search, fn ($q) => $q->where(function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%")
+                      ->orWhere('email', 'like', "%{$this->search}%");
+                }))
+                ->pluck('uuid')
+                ->toArray();
+        } else {
+            $this->selectedUsers = [];
+        }
+    }
+
+    public function updatedSelectedUsers(): void
+    {
+        $total = User::whereNull('email_verified_at')
+            ->when($this->search, fn ($q) => $q->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                  ->orWhere('email', 'like', "%{$this->search}%");
+            }))
+            ->count();
+
+        $this->selectAll = $total > 0 && count($this->selectedUsers) >= $total;
+    }
+
+    public function bulkResendActivation(): void
+    {
+        if (empty($this->selectedUsers)) {
+            $this->dispatch('notify', text: 'Pilih setidaknya satu pengguna.', variant: 'danger');
+            return;
+        }
+
+        $sent = 0;
+        foreach ($this->selectedUsers as $uuid) {
+            $user = User::where('uuid', $uuid)->whereNull('email_verified_at')->first();
+            if ($user) {
+                $user->sendEmailVerificationNotification();
+                $sent++;
+            }
+        }
+
+        $this->selectedUsers = [];
+        $this->selectAll = false;
+
+        $this->dispatch('notify',
+            text: "Email verifikasi berhasil dikirim ke {$sent} pengguna.",
+            variant: 'success'
+        );
+    }
+
+    public function clearSelection(): void
+    {
+        $this->selectedUsers = [];
+        $this->selectAll = false;
+    }
+
     public function reload(): void
     {
         $this->search = '';
+        $this->selectedUsers = [];
+        $this->selectAll = false;
         $this->resetPage();
     }
 

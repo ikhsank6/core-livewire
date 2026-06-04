@@ -19,10 +19,59 @@
                     :showColumns="false"
                     :showPageSize="false"
                     :showReload="true"
-                    :showViewToggle="true" />
+                    :showViewToggle="true">
+
+                    {{-- Bulk resend button — muncul saat ada pilihan --}}
+                    <x-slot name="extraActions">
+                        <div x-show="$wire.selectedUsers.length > 0"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             style="display:none"
+                             class="flex items-center gap-2">
+
+                            {{-- Count badge --}}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-semibold border border-indigo-200 dark:border-indigo-700">
+                                <span x-text="$wire.selectedUsers.length"></span>
+                                <span>dipilih</span>
+                            </span>
+
+                            {{-- Kirim Verifikasi --}}
+                            <flux:button
+                                wire:click="bulkResendActivation"
+                                wire:loading.attr="disabled"
+                                wire:target="bulkResendActivation"
+                                icon="envelope"
+                                variant="primary"
+                                class="h-10! px-4! rounded-xl! text-sm! font-semibold! shadow-sm!">
+                                <span wire:loading.remove wire:target="bulkResendActivation">Kirim Verifikasi</span>
+                                <span wire:loading wire:target="bulkResendActivation">Mengirim...</span>
+                            </flux:button>
+
+                            {{-- Batalkan pilihan --}}
+                            <flux:button
+                                wire:click="clearSelection"
+                                icon="x-mark"
+                                variant="ghost"
+                                class="h-10! w-10! rounded-xl! border border-zinc-200! dark:border-zinc-700!"
+                                title="Batalkan pilihan">
+                            </flux:button>
+                        </div>
+                    </x-slot>
+                </x-ui.table.header>
             </x-slot>
 
             <x-ui.table.thead>
+                {{-- Checkbox select-all --}}
+                <th class="w-10 px-4 py-3">
+                    <input type="checkbox"
+                           wire:model.live="selectAll"
+                           class="w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-indigo-600 dark:bg-zinc-800 cursor-pointer focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0 transition-colors"
+                           title="Pilih semua belum terverifikasi">
+                </th>
                 <x-ui.table.th>Nama</x-ui.table.th>
                 <x-ui.table.th>Email</x-ui.table.th>
                 <x-ui.table.th>Role</x-ui.table.th>
@@ -51,6 +100,18 @@
                         }
                     @endphp
                     <x-ui.table.tr>
+                        {{-- Row checkbox --}}
+                        <td class="w-10 px-4 py-3">
+                            <input type="checkbox"
+                                   wire:model.live="selectedUsers"
+                                   value="{{ $user->uuid }}"
+                                   @if($user->email_verified_at) disabled @endif
+                                   @class([
+                                       'w-4 h-4 rounded border-zinc-300 dark:border-zinc-600 text-indigo-600 dark:bg-zinc-800 transition-colors focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0',
+                                       'cursor-pointer' => !$user->email_verified_at,
+                                       'opacity-50 cursor-not-allowed bg-zinc-100 dark:bg-zinc-700 dark:disabled:bg-zinc-800' => $user->email_verified_at,
+                                   ])>
+                        </td>
                         <x-ui.table.td>
                             <div class="flex items-center gap-3">
                                 <x-ui.avatar :name="$user->name" :src="$user->avatar ? Storage::url($user->avatar) : null" size="md" />

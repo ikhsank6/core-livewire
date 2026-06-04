@@ -74,7 +74,7 @@
         /* Header */
         .email-header {
             padding: 28px 32px;
-            background: linear-gradient(135deg, #03AC0E 0%, #00D817 100%);
+            background: linear-gradient(135deg, #3a6cf4 0%, #2451d6 100%);
             text-align: center;
         }
         
@@ -135,10 +135,10 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #03AC0E 0%, #00D817 100%);
+            background: linear-gradient(135deg, #3a6cf4 0%, #2451d6 100%);
             color: #ffffff !important;
             border: none;
-            box-shadow: 0 4px 14px 0 rgba(3, 172, 14, 0.39);
+            box-shadow: 0 4px 14px 0 rgba(58, 108, 244, 0.35);
         }
         
         /* Info Box */
@@ -153,7 +153,7 @@
         .info-box-title {
             font-size: 11px;
             font-weight: 700;
-            color: #03AC0E;
+            color: #3a6cf4;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 16px;
@@ -189,7 +189,7 @@
         }
         
         .info-value.highlight {
-            color: #03AC0E;
+            color: #3a6cf4;
         }
         
         /* Divider */
@@ -215,7 +215,7 @@
         }
         
         .footer-text a {
-            color: #03AC0E;
+            color: #3a6cf4;
             text-decoration: none;
             font-weight: 500;
         }
@@ -232,7 +232,7 @@
             display: inline-block;
             width: 36px;
             height: 36px;
-            background-color: #03AC0E;
+            background-color: #3a6cf4;
             border-radius: 50%;
             margin: 0 6px;
             text-decoration: none;
@@ -278,9 +278,9 @@
                 <table role="presentation" class="email-wrapper" width="600" cellpadding="0" cellspacing="0" align="center" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td class="email-header" style="padding: 28px 32px; background: linear-gradient(135deg, #03AC0E 0%, #00D817 100%); text-align: center;">
+                        <td class="email-header" style="padding: 28px 32px; background: linear-gradient(135deg, #3a6cf4 0%, #2451d6 100%); text-align: center;">
                             @if($logo)
-                                <img src="{{ url('storage/' . $logo) }}" alt="{{ $companyName ?? config('app.name') }}" class="logo" style="height: 40px; width: auto;">
+                                <img src="{{ url(\Illuminate\Support\Facades\Storage::url($logo)) }}" alt="{{ $companyName ?? config('app.name') }}" class="logo" style="height: 40px; width: auto; max-height: 40px;">
                             @else
                                 <span class="logo-text" style="font-size: 28px; font-weight: 700; color: #ffffff; text-decoration: none; letter-spacing: -0.5px;">{{ $companyName ?? config('app.name') }}</span>
                             @endif
@@ -310,7 +310,7 @@
                                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
                                     <tr>
                                         <td align="center">
-                                            <a href="{{ $actionUrl }}" class="btn btn-primary" style="display: inline-block; padding: 14px 40px; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 8px; text-align: center; background: linear-gradient(135deg, #03AC0E 0%, #00D817 100%); color: #ffffff; box-shadow: 0 4px 14px 0 rgba(3, 172, 14, 0.39);">
+                                            <a href="{{ $actionUrl }}" class="btn btn-primary" style="display: inline-block; padding: 14px 40px; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 8px; text-align: center; background: linear-gradient(135deg, #3a6cf4 0%, #2451d6 100%); color: #ffffff; box-shadow: 0 4px 14px 0 rgba(58, 108, 244, 0.35);">
                                                 {{ $actionText }}
                                             </a>
                                         </td>
@@ -336,7 +336,7 @@
                             <p class="footer-text" style="font-size: 13px; color: #6D7588; margin: 0 0 20px 0; line-height: 1.6;">
                                 E-mail ini dibuat secara otomatis, mohon tidak membalas.<br>
                                 Jika butuh bantuan, silakan 
-                                <a href="mailto:{{ $supportEmail ?? 'support@example.com' }}" style="color: #03AC0E; text-decoration: none; font-weight: 500;">hubungi kami</a>.
+                                <a href="mailto:{{ $supportEmail ?? 'support@example.com' }}" style="color: #3a6cf4; text-decoration: none; font-weight: 500;">hubungi kami</a>.
                             </p>
                             
                             @if($facebook || $instagram || $twitter)
@@ -344,17 +344,17 @@
                                     <tr>
                                         @if($facebook)
                                             <td style="padding: 0 6px;">
-                                                <a href="{{ $facebook }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #03AC0E; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">f</a>
+                                                <a href="{{ $facebook }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #3a6cf4; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">f</a>
                                             </td>
                                         @endif
                                         @if($twitter)
                                             <td style="padding: 0 6px;">
-                                                <a href="{{ $twitter }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #03AC0E; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">𝕏</a>
+                                                <a href="{{ $twitter }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #3a6cf4; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">𝕏</a>
                                             </td>
                                         @endif
                                         @if($instagram)
                                             <td style="padding: 0 6px;">
-                                                <a href="{{ $instagram }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #03AC0E; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">IG</a>
+                                                <a href="{{ $instagram }}" class="social-link" style="display: inline-block; width: 36px; height: 36px; background-color: #3a6cf4; border-radius: 50%; text-decoration: none; line-height: 36px; color: #ffffff; font-size: 14px; font-weight: 600; text-align: center;">IG</a>
                                             </td>
                                         @endif
                                     </tr>

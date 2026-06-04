@@ -6,27 +6,24 @@ use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Http;
 
 class ResetPasswordQueued extends ResetPasswordNotification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
+    public string $ipAddress;
+
     public function __construct(#[\SensitiveParameter] $token)
     {
         parent::__construct($token);
 
-        // Use the 'default' queue
         $this->queue = 'default';
+
+        // Capture IP at request time (before job is queued)
+        $this->ipAddress = request()->ip() ?? 'Unknown';
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toMail($notifiable): MailMessage
     {
         $resetUrl = url(route('auth.password.reset', [
@@ -37,10 +34,42 @@ class ResetPasswordQueued extends ResetPasswordNotification implements ShouldQue
         return (new MailMessage)
             ->subject('Reset Password - '.config('app.name'))
             ->view('emails.reset-password', [
-                'userName' => $notifiable->name,
+                'userName'  => $notifiable->name,
                 'userEmail' => $notifiable->email,
-                'resetUrl' => $resetUrl,
-                'subject' => 'Reset Password',
+                'resetUrl'  => $resetUrl,
+                'subject'   => 'Reset Password',
+                'ipAddress' => $this->ipAddress,
+                'location'  => $this->resolveLocation($this->ipAddress),
             ]);
+    }
+
+    private function resolveLocation(string $ip): string
+    {
+        // Skip lookup for local/private IPs
+        if (in_array($ip, ['127.0.0.1', '::1', 'localhost']) || str_starts_with($ip, '192.168.') || str_starts_with($ip, '10.')) {
+            return 'Lokal / Development';
+        }
+
+        try {
+            $response = Http::timeout(5)->get("http://ip-api.com/json/{$ip}", [
+                'fields' => 'status,country,regionName,city',
+                'lang'   => 'id',
+            ]);
+
+            if ($response->ok()) {
+                $data = $response->json();
+                if (($data['status'] ?? '') === 'success') {
+                    return implode(', ', array_filter([
+                        $data['city']       ?? null,
+                        $data['regionName'] ?? null,
+                        $data['country']    ?? null,
+                    ]));
+                }
+            }
+        } catch (\Exception) {
+            // Silent fail — lokasi tidak kritis
+        }
+
+        return 'Tidak diketahui';
     }
 }

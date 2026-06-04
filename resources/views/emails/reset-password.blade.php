@@ -32,6 +32,7 @@
                 </p>
 
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    {{-- Email --}}
                     <tr>
                         <td style="padding: 10px 0; border-bottom: 1px solid #E5E7EB;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -44,13 +45,40 @@
                             </table>
                         </td>
                     </tr>
+                    {{-- Waktu --}}
                     <tr>
-                        <td style="padding: 10px 0;">
+                        <td style="padding: 10px 0; border-bottom: 1px solid #E5E7EB;">
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td style="font-size: 14px; color: #6D7588;">Waktu Permintaan</td>
                                     <td style="font-size: 14px; font-weight: 600; color: #212121; text-align: right;">
                                         {{ now()->format('d M Y, H:i') }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {{-- IP Address --}}
+                    <tr>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #E5E7EB;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="font-size: 14px; color: #6D7588;">Alamat IP</td>
+                                    <td style="font-size: 14px; font-weight: 600; color: #212121; text-align: right; font-family: monospace;">
+                                        {{ $ipAddress ?? '-' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    {{-- Lokasi --}}
+                    <tr>
+                        <td style="padding: 10px 0;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="font-size: 14px; color: #6D7588;">Lokasi</td>
+                                    <td style="font-size: 14px; font-weight: 600; color: #212121; text-align: right;">
+                                        {{ $location ?? 'Tidak diketahui' }}
                                     </td>
                                 </tr>
                             </table>
