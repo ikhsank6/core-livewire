@@ -40,39 +40,59 @@
             </button>
         </div>
 
-        <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
+        <!-- Navigation
+             PENTING: jangan pakai overflow-x-hidden di sini — akan memotong tooltip fixed.
+             Scrolling vertikal ditangani oleh overflow-y-auto, tapi tooltip pakai
+             position:fixed sehingga tidak terpengaruh overflow apapun.
+        -->
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             @foreach($menuTree as $menu)
                 @if(empty($menu['children']))
                     <!-- Single Menu Item -->
-                    <div x-data="{ 
-                        active: '{{ $currentRoute === $menu['route'] }}',
-                        tooltip: '{{ $menu['name'] }}'
-                    }" class="relative group">
+                    <div x-data="{
+                        active: {{ $currentRoute === $menu['route'] ? 'true' : 'false' }},
+                        tipVisible: false,
+                        tipTop: 0,
+                        tipLeft: 0
+                    }"
+                    @mouseenter="
+                        if (sidebarCollapsed) {
+                            const r = $el.getBoundingClientRect();
+                            tipTop  = r.top + r.height / 2;
+                            tipLeft = r.right + 10;
+                            tipVisible = true;
+                        }
+                    "
+                    @mouseleave="tipVisible = false">
 
                         <a href="{{ \App\Services\MenuService::safeRoute($menu['route']) }}" wire:navigate
-                            class="flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 group relative"
-                            :class="{ 
+                            class="flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 relative"
+                            :class="{
                                 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-white': active,
                                 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-indigo-400': !active,
                                 'justify-center': sidebarCollapsed
                             }">
-
                             <div class="shrink-0">
                                 @if($menu['icon'])
                                     @svg('heroicon-o-' . $menu['icon'], 'w-6 h-6')
                                 @endif
                             </div>
-
                             <span class="ml-3 font-medium whitespace-nowrap transition-opacity duration-200"
                                 :class="{ 'opacity-0 w-0 hidden': sidebarCollapsed, 'opacity-100': !sidebarCollapsed }">
                                 {{ $menu['name'] }}
                             </span>
                         </a>
 
-                        <!-- Tooltip -->
-                        <div x-show="sidebarCollapsed"
-                            class="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                        <!-- Tooltip: position fixed agar tidak terpotong overflow -->
+                        <div x-show="tipVisible"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 translate-x-1"
+                             x-transition:enter-end="opacity-100 translate-x-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             :style="`top:${tipTop}px;left:${tipLeft}px;transform:translateY(-50%)`"
+                             class="fixed px-2.5 py-1.5 bg-zinc-800 dark:bg-zinc-700 text-white text-xs font-medium rounded-lg shadow-lg pointer-events-none whitespace-nowrap z-9999">
                             {{ $menu['name'] }}
                         </div>
                     </div>
@@ -80,14 +100,27 @@
                 @else
                     <!-- Dropdown/Nested Menu -->
                     <?php $hasActiveChild = collect($menu['children'])->contains('route', $currentRoute); ?>
-                     <div x-data="{ expanded: {!! $hasActiveChild ? 'true' : 'false' !!} }"
-                        data-has-active="{!! $hasActiveChild ? 'true' : 'false' !!}"
-                        x-on:livewire:navigated.window="expanded = ($el.getAttribute('data-has-active') === 'true')"
-                        class="relative group">
+                    <div x-data="{
+                        expanded: {{ $hasActiveChild ? 'true' : 'false' }},
+                        tipVisible: false,
+                        tipTop: 0,
+                        tipLeft: 0
+                    }"
+                    data-has-active="{{ $hasActiveChild ? 'true' : 'false' }}"
+                    x-on:livewire:navigated.window="expanded = ($el.getAttribute('data-has-active') === 'true')"
+                    @mouseenter="
+                        if (sidebarCollapsed) {
+                            const r = $el.getBoundingClientRect();
+                            tipTop  = r.top + r.height / 2;
+                            tipLeft = r.right + 10;
+                            tipVisible = true;
+                        }
+                    "
+                    @mouseleave="tipVisible = false">
 
                         <button
                             @click="if(sidebarCollapsed) { sidebarCollapsed = false; setTimeout(() => expanded = true, 300); } else { expanded = !expanded }"
-                            class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-indigo-400 group relative"
+                            class="w-full flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 dark:hover:text-indigo-400 relative"
                             :class="{ 'justify-center': sidebarCollapsed }">
 
                             <div class="shrink-0">
@@ -108,9 +141,16 @@
                             </svg>
                         </button>
 
-                        <!-- Tooltip for Parent -->
-                        <div x-show="sidebarCollapsed"
-                            class="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-zinc-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                        <!-- Tooltip for parent: position fixed -->
+                        <div x-show="tipVisible"
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 translate-x-1"
+                             x-transition:enter-end="opacity-100 translate-x-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             :style="`top:${tipTop}px;left:${tipLeft}px;transform:translateY(-50%)`"
+                             class="fixed px-2.5 py-1.5 bg-zinc-800 dark:bg-zinc-700 text-white text-xs font-medium rounded-lg shadow-lg pointer-events-none whitespace-nowrap z-9999">
                             {{ $menu['name'] }}
                         </div>
 
@@ -119,17 +159,16 @@
                             @foreach($menu['children'] as $child)
                                 <?php $isChildActive = $currentRoute === $child['route']; ?>
                                 <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
-                                    class="flex items-center px-3 py-2 rounded-md text-sm transition-colors duration-200" :class="{ 
+                                    class="flex items-center px-3 py-2 rounded-md text-sm transition-colors duration-200"
+                                    :class="{
                                         'bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-white font-semibold': {{ $isChildActive ? 'true' : 'false' }},
                                         'text-zinc-600 hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-indigo-400': !{{ $isChildActive ? 'true' : 'false' }}
                                     }">
-
                                     @if($child['icon'])
                                         <div class="mr-2">
                                             @svg('heroicon-o-' . $child['icon'], 'w-4 h-4')
                                         </div>
                                     @endif
-
                                     <span>{{ $child['name'] }}</span>
                                 </a>
                             @endforeach
@@ -139,9 +178,8 @@
             @endforeach
         </nav>
 
-        <!-- Footer / Profile (Optional bottom section) -->
+        <!-- Footer -->
         <div class="border-t border-zinc-200 dark:border-zinc-700 p-4" x-show="!sidebarCollapsed">
-            <!-- Simplified footer if needed -->
         </div>
 
     </aside>

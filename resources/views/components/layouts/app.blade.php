@@ -123,7 +123,7 @@
                         @php $isActive = $currentRoute === $menu['route']; @endphp
                         <div
                             x-show="searchQuery === '' || '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase())"
-                            @mouseenter="if(sidebarCollapsed) $dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 })"
+                            @mouseenter="$dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 })"
                             @mouseleave="$dispatch('sidebar-tip-hide')">
                             <a href="{{ \App\Services\MenuService::safeRoute($menu['route']) }}" wire:navigate
                                 class="flex items-center rounded-lg text-sm font-medium transition-all duration-200"
@@ -232,6 +232,8 @@
                                 @foreach($menu['children'] as $child)
                                     @php $isChildActive = $currentRoute === $child['route']; @endphp
                                     <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
+                                        @mouseenter="$dispatch('sidebar-tip', { label: '{{ addslashes($child['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 })"
+                                        @mouseleave="$dispatch('sidebar-tip-hide')"
                                         x-show="searchQuery === '' || 
                                                 '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase()) || 
                                                 '{{ strtolower(addslashes($child['name'])) }}'.includes(searchQuery.toLowerCase())"
@@ -283,7 +285,7 @@
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="opacity-100 translate-x-0"
         x-transition:leave-end="opacity-0 translate-x-1"
-        :style="`top: ${top}px; transform: translateY(-50%); left: 68px;`"
+        :style="`top: ${top}px; transform: translateY(-50%); left: ${sidebarCollapsed ? '68px' : '260px'};`"
         class="fixed z-[9999] pointer-events-none px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-semibold rounded-lg shadow-xl border border-white/10 whitespace-nowrap">
         <span x-text="label"></span>
     </div>
@@ -587,11 +589,17 @@
 
         <x-slot name="footer">
             <button type="button" x-on:click="show = false"
-                class="flex-1 inline-flex justify-center rounded-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                class="flex-1 inline-flex justify-center items-center gap-1.5 rounded-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="stroke: currentColor !important;" d="M6 18L18 6M6 6l12 12" />
+                </svg>
                 Batal
             </button>
             <a href="{{ route('logout') }}"
-                class="flex-1 inline-flex justify-center items-center rounded-full px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
+                class="flex-1 inline-flex justify-center items-center gap-1.5 rounded-full px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: currentColor !important;" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
                 Ya, Logout
             </a>
         </x-slot>

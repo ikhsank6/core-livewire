@@ -86,7 +86,10 @@ $maxWidthClass = [
                     {{ $footer }}
                 @else
                     <button type="button" @click.prevent="show = false" wire:click="{{ $cancelClick }}"
-                        class="h-10 px-5 inline-flex items-center justify-center rounded-full text-sm font-bold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 hover:text-zinc-900 border border-zinc-200 transition-all duration-200 cursor-pointer dark:text-zinc-400 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 dark:hover:text-white dark:border-zinc-700 shadow-none">
+                        class="h-10 px-5 inline-flex items-center justify-center gap-1.5 rounded-full text-sm font-bold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 hover:text-zinc-900 border border-zinc-200 transition-all duration-200 cursor-pointer dark:text-zinc-400 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 dark:hover:text-white dark:border-zinc-700 shadow-none">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: currentColor !important;" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                         Cancel
                     </button>
                     <button type="submit" @if($formId) form="{{ $formId }}" @endif
@@ -95,6 +98,10 @@ $maxWidthClass = [
                         <svg wire:loading class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <svg wire:loading.remove class="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: currentColor !important;" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: currentColor !important;" d="M17 21v-8H7v8M7 3v5h8"/>
                         </svg>
                         <span wire:loading.remove>Save Changes</span>
                         <span wire:loading>Saving...</span>
