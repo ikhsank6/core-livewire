@@ -43,6 +43,18 @@ class UserIndex extends Component implements HasForms
 
     public bool $selectAll = false;
 
+    #[Url]
+    public string $filterStatus = '';
+
+    #[Url]
+    public array $filterRoles = [];
+
+    public bool $showFilterModal = false;
+
+    public string $pendingStatus = '';
+
+    public array $pendingRoles = [];
+
     protected UserRepositoryInterface $userRepository;
 
     protected RoleRepositoryInterface $roleRepository;
@@ -263,20 +275,58 @@ class UserIndex extends Component implements HasForms
         $this->resetPage();
     }
 
-    public function updatedSearch()
+    public function openFilterModal(): void
+    {
+        $this->pendingStatus = $this->filterStatus;
+        $this->pendingRoles  = $this->filterRoles;
+        $this->showFilterModal = true;
+    }
+
+    public function applyFilters(): void
+    {
+        $this->filterStatus    = $this->pendingStatus;
+        $this->filterRoles     = $this->pendingRoles;
+        $this->showFilterModal = false;
+        $this->resetPage();
+    }
+
+    public function clearFilters(): void
+    {
+        $this->filterStatus    = '';
+        $this->filterRoles     = [];
+        $this->pendingStatus   = '';
+        $this->pendingRoles    = [];
+        $this->showFilterModal = false;
+        $this->resetPage();
+    }
+
+    public function getActiveFilterCountProperty(): int
+    {
+        return (int) (!empty($this->filterStatus)) + (\count($this->filterRoles) > 0 ? 1 : 0);
+    }
+
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatedPerPage()
+    public function updatedPerPage(): void
     {
         $this->resetPage();
     }
 
     public function render()
     {
+        $roles = $this->roleRepository->all();
+
         return view('livewire.users.index', [
-            'users' => $this->userRepository->searchWithRoles($this->search, $this->perPage),
+            'users' => $this->userRepository->searchWithFilters(
+                $this->search,
+                $this->perPage,
+                $this->filterStatus,
+                $this->filterRoles,
+            ),
+            'roles' => $roles,
         ]);
     }
 }

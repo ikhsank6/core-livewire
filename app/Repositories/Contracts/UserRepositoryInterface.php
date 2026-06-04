@@ -13,6 +13,11 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function searchWithRoles(?string $term, int $perPage = 10): LengthAwarePaginator;
 
     /**
+     * Search users with role relation + status/role filters.
+     */
+    public function searchWithFilters(?string $term, int $perPage = 10, string $status = '', array $roleIds = []): LengthAwarePaginator;
+
+    /**
      * Create user with roles.
      */
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User;

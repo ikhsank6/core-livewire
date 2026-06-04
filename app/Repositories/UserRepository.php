@@ -49,6 +49,34 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
+     * Search users with role + status/role filters.
+     */
+    public function searchWithFilters(?string $term, int $perPage = 10, string $status = '', array $roleIds = []): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $query = $this->model->with('role', 'roles');
+
+        if ($term) {
+            $query->where(function ($q) use ($term) {
+                $q->where('name', 'like', "%{$term}%")
+                  ->orWhere('email', 'like', "%{$term}%");
+            });
+        }
+
+        match ($status) {
+            'active'    => $query->where('is_active', true)->whereNotNull('email_verified_at'),
+            'suspended' => $query->where('is_active', false),
+            'pending'   => $query->where('is_active', true)->whereNull('email_verified_at'),
+            default     => null,
+        };
+
+        if (!empty($roleIds)) {
+            $query->whereHas('roles', fn ($q) => $q->whereIn('roles.id', $roleIds));
+        }
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
      * Create user with roles.
      */
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User

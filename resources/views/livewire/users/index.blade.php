@@ -21,8 +21,22 @@
                     :showReload="true"
                     :showViewToggle="true">
 
-                    {{-- Bulk resend button — muncul saat ada pilihan --}}
                     <x-slot name="extraActions">
+                        {{-- Filter button --}}
+                        <button wire:click="openFilterModal"
+                                class="relative inline-flex items-center gap-2 h-10 px-3 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all shadow-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                            </svg>
+                            Filter
+                            @if($this->activeFilterCount > 0)
+                                <span class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold">
+                                    {{ $this->activeFilterCount }}
+                                </span>
+                            @endif
+                        </button>
+
+                        {{-- Bulk resend button — muncul saat ada pilihan --}}
                         <div x-show="$wire.selectedUsers.length > 0"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 scale-95"
@@ -224,6 +238,78 @@
             </x-slot>
         </x-ui.table>
     </x-ui.card>
+
+    <!-- Filter Modal -->
+    <x-ui.modal wire:model="showFilterModal" title="Filter Pengguna">
+        <div class="space-y-5 py-1">
+
+            {{-- Status --}}
+            <div>
+                <label class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-2">Status</label>
+                <x-ui.select
+                    model="pendingStatus"
+                    placeholder="Semua Status"
+                    :options="[
+                        ['value' => 'active',    'label' => 'Aktif'],
+                        ['value' => 'suspended', 'label' => 'Ditangguhkan'],
+                        ['value' => 'pending',   'label' => 'Pending'],
+                    ]"
+                />
+            </div>
+
+            {{-- Role (multiple) --}}
+            <div>
+                <label class="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide mb-2">Role</label>
+                <x-ui.select
+                    model="pendingRoles"
+                    placeholder="Semua Role"
+                    :options="$roles"
+                    :multiple="true"
+                />
+            </div>
+        </div>
+
+        {{-- Footer --}}
+        <x-slot name="footer">
+            <div class="flex items-center justify-between w-full">
+                {{-- Reset --}}
+                <button type="button" wire:click="clearFilters"
+                        class="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-400 dark:text-zinc-500
+                               hover:text-red-500 dark:hover:text-red-400 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Reset Filter
+                </button>
+
+                <div class="flex items-center gap-2">
+                    {{-- Batal --}}
+                    <button type="button" wire:click="$set('showFilterModal', false)"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium
+                                   text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800
+                                   hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-xl transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Batal
+                    </button>
+
+                    {{-- Terapkan --}}
+                    <button type="button" wire:click="applyFilters"
+                            class="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-semibold
+                                   text-white bg-indigo-600 hover:bg-indigo-700
+                                   rounded-xl transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
+                        </svg>
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </x-slot>
+    </x-ui.modal>
 
     <!-- Edit/Create Modal -->
     <x-ui.modal wire:model="showModal" :title="$record ? 'Edit User' : 'Tambah User'" formId="user-form">
