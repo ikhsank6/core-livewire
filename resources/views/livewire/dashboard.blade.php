@@ -17,6 +17,7 @@
         </div>
     </div>
 
+    @if(auth()->user()->role?->slug !== 'user')
     {{-- ===================== STAT CARDS ===================== --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
@@ -121,9 +122,11 @@
 
         </div>
     </div>
+    @endif
 
 </div>
 
+@if(auth()->user()->role?->slug !== 'user')
 {{-- ===================== HIGHCHARTS INIT ===================== --}}
 {{-- All chart JS lives here — NO complex JS inside x-data attributes --}}
 <script>
@@ -225,3 +228,4 @@
     document.addEventListener('livewire:navigated', buildChart);
 })();
 </script>
+@endif

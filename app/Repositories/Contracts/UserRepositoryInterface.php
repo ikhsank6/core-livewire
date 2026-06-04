@@ -8,6 +8,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 interface UserRepositoryInterface extends RepositoryInterface
 {
     /**
+     * Get aggregated user statistics for the dashboard.
+     *
+     * @return array{total:int, active:int, pending:int, suspended:int}
+     */
+    public function getDashboardStatistics(): array;
+
+    /**
      * Search users with role relation.
      */
     public function searchWithRoles(?string $term, int $perPage = 10): LengthAwarePaginator;

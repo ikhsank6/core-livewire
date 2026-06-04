@@ -26,6 +26,21 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
+     * Count records, optionally filtered by simple where conditions
+     * and/or an advanced query callback (for whereNull, whereHas, etc).
+     */
+    public function count(array $conditions = [], ?\Closure $callback = null): int
+    {
+        $query = $this->model->newQuery()->where($conditions);
+
+        if ($callback) {
+            $callback($query);
+        }
+
+        return $query->count();
+    }
+
+    /**
      * Get paginated records.
      */
     public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator

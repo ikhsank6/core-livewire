@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Role;
-use App\Models\User;
+use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,20 +12,28 @@ use Livewire\Component;
 #[Title('Dashboard')]
 class Dashboard extends Component
 {
+    protected UserRepositoryInterface $userRepository;
+
+    protected RoleRepositoryInterface $roleRepository;
+
+    public function boot(
+        UserRepositoryInterface $userRepository,
+        RoleRepositoryInterface $roleRepository
+    ): void {
+        $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
+    }
+
     public function render()
     {
-        $totalUsers     = User::count();
-        $activeUsers    = User::where('is_active', true)->whereNotNull('email_verified_at')->count();
-        $pendingUsers   = User::where('is_active', true)->whereNull('email_verified_at')->count();
-        $suspendedUsers = User::where('is_active', false)->count();
-        $totalRoles     = Role::count();
+        $stats = $this->userRepository->getDashboardStatistics();
 
-        return view('livewire.dashboard', compact(
-            'totalUsers',
-            'activeUsers',
-            'pendingUsers',
-            'suspendedUsers',
-            'totalRoles',
-        ));
+        return view('livewire.dashboard', [
+            'totalUsers'     => $stats['total'],
+            'activeUsers'    => $stats['active'],
+            'pendingUsers'   => $stats['pending'],
+            'suspendedUsers' => $stats['suspended'],
+            'totalRoles'     => $this->roleRepository->count(),
+        ]);
     }
 }

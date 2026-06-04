@@ -32,6 +32,21 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     // ==================== PUBLIC METHODS ====================
 
     /**
+     * Get aggregated user statistics for the dashboard.
+     *
+     * @return array{total:int, active:int, pending:int, suspended:int}
+     */
+    public function getDashboardStatistics(): array
+    {
+        return [
+            'total'     => $this->count(),
+            'active'    => $this->count(['is_active' => true], fn ($q) => $q->whereNotNull('email_verified_at')),
+            'pending'   => $this->count(['is_active' => true], fn ($q) => $q->whereNull('email_verified_at')),
+            'suspended' => $this->count(['is_active' => false]),
+        ];
+    }
+
+    /**
      * Search users with role relation.
      */
     public function searchWithRoles(?string $term, int $perPage = 10): LengthAwarePaginator
