@@ -1,6 +1,6 @@
 # Laravel Livewire CMS Platform
 
-> **v2.2.1** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, fully redesigned public website (Aveit-inspired design system), and a split-screen auth layout.
+> **v2.3.0** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, unified blue brand styling across public website buttons, and daily rotated logging.
 
 ## 🚀 Tech Stack
 
@@ -249,6 +249,13 @@ php artisan migrate:fresh --seed  # Reset database
 ---
 
 ## 📋 Changelog
+
+### v2.3.0
+- **Public Website Button & Color Harmonization**: Unified button styling across public views (navbar, hero, and CTA sections) using brand primary blue (`#3a6cf4`) instead of orange clashing colors.
+- **Submit Button Icons**: Added action icons (sign-in, user-add, mail) to login, register, and forgot password submit buttons.
+- **Daily logging configuration**: Switched default logging to `'daily'` channel with auto-rotating logs.
+- **Admin User Table Checkbox**: Retained checkboxes for active/verified users in User list table but styled them as disabled and cursor-not-allowed.
+- **Global CSS Cleanup**: Centralized `.eyebrow-pill-light` styles into `website.css` and removed local style overrides.
 
 ### v2.2.1
 - Fix: sidebar tooltips tidak muncul (overflow-x clipping) → tooltip pakai `position: fixed` dengan Alpine coordinate tracking
