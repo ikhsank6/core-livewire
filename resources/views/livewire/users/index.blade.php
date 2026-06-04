@@ -21,7 +21,7 @@
                     :showReload="true"
                     :showViewToggle="true">
 
-                    <x-slot name="extraActions">
+                    <x-slot name="searchAction">
                         {{-- Filter button --}}
                         <button wire:click="openFilterModal"
                                 class="relative inline-flex items-center gap-2 h-10 px-3 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all shadow-sm">
@@ -35,7 +35,9 @@
                                 </span>
                             @endif
                         </button>
+                    </x-slot>
 
+                    <x-slot name="extraActions">
                         {{-- Bulk resend button — muncul saat ada pilihan --}}
                         <div x-show="$wire.selectedUsers.length > 0"
                              x-transition:enter="transition ease-out duration-200"

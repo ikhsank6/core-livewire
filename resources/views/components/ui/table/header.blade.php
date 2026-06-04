@@ -13,7 +13,7 @@
 
 <div {{ $attributes->class(['flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 pt-1']) }}>
     {{-- Left: Elegant Search --}}
-    <div class="flex flex-1 items-center gap-2 max-w-sm">
+    <div class="flex flex-1 items-center gap-2 max-w-md">
         <flux:input
             wire:model.live.debounce.300ms="{{ $search }}"
             :placeholder="$searchPlaceholder"
@@ -21,6 +21,7 @@
             clearable
             class="flex-1"
         />
+        {{ $searchAction ?? '' }}
     </div>
 
     {{-- Right: Integrated Actions --}}
