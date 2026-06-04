@@ -242,7 +242,7 @@
     </x-ui.card>
 
     <!-- Filter Modal -->
-    <x-ui.modal wire:model="showFilterModal" title="Filter Pengguna">
+    <x-ui.modal wire:model="showFilterModal" title="Filter Pengguna" :crudEvents="false">
         <div class="space-y-5 py-1">
 
             {{-- Status --}}

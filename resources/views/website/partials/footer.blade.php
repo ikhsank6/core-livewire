@@ -134,7 +134,7 @@
             <div>
                 <h5 class="text-white font-heading font-bold text-sm mb-5 uppercase tracking-wider">Newsletter</h5>
                 <p class="text-dark-text text-sm mb-4 leading-relaxed">Dapatkan berita dan informasi terbaru langsung di inbox Anda.</p>
-                <form class="flex gap-2" onsubmit="return false;" aria-label="Berlangganan newsletter">
+                <form class="flex gap-2" @submit.prevent aria-label="Berlangganan newsletter">
                     <input type="email"
                            placeholder="Email Anda..."
                            class="flex-1 min-w-0 px-4 py-2.5 rounded-xl bg-white/8 border border-white/12 text-white text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all">

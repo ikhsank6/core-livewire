@@ -3,7 +3,8 @@
     'title' => '',
     'maxWidth' => '2xl',
     'formId' => null,
-    'cancelClick' => '$set("showModal", false)'
+    'cancelClick' => '$set("showModal", false)',
+    'crudEvents' => true, // set false untuk modal non-CRUD (mis. filter) agar tidak ikut $dispatch('crud-modal-open')
 ])
 
 @php
@@ -27,7 +28,7 @@ $maxWidthClass = [
     }"
     x-on:open-modal.window="if ($event.detail.name === '{{ $name }}') show = true"
     x-on:close-modal.window="if ($event.detail.name === '{{ $name }}') show = false"
-    @if($attributes->wire('model')->value())
+    @if($attributes->wire('model')->value() && $crudEvents)
         x-on:crud-modal-open.window="show = true"
         x-on:crud-modal-close.window="show = false"
     @endif

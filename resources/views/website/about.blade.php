@@ -126,10 +126,12 @@
                     @endif
 
                     @if($aboutUs?->address)
-                    <div class="flex items-start gap-4 p-4 rounded-xl
-                                {{ $aboutUs?->map_url ? 'cursor-pointer hover:bg-section-gray dark:hover:bg-dark' : '' }}
-                                transition-colors group"
-                         @if($aboutUs?->map_url) onclick="window.open('{{ $aboutUs->map_url }}', '_blank')" @endif>
+                    @if($aboutUs?->map_url)
+                    <a href="{{ $aboutUs->map_url }}" target="_blank"
+                       class="flex items-start gap-4 p-4 rounded-xl cursor-pointer hover:bg-section-gray dark:hover:bg-dark transition-colors group">
+                    @else
+                    <div class="flex items-start gap-4 p-4 rounded-xl transition-colors group">
+                    @endif
                         <div class="w-12 h-12 bg-primary/8 dark:bg-primary/12 rounded-xl flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary/15 transition-colors">
                             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -140,7 +142,11 @@
                             <p class="text-xs text-slate-400 dark:text-slate-500 mb-0.5 font-medium">Alamat</p>
                             <p class="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors leading-relaxed">{{ $aboutUs->address }}</p>
                         </div>
+                    @if($aboutUs?->map_url)
+                    </a>
+                    @else
                     </div>
+                    @endif
                     @endif
 
                     @if($aboutUs?->whatsapp)

@@ -1,5 +1,5 @@
 {{-- Alpine Theme Store - for theme state management across Livewire navigations --}}
-<script data-navigate-once>
+<script data-navigate-once nonce="{{ csp_nonce() }}">
     // Apply theme immediately on every navigation (before Alpine loads)
     (function () {
         const theme = localStorage.getItem('theme') || 'light';

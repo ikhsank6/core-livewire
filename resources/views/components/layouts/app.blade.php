@@ -607,7 +607,7 @@
 
     <x-ui.delete-confirm-modal />
 
-    <script>
+    <script nonce="{{ csp_nonce() }}">
         document.addEventListener('livewire:navigated', () => {
             const el = document.getElementById('breadcrumb-wrapper');
             if (!el) return;

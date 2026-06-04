@@ -103,7 +103,7 @@
 
     {{-- Scroll hint --}}
     <div class="absolute bottom-7 right-6 z-20 hidden md:flex flex-col items-center gap-1.5 cursor-pointer opacity-50 hover:opacity-90 transition-opacity"
-         onclick="window.scrollBy({top: window.innerHeight, behavior:'smooth'})"
+         @click="window.scrollBy({top: window.innerHeight, behavior:'smooth'})"
          aria-hidden="true">
         <span class="text-[10px] font-bold tracking-[.25em] uppercase text-white">Scroll</span>
         <div class="w-5 h-8 rounded-full border border-white/30 flex justify-center pt-1.5">

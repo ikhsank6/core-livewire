@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Menu;
 use App\Policies\MenuPolicy;
 use App\Services\MenuService;
+use App\Support\CspNonce;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(MenuService::class, function ($app) {
             return new MenuService;
         });
+
+        // CSP nonce singleton – same nonce is shared between
+        // the SecurityHeaders middleware and all Blade templates.
+        $this->app->singleton(CspNonce::class);
     }
 
     /**
@@ -39,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+
+        // Set the CSP nonce for Vite, Livewire, and Filament scripts.
+        // Livewire automatically picks this up via Vite::cspNonce().
+        Vite::useCspNonce(app(CspNonce::class)->get());
 
         FilamentColor::register([
             'danger' => Color::Red,

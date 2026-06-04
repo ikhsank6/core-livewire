@@ -13,12 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
 
-        $middleware->trustHosts(at: [
+        $middleware->trustHosts(at: array_filter([
             'localhost',
             '127.0.0.1',
-            // Add your production domains here
-            // env('APP_URL'),
-        ]);
+            parse_url((string) env('APP_URL', ''), PHP_URL_HOST),
+        ]));
 
         $middleware->alias([
             'menu.access' => \App\Http\Middleware\CheckMenuAccess::class,
