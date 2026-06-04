@@ -1,242 +1,289 @@
-# Laravel Livewire 3 – Dynamic Role-Based CMS Application
+# Laravel Livewire CMS Platform
 
-A comprehensive Laravel 11 + Livewire 3 application featuring a dynamic role-based menu system, CMS functionality, and a modern public website with dark mode support.
+> **v2.2.1** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, fully redesigned public website (Aveit-inspired design system), and a split-screen auth layout.
 
 ## 🚀 Tech Stack
 
-| Category          | Technology                            |
-| ----------------- | ------------------------------------- |
-| **Framework**     | Laravel 11                            |
-| **Frontend**      | Livewire 3 + TailwindCSS 4 + AlpineJS |
-| **UI Components** | FluxUI + Filament Forms               |
-| **Database**      | SQLite (configurable)                 |
-| **Queue**         | Database Driver                       |
-| **Email**         | SMTP with custom templates            |
+| Category | Technology |
+|---|---|
+| **Framework** | Laravel 12 |
+| **Reactive UI** | Livewire 3 |
+| **CSS Framework** | Tailwind CSS 4 (Vite plugin) |
+| **JavaScript** | Alpine.js 3 (npm bundle) |
+| **Admin UI** | Flux UI + Filament Forms + Flowbite (CDN) |
+| **Charts** | Highcharts 12 |
+| **Database** | SQLite (configurable → MySQL / PostgreSQL) |
+| **Queue** | Database driver |
+| **Email** | SMTP with queued notifications |
+| **Build Tool** | Vite 7 (dual entry: admin + website) |
+
+---
 
 ## ✨ Features
 
 ### 🔐 Authentication & Security
 
--   Full authentication flow (Login, Register, Forgot Password, Reset Password)
--   Email verification with custom branded templates
--   Queued email notifications
--   Standardized password validation (NIST/OWASP) with real-time strength indicators
--   Rate limiting protection on public and auth routes
--   Role-based access control (RBAC)
+- Full auth flow: Login, Register, Forgot Password, Reset Password, Email Verification
+- **Split-screen auth layout** — Dark branded left panel (floating CMS mockup) + form right panel
+- Theme toggle with sun/moon icons inside the toggle button
+- Queued email notifications (Mailtrap-ready)
+- Standardized password validation (NIST/OWASP) with real-time strength indicator
+- Rate limiting: auth routes 10 req/min, public website 60 req/min
+- Role-based access control (RBAC)
 
-### 📱 Dynamic Sidebar Menu
+### 🌐 Public Website (v2.2.x Redesign)
 
--   Menu structure stored in database (`menus` table)
--   Role-based visibility via `role_menu` pivot table
--   Recursive multi-level support
--   Drag-and-drop reordering
--   Responsive: Collapsible on desktop, Off-canvas on mobile
--   Icon support with Heroicons
+A fully redesigned public-facing website with a dedicated Aveit-inspired design system:
 
-### 🌐 Public Website
+- **Hero Carousel** — Pure Alpine.js (no Swiper), autoplay, dot navigation, keyboard-friendly
+- **Home Page** — CMS-driven: carousel → about snippet → latest news → CTA. Zero hardcoded placeholder content.
+- **News Section** — Featured article (horizontal card), article grid, categories sidebar, related news
+- **About Page** — Company description, contact details, Google Maps embed
+- **Animated Navigation** — Sticky glass navbar with spring-based hover pill, animated active underline bar, shimmer sweep on hover
+- **Dark/Light Mode** — System-aware default, persisted to localStorage, smooth transition
+- **AOS (Animate on Scroll)** — Custom IntersectionObserver implementation (no library dependency)
+- **SEO** — Meta tags, Open Graph, Twitter Cards
+- **Responsive** — Mobile-first, tested 360px → 1440px
 
--   **Home Page**: Hero carousel with AOS animations
--   **News Section**: Featured articles, categories, detail pages
--   **About Page**: Company information with map integration
--   **Dark/Light Mode**: Toggle with smooth transitions
--   **SEO Optimized**: Meta tags, Open Graph, Twitter Cards
+**Website design tokens** (separate from admin):
+- Primary: `#3a6cf4` (blue), Accent: `#f97316` (orange), Dark: `#0d1117` (navy)
+- Fonts: Quicksand (headings) + Nunito (body) via Google Fonts
 
-### 📰 CMS (Content Management System)
+### 📰 CMS (Content Management)
 
--   **News Management**: Create, edit, publish articles with rich text editor
--   **News Categories**: Organize articles by categories
--   **Carousels**: Homepage slider management with drag-and-drop ordering
--   **About Us**: Company profile, contact info, social links, logo
+- **News** — Create/edit/publish articles, rich text editor, auto-slug, excerpt generation
+- **News Categories** — Organize articles, filter by category on public website
+- **Carousels** — Homepage slider management, drag-and-drop ordering
+- **About Us** — Company profile, contact info, social links, map coordinates, logo
 
-### ⚙️ Settings & Configuration
+### ⚙️ Settings
 
--   **System Settings**: Favicon, SEO metadata, Google Analytics
--   **Log Viewer**: View Laravel logs with filtering and search (Opcodes Log Viewer)
+- **System Settings** — Favicon, SEO metadata, Google Analytics
+- **Log Viewer** — View/filter/search Laravel logs (super-admin only, Opcodes Log Viewer)
+- **Job Monitor** — View queued jobs
 
-### 👥 Master Data Management
+### 👥 Master Data
 
--   **User Management**: CRUD with auto-generated secure passwords, avatar, and role assignment
--   **Role Management**: Create roles and assign menu access
--   **Menu Management**: Dynamic menu builder with drag-and-drop
+- **User Management** — CRUD, auto-generated passwords, avatar, role assignment
+- **Role Management** — Create roles, assign menu access per role
+- **Menu Management** — Dynamic menu builder, drag-and-drop ordering, Heroicon support
 
-### 🎨 UI/UX Features
+### 📊 Dashboard
 
--   Modern glassmorphism design
--   Dark mode support throughout
--   Reusable UI components (buttons, tables, cards, modals)
--   Real-time password strength component
--   Toast notifications
--   Empty state components
--   Pagination with "Jump to Page"
--   Table/Card view toggle
+- Interactive Highcharts donut/bar chart (user distribution)
+- Key metrics cards
+- Re-initializes after Livewire SPA navigation
 
-### 🔔 Notifications
+### 🎨 Admin UI/UX
 
--   In-app notification system
--   Notification bell with unread count
--   Notification inbox with read/unread filters
+- Collapsible sidebar with **fixed-position tooltips** (no overflow clipping)
+- Dark mode throughout admin panel
+- Toast notifications (success, danger, warning, info)
+- Reusable components: modals, tables, cards, badges, pagination, empty states
+- Real-time password strength indicator
 
-### 📧 Email Templates
+### 🔔 In-App Notifications
 
--   Modern Tokopedia-style email design
--   Branded with company logo
--   Responsive for all email clients
--   Templates for: Verify Email, Reset Password
+- Custom notification model (role-based routing: `from_role_id`, `to_role_id`)
+- Notification bell with unread count
+- Notification inbox with read/unread filters
+
+---
 
 ## 📦 Installation
 
 ### Prerequisites
 
--   PHP 8.2+
--   Composer
--   Node.js & NPM
--   SQLite (or MySQL/PostgreSQL)
+- PHP 8.2+
+- Composer
+- Node.js 18+ & NPM
+- SQLite (or MySQL/PostgreSQL)
 
 ### Steps
 
-1. **Clone & Install Dependencies**
+```bash
+# 1. Clone & install
+git clone <repo>
+cd <repo>
+composer install
+npm install
 
-    ```bash
-    git clone <repo>
-    cd <repo>
-    composer install
-    npm install
-    ```
+# 2. Environment
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan storage:link
 
-2. **Environment Setup**
+# 3. Configure .env
+APP_URL=http://localhost:8000
+DB_CONNECTION=sqlite
+MAIL_MAILER=smtp
+MAIL_HOST=your-smtp-host
+MAIL_PORT=587
+MAIL_USERNAME=your-username
+MAIL_PASSWORD=your-password
+MAIL_FROM_ADDRESS=noreply@example.com
 
-    ```bash
-    cp .env.example .env
-    php artisan key:generate
-    touch database/database.sqlite
-    php artisan storage:link
-    ```
+# 4. Database
+php artisan migrate:fresh --seed
 
-3. **Configure Environment**
+# 5. Build assets
+npm run build      # production
+# OR
+npm run dev        # development (HMR)
+```
 
-    ```env
-    APP_URL=http://localhost:8000
+### Default Credentials
 
-    DB_CONNECTION=sqlite
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | `superadmin@example.com` | `password` |
 
-    MAIL_MAILER=smtp
-    MAIL_HOST=your-smtp-host
-    MAIL_PORT=587
-    MAIL_USERNAME=your-username
-    MAIL_PASSWORD=your-password
-    MAIL_FROM_ADDRESS=noreply@example.com
-    ```
+### Run (Development)
 
-4. **Database Migration & Seeding**
+```bash
+# All-in-one (recommended)
+composer dev
 
-    ```bash
-    php artisan migrate:fresh --seed
-    ```
+# Or individually:
+php artisan serve          # Terminal 1
+npm run dev                # Terminal 2
+php artisan queue:listen   # Terminal 3
+php artisan pail           # Terminal 4 (logs)
+```
 
-    **Default Credentials:**
-    | Role | Email | Password |
-    |------|-------|----------|
-    | Super Admin | `superadmin@example.com` | `password` |
-
-5. **Run Application**
-
-    ```bash
-    # Terminal 1: Assets
-    npm run dev
-
-    # Terminal 2: Server
-    php artisan serve
-
-    # Terminal 3: Queue Worker (for emails)
-    php artisan queue:work
-    ```
+---
 
 ## 📁 Project Structure
 
 ```
 app/
 ├── Actions/
-│   └── Website/           # Public website action classes
+│   └── Website/           # Public page action classes (ShowHomePage, ShowNewsList, ...)
 ├── Forms/                 # Filament form schemas
-├── Http/
-│   └── Middleware/
-│       └── CheckMenuAccess.php
+├── Http/Middleware/       # CheckMenuAccess, SecurityHeaders
 ├── Livewire/
 │   ├── Auth/              # Authentication components
-│   ├── Layout/            # Sidebar, Notifications
-│   ├── Settings/          # System settings, Logs
-│   └── [Feature]/         # Feature-specific components
-├── Models/                # Eloquent models
-├── Notifications/         # Email notification classes
-├── Repositories/          # Repository pattern implementation
-└── Services/
-    └── MenuService.php    # Menu caching logic
+│   ├── Concerns/          # Shared traits (WithNotifications, WithRateLimiting, ...)
+│   ├── Layout/            # Sidebar, NotificationBell, NotificationIndex
+│   ├── Settings/          # System settings, Logs, Jobs
+│   └── [Feature]/         # Feature-specific CRUD components
+├── Models/                # 10 Eloquent models (all with UUID + soft deletes)
+├── Repositories/          # Repository pattern (Interface → Implementation)
+└── Services/MenuService.php
 
-resources/views/
-├── components/
-│   ├── emails/           # Email template components
-│   ├── layouts/          # App layout
-│   └── ui/               # Reusable UI components
-├── emails/               # Email templates
-├── livewire/             # Livewire views
-├── partials/             # Shared partials
-└── website/              # Public website views
+resources/
+├── css/
+│   ├── app.css            # Admin styles (Metronic/Flux/Filament)
+│   └── website.css        # Website styles (Aveit design system)
+├── js/
+│   ├── app.js             # Admin JS (Highcharts, Flowbite)
+│   └── website.js         # Website JS (Alpine.js + AOS + counter)
+└── views/
+    ├── components/
+    │   ├── layouts/       # app.blade.php (admin), auth.blade.php (split-screen)
+    │   └── ui/            # Reusable UI components
+    ├── livewire/          # Livewire blade views
+    ├── layouts/           # website.blade.php
+    └── website/           # Public pages + partials
 
-routes/
-└── modules/
-    ├── auth.php          # Authentication routes
-    ├── cms.php           # CMS routes
-    ├── master_data.php   # Master data routes
-    ├── settings.php      # Settings routes
-    └── website.php       # Public website routes
+routes/modules/
+├── auth.php               # Authentication routes
+├── cms.php                # CMS routes
+├── master_data.php        # User/Role/Menu routes
+├── settings.php           # Settings routes
+└── website.php            # Public routes (rate limited)
 ```
 
-## 🛠️ Usage
+---
 
-### Adding a New Menu
+## 🛠️ Key Patterns
 
-1. Navigate to **Master Data > Menus**
-2. Click **Add Menu**
-3. Fill in: Name, Route, Icon, Parent (optional)
-4. Assign to roles via **Master Data > Roles**
+### Adding a New CMS Module
 
-### Protecting Routes
+1. Migration → Model (`HasUuid`, `SoftDeletes`) → Repository Interface → Implementation → Binding
+2. Form schema in `app/Forms/` → Livewire component (inject repo via `boot()`) → Blade view
+3. Route in `routes/modules/` → Menu seeder entry
 
-Add routes inside the `auth` & `menu.access` middleware group:
+### Protecting Admin Routes
 
 ```php
-Route::middleware(['auth', 'menu.access'])->group(function () {
+Route::middleware(['auth', 'verified', 'menu.access'])->group(function () {
     Route::get('/your-route', YourComponent::class)->name('your.route');
 });
 ```
 
-### Rate Limiting
+### Adding Website Partials
 
-Public routes are protected with rate limiting:
+Website partials live in `resources/views/website/partials/`. Key reusable ones:
 
--   **Website routes**: 60 requests/minute/IP
--   **Auth routes**: 10 requests/minute/IP
+```blade
+{{-- Section heading --}}
+@include('website.partials.section-heading', [
+    'eyebrow' => 'Label',
+    'title'   => 'Judul <span class="text-primary">Halaman</span>',
+    'subtitle' => 'Deskripsi singkat.',
+])
+
+{{-- News card (standard or featured) --}}
+@include('website.partials.news-card', ['item' => $newsItem, 'featured' => true])
+
+{{-- Page header (inner pages) --}}
+@include('website.partials.page-header', [
+    'title'      => 'Judul Halaman',
+    'breadcrumb' => 'Breadcrumb Label',
+])
+```
+
+---
 
 ## 🔧 Artisan Commands
 
 ```bash
-# Clear all caches
-php artisan optimize:clear
-
-# Run queue worker
-php artisan queue:work
-
-# Retry failed jobs
-php artisan queue:retry all
-
-# View logs
-php artisan log-viewer:publish
+php artisan optimize:clear     # Clear all caches
+php artisan queue:work         # Run queue worker
+php artisan queue:retry all    # Retry failed jobs
+php artisan migrate:fresh --seed  # Reset database
 ```
+
+---
+
+## 📋 Changelog
+
+### v2.2.1
+- Fix: sidebar tooltips tidak muncul (overflow-x clipping) → tooltip pakai `position: fixed` dengan Alpine coordinate tracking
+- Fix: navigation menu spring-based hover & active animations (`nav-pill`, `nav-active-bar`, `nav-shimmer`)
+- Fix: auth layout theme toggle — icon sun/moon di dalam toggle button
+
+### v2.2.0
+- **Redesign website public** lengkap dengan Aveit-inspired design system
+- Dual Vite entry points: `website.css` + `website.js` terpisah dari admin
+- Alpine.js di-bundle via npm (hapus CDN), tambah `@alpinejs/collapse`
+- Hero carousel pure Alpine (hapus Swiper CDN)
+- Reusable partials: `section-heading`, `news-card`, `page-header`
+- Custom AOS via IntersectionObserver (hapus AOS library dependency)
+- Fix: AOS tidak jalan karena `DOMContentLoaded` tidak fired di module scripts
+- Navigasi: sticky glass navbar, spring hover pill, animated active underline
+- Auth: split-screen layout, Google Fonts (Quicksand + Nunito), improved theme toggle
+- Hapus semua konten placeholder SaaS/AI dari home page (100% CMS-driven)
+- Sidebar news: hapus newsletter non-fungsional → ganti CTA kontak
+
+### v2.1.x
+- Highcharts dashboard analytics (donut chart distribusi user)
+- Livewire concerns: `WithNotifications`, `WithSearchablePagination`, `WithRateLimiting`
+- Refactor dashboard UI, standardize button styling
+
+### v2.0.x
+- Redesign UI admin panel (Metronic-inspired)
+- Custom pagination dengan per-page selector
+- Media management system terpusat
+
+---
 
 ## 📄 License
 
-This project is open-sourced software licensed under the [MIT license](LICENSE).
+MIT License — open-sourced software.
 
 ## 👤 Author
 
-Developed with ❤️ using Laravel & Livewire
+Developed with Laravel 12 + Livewire 3 + Alpine.js

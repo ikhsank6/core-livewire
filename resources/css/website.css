@@ -235,20 +235,20 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.875rem 2rem;
-    background: var(--color-accent);
+    background: var(--color-primary);
     color: #fff;
     font-family: "Quicksand", sans-serif;
     font-weight: 700;
     font-size: 0.9375rem;
     border-radius: 9999px;
     transition: all 0.25s ease;
-    box-shadow: 0 6px 24px rgba(249,115,22,0.35);
+    box-shadow: 0 6px 24px rgba(58,108,244,0.35);
     white-space: nowrap;
 }
 .btn-accent-solid:hover {
-    background: var(--color-accent-dark);
+    background: var(--color-primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(249,115,22,0.45);
+    box-shadow: 0 10px 32px rgba(58,108,244,0.45);
 }
 
 .btn-outline-white {
@@ -315,6 +315,22 @@ body {
     background: rgba(58,108,244,0.15);
     border-color: rgba(58,108,244,0.3);
     color: #6b92f7;
+}
+
+.eyebrow-pill-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 1rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 9999px;
+    color: #fff;
+    font-family: "Quicksand", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 .eyebrow-dot {
