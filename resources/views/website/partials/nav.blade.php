@@ -39,17 +39,31 @@
 
                     @foreach($navItems as $item)
                     <a href="{{ $item['url'] }}"
-                       class="relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 font-heading"
+                       class="nav-link {{ $item['active'] ? 'is-active' : '' }} relative px-4 py-2.5 text-sm font-semibold rounded-xl font-heading overflow-hidden"
                        :class="scrolled
                            ? '{{ $item['active']
-                               ? 'text-primary bg-primary/8 dark:bg-primary/15'
-                               : 'text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary hover:bg-slate-100/80 dark:hover:bg-white/5' }}'
-                           : '{{ $item['active']
-                               ? 'text-white bg-white/15 backdrop-blur-sm'
-                               : 'text-white/85 hover:text-white hover:bg-white/10' }}'">
-                        {{ $item['label'] }}
+                               ? 'text-primary dark:text-primary-light'
+                               : 'text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary' }}'
+                           : '{{ $item['active'] ? 'text-white' : 'text-white/85 hover:text-white' }}'">
+
+                        {{-- Hover / active pill background --}}
+                        <span class="nav-pill absolute inset-0 rounded-xl {{ $item['active'] ? 'is-active' : '' }}"
+                              :class="scrolled
+                                  ? '{{ $item['active'] ? 'bg-primary/10 dark:bg-primary/18' : 'bg-slate-100/90 dark:bg-white/6' }}'
+                                  : '{{ $item['active'] ? 'bg-white/18 backdrop-blur-sm' : 'bg-white/12' }}'">
+                        </span>
+
+                        {{-- Shimmer on hover --}}
+                        <span class="nav-shimmer"></span>
+
+                        {{-- Label text --}}
+                        <span class="nav-text relative z-10">{{ $item['label'] }}</span>
+
+                        {{-- Active bar: animated underline --}}
                         @if($item['active'])
-                        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary transition-all duration-300"></span>
+                        <span class="nav-active-bar absolute bottom-0 left-1/2 w-3/5 h-0.5 rounded-full -translate-x-1/2"
+                              :class="scrolled ? 'bg-primary' : 'bg-white/90'">
+                        </span>
                         @endif
                     </a>
                     @endforeach
@@ -153,14 +167,24 @@
         <div class="flex flex-col gap-0.5 px-3 mb-3">
             @foreach($navItems as $item)
             <a href="{{ $item['url'] }}" @click="mobileMenuOpen = false"
-               class="relative px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 font-heading
+               class="relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 font-heading overflow-hidden
                       {{ $item['active']
                           ? 'text-primary bg-primary/8 dark:bg-primary/15'
                           : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-primary' }}">
+                {{-- Active left bar --}}
                 @if($item['active'])
-                    <span class="absolute left-2 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full"></span>
+                    <span class="shrink-0 w-1 h-5 bg-primary rounded-full"
+                          style="animation: nav-bar-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both; transform-origin: top; animation-name: nav-mobile-bar;">
+                    </span>
+                @else
+                    <span class="shrink-0 w-1 h-5 rounded-full opacity-0"></span>
                 @endif
                 {{ $item['label'] }}
+
+                {{-- Active dot on right --}}
+                @if($item['active'])
+                    <span class="ml-auto w-1.5 h-1.5 bg-primary rounded-full shrink-0"></span>
+                @endif
             </a>
             @endforeach
         </div>
