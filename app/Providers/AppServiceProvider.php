@@ -46,10 +46,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useTailwind();
 
-        // Set the CSP nonce for Vite, Livewire, and Filament scripts.
-        // Livewire automatically picks this up via Vite::cspNonce().
-        Vite::useCspNonce(app(CspNonce::class)->get());
-
         FilamentColor::register([
             'danger' => Color::Red,
             'gray' => Color::Zinc,

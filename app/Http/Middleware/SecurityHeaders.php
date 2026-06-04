@@ -16,6 +16,12 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Resolve the nonce and register it with Vite before the response is generated
+        if (config('csp.enabled', true)) {
+            $nonce = app(CspNonce::class)->get();
+            \Illuminate\Support\Facades\Vite::useCspNonce($nonce);
+        }
+
         $response = $next($request);
 
         // ─── Standard Security Headers ───────────────────────────────
@@ -37,6 +43,7 @@ class SecurityHeaders
         // ─── Content Security Policy ─────────────────────────────────
         if (config('csp.enabled', true)) {
             $this->applyCsp($request, $response);
+            $this->injectNonces($response);
         }
 
         return $response;
@@ -91,7 +98,9 @@ class SecurityHeaders
                 config('csp.extra.connect-src', [])
             ),
 
-            'frame-src'  => ["'none'"],
+            'frame-src'  => ["'self'", 'https://www.google.com'],
+            'worker-src' => ["'self'", 'blob:'],
+            'child-src'  => ["'self'", 'blob:'],
             'object-src' => ["'none'"],
             'base-uri'   => ["'self'"],
             'form-action' => ["'self'"],
@@ -125,5 +134,47 @@ class SecurityHeaders
         }
 
         return $sources;
+    }
+
+    /**
+     * Dynamically inject the CSP nonce into all script tags in the HTML response.
+     */
+    protected function injectNonces(Response $response): void
+    {
+        // Avoid modifying file downloads or streamed responses
+        if ($response instanceof \Symfony\Component\HttpFoundation\BinaryFileResponse ||
+            $response instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
+            return;
+        }
+
+        $contentType = $response->headers->get('Content-Type') ?? '';
+
+        if (str_contains($contentType, 'text/html')) {
+            $content = $response->getContent();
+            if ($content === false || is_null($content)) {
+                return;
+            }
+
+            $nonce = app(CspNonce::class)->get();
+
+            // Match all <script ...> tags (case-insensitive)
+            $content = preg_replace_callback(
+                '/<script(\s[^>]*?)?>/i',
+                function ($matches) use ($nonce) {
+                    $attributes = $matches[1] ?? '';
+
+                    // If it already has a nonce, do not add it again
+                    if (preg_match('/nonce=/i', $attributes)) {
+                        return $matches[0];
+                    }
+
+                    // Insert the nonce attribute
+                    return "<script nonce=\"{$nonce}\"{$attributes}>";
+                },
+                $content
+            );
+
+            $response->setContent($content);
+        }
     }
 }
