@@ -1,12 +1,15 @@
-<div class="max-w-4xl mx-auto">
+<div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
         <h1 class="text-2xl font-light text-zinc-900 dark:text-white">User Profile</h1>
         <p class="text-sm text-zinc-500 dark:text-zinc-400">Central Hub for Personal Customization</p>
     </div>
 
+    <!-- Two-column grid: Personal Info | Roles Configuration -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+
     <!-- Personal Info Card -->
-    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+    <div class="md:col-span-3 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         <!-- Card Header -->
         <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
             <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Personal Info</h2>
@@ -184,7 +187,7 @@
     </div>
 
     <!-- Roles Configuration Card -->
-    <div class="mt-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
+    <div class="md:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
             <h2 class="text-lg font-semibold text-zinc-900 dark:text-white">Roles Configuration</h2>
         </div>
@@ -215,4 +218,6 @@
             </div>
         </div>
     </div>
+
+    </div>{{-- end grid --}}
 </div>
