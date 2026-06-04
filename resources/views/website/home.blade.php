@@ -57,7 +57,7 @@
 
                 @if($carousel->button_text)
                 <div class="flex flex-wrap gap-3 mt-8">
-                    <a href="{{ $carousel->button_link ?? route('about') }}" class="btn-accent-solid">
+                    <a href="{{ $carousel->button_link ?? route('about') }}" class="btn-primary-solid">
                         {{ $carousel->button_text }}
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -496,7 +496,7 @@
             Tim kami siap membantu Anda. Hubungi kami sekarang atau daftar untuk mulai menggunakan platform kami.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('about') }}#contact" class="btn-accent-solid">
+            <a href="{{ route('about') }}#contact" class="btn-primary-solid">
                 Hubungi Kami
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -511,24 +511,6 @@
     </div>
 </section>
 
-@push('styles')
-<style>
-.eyebrow-pill-light {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 1rem;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 9999px;
-    color: rgba(255,255,255,0.8);
-    font-family: "Quicksand", sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-</style>
-@endpush
+
 
 @endsection

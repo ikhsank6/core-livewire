@@ -107,7 +107,7 @@
                         Masuk
                     </a>
                     <a href="{{ route('auth.register') }}"
-                       class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-accent hover:bg-accent-dark rounded-full shadow-lg shadow-orange-500/25 transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] font-heading">
+                       class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary-dark rounded-full shadow-lg shadow-primary/25 transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] font-heading">
                         Daftar
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -204,7 +204,7 @@
                 Masuk
             </a>
             <a href="{{ route('auth.register') }}"
-               class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-bold text-white bg-accent hover:bg-accent-dark rounded-xl shadow-md shadow-orange-500/20 transition-all font-heading">
+               class="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-bold text-white bg-primary hover:bg-primary-dark rounded-xl shadow-md shadow-primary/20 transition-all font-heading">
                 Daftar Sekarang
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>

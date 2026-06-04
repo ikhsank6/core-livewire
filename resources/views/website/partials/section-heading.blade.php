@@ -38,22 +38,4 @@
     @endif
 </div>
 
-@once
-<style>
-.eyebrow-pill-light {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 1rem;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 9999px;
-    color: #fff;
-    font-family: "Quicksand", sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-</style>
-@endonce
+
