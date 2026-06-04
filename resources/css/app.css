@@ -644,23 +644,28 @@ p.fi-fo-field-wrp-error-message::before,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f87171'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
 }
 
-/* Input wrapper error state: soft red border instead of Filament's heavy ring */
+/* Input wrapper error state: red border instead of Filament's heavy ring */
 .fi-input-wrp[class*="ring-danger"],
 .fi-input-wrp[class*="focus-within:ring-danger"] {
     --tw-ring-color: transparent !important;
     box-shadow: none !important;
-    border-color: #fca5a5 !important;
+    border-color: #dc2626 !important;
 }
 
-/* Fallback: any input inside an error field wrapper gets a subtle red border */
+.dark .fi-input-wrp[class*="ring-danger"],
+.dark .fi-input-wrp[class*="focus-within:ring-danger"] {
+    border-color: #f87171 !important;
+}
+
+/* Fallback: any input inside an error field wrapper gets a red border matching the text */
 .fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
 .fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
-    border-color: #fca5a5 !important;
+    border-color: #dc2626 !important;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08) !important;
 }
 
 .dark .fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
 .dark .fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
-    border-color: #b91c1c !important;
+    border-color: #f87171 !important;
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
