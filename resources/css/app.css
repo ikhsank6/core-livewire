@@ -645,10 +645,15 @@ p.fi-fo-field-wrp-error-message::before,
 }
 
 /* Input wrapper error state: red border instead of Filament's heavy ring */
+/* NOTE: .fi-input-wrp has border-width:0 by default (Filament draws its ring via box-shadow),
+   so border-color alone is invisible — border-width/style must be set explicitly or the
+   red never shows and only the faint box-shadow halo is visible (reads as pink). */
 .fi-input-wrp[class*="ring-danger"],
 .fi-input-wrp[class*="focus-within:ring-danger"] {
     --tw-ring-color: transparent !important;
     box-shadow: none !important;
+    border-width: 1.5px !important;
+    border-style: solid !important;
     border-color: #dc2626 !important;
 }
 
@@ -660,6 +665,8 @@ p.fi-fo-field-wrp-error-message::before,
 /* Fallback: any input inside an error field wrapper gets a red border matching the text */
 .fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
 .fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
+    border-width: 1.5px !important;
+    border-style: solid !important;
     border-color: #dc2626 !important;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08) !important;
 }
