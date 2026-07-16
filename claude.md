@@ -95,11 +95,19 @@ Interface (Contracts/) → Implementation (Repositories/) → Binding (Repositor
 - `create()`, `update()`, `delete()` — semua dibungkus `DB::transaction()`
 - `search()` — generic search dengan multiple searchable columns
 
-**Rules**:
-- Jangan pernah panggil `Model::query()` langsung di Livewire component
+**Rules (TIDAK ADA PENGECUALIAN untuk module/domain model)**:
+- Jangan pernah panggil `Model::query()`, `Model::find()`, `Model::where()`, `Model::create()`, dll langsung di Livewire component
+- Jangan pernah pakai `DB::table(...)` raw query builder di Livewire component — buat Repository (+ interface) walaupun tabelnya tidak punya Eloquent model (mis. `failed_jobs`)
 - Selalu buat interface di `Contracts/` terlebih dahulu
 - Daftarkan binding di `RepositoryServiceProvider::$bindings`
 - Inject repository via Livewire `boot()` method (bukan constructor)
+- **Pengecualian yang diperbolehkan**: pemanggilan Laravel auth facade bawaan (`Auth::attempt()`, `Auth::user()`, `Password::sendResetLink()`, `Password::reset()`) di komponen `Livewire/Auth/*` — facade ini sudah membungkus query-nya sendiri dan bukan akses langsung ke Eloquent model kita.
+
+**Status Audit Kepatuhan** (per modul, cek ulang tiap ada Livewire component baru):
+- ✅ Patuh: `AboutUsIndex`, `CarouselIndex`, `Dashboard`, `NotificationBell`, `NotificationIndex`, `MenuIndex`, `RoleMenuAccess`, `NewsIndex`, `NewsCategoryIndex`, `RoleIndex`, `SystemSettingIndex`, `UserIndex`, `Auth/Login`, `Auth/ForgotPassword`, `Auth/ResetPassword`, `Auth/Register`, `Auth/Profile`, `Auth/ChangePassword`
+- ❌ **Technical debt — perlu diperbaiki**:
+  - `app/Livewire/Auth/VerifyEmail.php` — pakai `\App\Models\User::find($id)` langsung di `mount()`. Harus diganti ke `UserRepositoryInterface::find($id)` (inject via `boot()`).
+  - `app/Livewire/Settings/JobIndex.php` — pakai `DB::table('failed_jobs')` raw query untuk list/paginate/delete/truncate. Harus dibuatkan `FailedJobRepositoryInterface` + `FailedJobRepository` (query builder murni, tanpa Eloquent model, tetap dibungkus repository agar reusable & konsisten dengan pattern).
 
 ### 2. Livewire Full-Page Components
 

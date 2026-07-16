@@ -2,6 +2,16 @@
 
 > **v2.3.1** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, a reusable autocomplete select component, advanced user filtering, bulk email verification, and IP/location-aware email notifications.
 
+## 📸 Screenshots
+
+| Login | Dashboard |
+|---|---|
+| ![Login Page](docs/screenshots/login.png) | ![Dashboard Page](docs/screenshots/dashboard.png) |
+
+| CMS — News |
+|---|
+| ![CMS News Page](docs/screenshots/cms-news.png) |
+
 ## 🚀 Tech Stack
 
 | Category | Technology |
