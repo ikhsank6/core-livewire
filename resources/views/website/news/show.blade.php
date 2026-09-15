@@ -1,136 +1,125 @@
 @extends('layouts.website')
 
-@section('title', $news->title . ' - ' . ($aboutUs->company_name ?? config('app.name')))
+@section('title', $news->title . ' — ' . ($aboutUs->company_name ?? config('app.name')))
 @section('description', $news->excerpt ?? Str::limit(strip_tags($news->content), 160))
+
+@php
+    $registry = 'REG-'.str_pad((string) $news->id, 4, '0', STR_PAD_LEFT);
+    $date = $news->published_at ?? $news->created_at;
+
+    $shares = [
+        ['label' => 'Bagikan ke Facebook', 'url' => 'https://www.facebook.com/sharer/sharer.php?u='.urlencode(request()->url()), 'path' => 'M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.6c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.2H8.6v3h2.5V19H14v-7.5h2.5l.4-3H14Z'],
+        ['label' => 'Bagikan ke X',        'url' => 'https://twitter.com/intent/tweet?url='.urlencode(request()->url()).'&text='.urlencode($news->title), 'path' => 'M15.2 2.9h2.6l-5.7 6.5 6.7 8.8h-5.2L9.5 13l-4.7 5.2H2.2l6.1-7-6.4-8.3h5.4l3.7 4.9 4.2-4.9Zm-.9 13.8h1.4L6.1 4.3H4.6l9.7 12.4Z'],
+        ['label' => 'Bagikan via WhatsApp','url' => 'https://wa.me/?text='.urlencode($news->title.' '.request()->url()), 'path' => 'M10 2a8 8 0 0 0-6.9 12L2 18l4.1-1.1A8 8 0 1 0 10 2Zm4.3 11.2c-.2.5-1 1-1.5 1.1-.4 0-.9.1-1.4-.1-.3-.1-.8-.3-1.4-.5-2.4-1.1-4-3.5-4.1-3.7-.1-.2-1-1.3-1-2.4 0-1.2.6-1.7.8-2 .2-.2.5-.3.6-.3h.5c.1 0 .3 0 .5.4l.7 1.7c0 .1.1.3 0 .4l-.3.4-.3.3c-.1.1-.2.2-.1.4.1.2.5 1 1.2 1.6.8.7 1.5 1 1.7 1.1.2.1.3 0 .4-.1l.6-.7c.1-.2.3-.1.4-.1l1.6.8c.2.1.4.2.4.3v.5Z'],
+        ['label' => 'Bagikan ke LinkedIn', 'url' => 'https://www.linkedin.com/shareArticle?mini=true&url='.urlencode(request()->url()).'&title='.urlencode($news->title), 'path' => 'M6.1 17.2H3.2V7.6h2.9v9.6ZM4.6 6.3a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4Zm12.6 10.9h-2.9v-4.7c0-1.1 0-2.5-1.5-2.5s-1.8 1.2-1.8 2.4v4.8H8.1V7.6H11v1.3h.1c.4-.8 1.4-1.6 2.8-1.6 3 0 3.5 2 3.5 4.5v5.4Z'],
+    ];
+@endphp
 
 @section('content')
 
-{{-- Page Header --}}
+{{-- The page header carries the only <h1>; the article body must not repeat it. --}}
 @include('website.partials.page-header', [
     'title'      => $news->title,
-    'breadcrumb' => 'Detail Berita',
+    'breadcrumb' => $news->category->name ?? 'Berita',
     'bgImage'    => $news->image ? Storage::url($news->image) : null,
 ])
 
-{{-- Content --}}
-<section class="py-12 md:py-20 bg-slate-50 dark:bg-dark">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="grid lg:grid-cols-3 gap-8">
+<section class="py-16 md:py-24">
+    <div class="mx-auto max-w-300 px-5 md:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] gap-8 lg:gap-12">
 
-            {{-- Article --}}
-            <div class="lg:col-span-2">
-                <article class="bg-white dark:bg-dark-card rounded-2xl overflow-hidden border border-slate-100 dark:border-dark-border shadow-sm">
+            <div>
+                <article class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft
+                                rounded-2xl overflow-hidden">
+
                     @if($news->image)
-                        <div class="relative">
-                            <img src="{{ Storage::url($news->image) }}" alt="{{ $news->title }}"
-                                 class="w-full h-[280px] md:h-[380px] object-cover">
-                            <div class="absolute top-4 left-4 bg-primary text-white text-center px-3 py-2 rounded-xl shadow-md">
-                                <span class="font-bold text-xl block leading-none">{{ $news->published_at?->format('d') }}</span>
-                                <span class="text-xs uppercase tracking-wide opacity-90">{{ $news->published_at?->format('M') }}</span>
-                            </div>
-                        </div>
+                        <img src="{{ Storage::url($news->image) }}"
+                             alt="{{ $news->title }}"
+                             class="w-full aspect-video object-cover">
                     @endif
 
-                    <div class="p-6 md:p-8">
-                        {{-- Meta --}}
-                        <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400 mb-5">
+                    <div class="p-6 md:p-10">
+
+                        {{-- Record meta --}}
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2.5 pb-6 mb-8
+                                    border-b border-hairline dark:border-pine-soft">
+                            <span class="t-data text-[0.6875rem] text-moss dark:text-bone-dim">{{ $registry }}</span>
+                            <span class="w-1 h-1 rounded-full bg-marigold" aria-hidden="true"></span>
+                            <time datetime="{{ $date?->toDateString() }}"
+                                  class="t-data text-[0.6875rem] text-moss dark:text-bone-dim">
+                                {{ $date?->translatedFormat('d M Y') }}
+                            </time>
                             @if($news->category)
-                                <span class="px-3 py-1 bg-primary/10 dark:bg-primary/20 text-primary rounded-full font-semibold text-xs">
+                                <span class="t-micro px-2.5 py-1 rounded-md bg-mineral dark:bg-pine/40
+                                             text-moss dark:text-bone-dim">
                                     {{ $news->category->name }}
                                 </span>
                             @endif
-                            <span class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                {{ $news->published_at?->format('d M Y') }}
-                            </span>
                         </div>
 
-                        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-6 leading-snug">
-                            {{ $news->title }}
-                        </h1>
+                        @if($news->excerpt)
+                            <p class="t-lead mb-8 text-ink dark:text-bone">{{ $news->excerpt }}</p>
+                        @endif
 
-                        <div class="prose dark:prose-invert text-slate-700 dark:text-slate-300 max-w-none">
-                            {!! $news->content !!}
-                        </div>
+                        <div class="prose">{!! $news->content !!}</div>
 
                         {{-- Share --}}
-                        <div class="mt-8 pt-6 border-t border-slate-100 dark:border-dark-border">
-                            <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Bagikan:</p>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}"
-                                   target="_blank" rel="noopener noreferrer" aria-label="Bagikan ke Facebook"
-                                   class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($news->title) }}"
-                                   target="_blank" rel="noopener noreferrer" aria-label="Bagikan ke X (Twitter)"
-                                   class="w-9 h-9 bg-slate-800 text-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://wa.me/?text={{ urlencode($news->title . ' ' . request()->url()) }}"
-                                   target="_blank" rel="noopener noreferrer" aria-label="Bagikan via WhatsApp"
-                                   class="w-9 h-9 bg-green-500 text-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(request()->url()) }}&title={{ urlencode($news->title) }}"
-                                   target="_blank" rel="noopener noreferrer" aria-label="Bagikan ke LinkedIn"
-                                   class="w-9 h-9 bg-blue-700 text-white rounded-full flex items-center justify-center hover:opacity-80 transition-opacity">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                                    </svg>
-                                </a>
-                            </div>
+                        <div class="mt-10 pt-7 border-t border-hairline dark:border-pine-soft
+                                    flex flex-wrap items-center gap-4">
+                            <span class="t-micro text-moss dark:text-bone-dim">Bagikan</span>
+                            <ul class="flex items-center gap-2">
+                                @foreach($shares as $share)
+                                    <li>
+                                        <a href="{{ $share['url'] }}" target="_blank" rel="noopener noreferrer"
+                                           aria-label="{{ $share['label'] }}"
+                                           class="w-11 h-11 rounded-full grid place-items-center border
+                                                  border-hairline dark:border-pine-soft text-moss dark:text-bone-dim
+                                                  hover:bg-marigold hover:border-marigold hover:text-ink transition-colors">
+                                            <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path d="{{ $share['path'] }}"/>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                 </article>
 
-                {{-- Related News --}}
+                {{-- Related --}}
                 @if($relatedNews->count() > 0)
-                <div class="mt-8">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-5">Berita Terkait</h3>
-                    <div class="grid sm:grid-cols-2 gap-5">
-                        @foreach($relatedNews as $related)
-                        <article class="group bg-white dark:bg-dark-card rounded-xl overflow-hidden border border-slate-100 dark:border-dark-border hover:shadow-md transition-all duration-200">
-                            <a href="{{ route('news.show', $related->slug) }}" class="flex gap-4 p-4">
-                                <div class="w-20 h-20 rounded-lg overflow-hidden shrink-0 bg-slate-100 dark:bg-dark">
-                                    @if($related->image)
-                                        <img src="{{ Storage::url($related->image) }}" alt="{{ $related->title }}"
-                                             class="w-full h-full object-cover">
-                                    @else
-                                        <div class="w-full h-full flex items-center justify-center">
-                                            <svg class="w-7 h-7 text-slate-400 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-primary line-clamp-2 transition-colors text-sm leading-snug">
-                                        {{ $related->title }}
-                                    </h4>
-                                    <span class="text-xs text-slate-400 dark:text-slate-500 mt-1.5 block">
-                                        {{ $related->published_at?->format('d M Y') }}
-                                    </span>
-                                </div>
-                            </a>
-                        </article>
-                        @endforeach
+                    <div class="mt-12">
+                        <h2 class="t-card text-ink dark:text-bone mb-5">Catatan terkait</h2>
+
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            @foreach($relatedNews as $related)
+                                <li>
+                                    <a href="{{ route('news.show', $related->slug) }}"
+                                       class="group flex gap-4 h-full p-5 bg-paper dark:bg-ink-card border
+                                              border-hairline dark:border-pine-soft rounded-2xl
+                                              hover:border-marigold transition-colors">
+                                        <span class="t-data text-[0.6875rem] text-moss/60 dark:text-bone-dim/60 shrink-0 pt-0.5">
+                                            {{ 'REG-'.str_pad((string) $related->id, 4, '0', STR_PAD_LEFT) }}
+                                        </span>
+                                        <span class="min-w-0">
+                                            <span class="block text-[0.9375rem] leading-snug text-ink dark:text-bone
+                                                         group-hover:text-marigold-deep dark:group-hover:text-marigold-deep dark:hover:text-marigold transition-colors line-clamp-2">
+                                                {{ $related->title }}
+                                            </span>
+                                            <time datetime="{{ ($related->published_at ?? $related->created_at)?->toDateString() }}"
+                                                  class="block t-data text-[0.6875rem] text-moss/70 dark:text-bone-dim/70 mt-2">
+                                                {{ ($related->published_at ?? $related->created_at)?->translatedFormat('d M Y') }}
+                                            </time>
+                                        </span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
                 @endif
             </div>
 
-            {{-- Sidebar --}}
             @include('website.partials.news-sidebar')
-
         </div>
     </div>
 </section>

@@ -1,15 +1,43 @@
-<form class="space-y-6">
-    <div class="grid md:grid-cols-2 gap-6">
-        <input type="text" placeholder="Your Name"
-            class="w-full bg-white/10 dark:bg-dark border border-white/20 dark:border-dark-border rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors">
-        <input type="email" placeholder="Your Email"
-            class="w-full bg-white/10 dark:bg-dark border border-white/20 dark:border-dark-border rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors">
+{{-- NOTE: currently unused — no view includes this partial, and it posts
+     nowhere. Kept in the new token system, with visible labels rather than
+     the placeholder-only fields it used to have. --}}
+<form class="space-y-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+            <label for="cf-nama" class="t-micro text-moss dark:text-bone-dim block mb-2">Nama</label>
+            <input id="cf-nama" type="text" name="nama" autocomplete="name"
+                   class="w-full h-12 px-4 rounded-xl bg-paper dark:bg-ink-card border border-hairline
+                          dark:border-pine-soft text-ink dark:text-bone transition-colors
+                          focus:border-marigold">
+        </div>
+        <div>
+            <label for="cf-surel" class="t-micro text-moss dark:text-bone-dim block mb-2">Surel</label>
+            <input id="cf-surel" type="email" name="surel" autocomplete="email"
+                   class="w-full h-12 px-4 rounded-xl bg-paper dark:bg-ink-card border border-hairline
+                          dark:border-pine-soft text-ink dark:text-bone transition-colors
+                          focus:border-marigold">
+        </div>
     </div>
-    <input type="text" placeholder="Subject"
-        class="w-full bg-white/10 dark:bg-dark border border-white/20 dark:border-dark-border rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary transition-colors">
-    <textarea rows="5" placeholder="Your Message"
-        class="w-full bg-white/10 dark:bg-dark border border-white/20 dark:border-dark-border rounded-lg px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-primary resize-none transition-colors"></textarea>
+
+    <div>
+        <label for="cf-perihal" class="t-micro text-moss dark:text-bone-dim block mb-2">Perihal</label>
+        <input id="cf-perihal" type="text" name="perihal"
+               class="w-full h-12 px-4 rounded-xl bg-paper dark:bg-ink-card border border-hairline
+                      dark:border-pine-soft text-ink dark:text-bone transition-colors
+                      focus:border-marigold">
+    </div>
+
+    <div>
+        <label for="cf-pesan" class="t-micro text-moss dark:text-bone-dim block mb-2">Pesan</label>
+        <textarea id="cf-pesan" name="pesan" rows="5"
+                  class="w-full p-4 rounded-xl bg-paper dark:bg-ink-card border border-hairline
+                         dark:border-pine-soft text-ink dark:text-bone resize-none transition-colors
+                         focus:border-marigold"></textarea>
+    </div>
+
     <button type="submit"
-        class="w-full bg-primary hover:bg-teal-600 text-white py-4 font-semibold rounded-lg transition-all">Send
-        Message</button>
+            class="inline-flex items-center justify-center gap-2.5 h-13 px-7 rounded-full
+                   bg-marigold text-ink hover:bg-marigold-dim transition-colors t-micro">
+        Kirim pesan
+    </button>
 </form>

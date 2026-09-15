@@ -1,20 +1,34 @@
-<div class="flex items-center gap-3 {{ $containerClass ?? '' }}">
-    {{-- Logo Image/Icon --}}
+{{--
+    Props:
+    $containerClass (string, optional)
+    $textClass      (string, optional)
+    $mark           (string, optional) – 'ink' (default) | 'bone'
+--}}
+@php
+    $mark = $mark ?? 'ink';
+    $markBg = $mark === 'bone' ? 'bg-bone' : 'bg-ink';
+    $markFg = $mark === 'bone' ? 'text-ink' : 'text-bone';
+@endphp
+
+<div class="flex items-center gap-2.5 {{ $containerClass ?? '' }}">
     @if($aboutUs?->logo)
-        <img src="{{ Storage::url($aboutUs->logo) }}" alt="{{ $aboutUs->company_name ?? config('app.name') }}"
-            class="{{ $logoClass ?? 'h-9 w-auto' }} transition-all duration-300">
+        <img src="{{ Storage::url($aboutUs->logo) }}"
+             alt="{{ $aboutUs->company_name ?? config('app.name') }}"
+             class="h-9 w-auto">
     @else
-        <div
-            class="shrink-0 w-10 h-10 bg-linear-to-br from-primary to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 transition-all duration-300 {{ $logoClass ?? '' }}">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        {{-- Doorway mark: one door, marigold threshold. --}}
+        <span class="shrink-0 w-9 h-9 {{ $markBg }} rounded-[0.6rem] flex items-center justify-center">
+            <svg class="w-5 h-5 {{ $markFg }}" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 17V7.2a2 2 0 0 1 .9-1.66l4-2.67a2 2 0 0 1 2.2 0l4 2.67A2 2 0 0 1 16 7.2V17"
+                      stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <path d="M2.5 17h15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <circle cx="12.3" cy="11.5" r="1.15" fill="#E8A317"/>
             </svg>
-        </div>
+        </span>
     @endif
 
-    {{-- Company Name --}}
-    <span class="{{ $textClass ?? 'font-bold text-lg' }}" @if(isset($alpineTextClass)) :class="{{ $alpineTextClass }}"
-    @endif>
+    <span class="{{ $textClass ?? 'font-display font-bold text-[1.0625rem] tracking-tight' }}"
+          style="font-variation-settings:'wdth' 108;">
         {{ $aboutUs->company_name ?? config('app.name') }}
     </span>
 </div>

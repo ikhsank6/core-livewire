@@ -33,8 +33,14 @@
     x-data="{
         sidebarOpen: window.innerWidth >= 1024,
         sidebarCollapsed: false,
+        sidebarTooltipSuppressedUntil: 0,
         searchQuery: '',
-        get sidebarWidth() { return this.sidebarCollapsed ? 'w-16' : 'w-64' }
+        get sidebarWidth() { return this.sidebarCollapsed ? 'w-16' : 'w-64' },
+        suppressSidebarTooltips(duration = 350) {
+            this.sidebarTooltipSuppressedUntil = Date.now() + duration;
+            window.dispatchEvent(new CustomEvent('sidebar-tip-hide'));
+            window.dispatchEvent(new CustomEvent('hide-floating-menu', { detail: { force: true } }));
+        }
     }"
     x-init="
         if ($store.sidebarState) { sidebarOpen = $store.sidebarState.open }
@@ -50,6 +56,31 @@
         };
         checkResponsive();
         window.addEventListener('resize', checkResponsive);
+        $watch('sidebarCollapsed', () => {
+            $dispatch('sidebar-tip-hide');
+            $dispatch('hide-floating-menu', { force: true });
+        });
+        $watch('sidebarOpen', () => {
+            $dispatch('sidebar-tip-hide');
+            $dispatch('hide-floating-menu', { force: true });
+        });
+        $watch('searchQuery', () => {
+            $dispatch('sidebar-tip-hide');
+            $dispatch('hide-floating-menu', { force: true });
+        });
+
+        // Ctrl+K / Cmd+K focuses the global search in the navbar.
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                $refs.globalSearch?.focus();
+            }
+        });
+
+        window.addEventListener('livewire:navigating', () => {
+            $dispatch('sidebar-tip-hide');
+            $dispatch('hide-floating-menu', { force: true });
+        });
     ">
 
     {{-- =====================
@@ -57,7 +88,7 @@
          ===================== --}}
     <aside
         :class="[
-            'fixed top-0 left-0 z-40 h-screen transition-all duration-300 ease-in-out',
+            'fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] transition-all duration-300 ease-in-out',
             sidebarOpen ? 'translate-x-0' : '-translate-x-full',
             sidebarCollapsed ? 'w-16' : 'w-64'
         ]"
@@ -65,48 +96,11 @@
 
         <div class="h-full flex flex-col bg-white dark:bg-[#1e1e2d] border-r border-gray-200 dark:border-white/6 overflow-hidden">
 
-            {{-- Logo / Brand --}}
-            <div class="h-16 flex items-center shrink-0 border-b border-gray-100 dark:border-white/6 overflow-hidden"
-                :class="sidebarCollapsed ? 'justify-center px-0' : 'justify-between px-4'">
-
-                <a href="/" class="flex items-center gap-2.5 min-w-0" x-show="!sidebarCollapsed" x-transition:enter="transition-opacity duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
-                    @if($aboutUs?->logo)
-                        <img src="{{ Storage::url($aboutUs->logo) }}" alt="Logo" class="h-8 w-8 rounded-lg object-contain shrink-0">
-                    @else
-                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white shrink-0 shadow-sm">
-                            <span class="font-bold text-sm">{{ strtoupper(substr($aboutUs?->company_name ?? 'A', 0, 2)) }}</span>
-                        </div>
-                    @endif
-                    <span class="font-semibold text-gray-900 dark:text-white text-sm truncate">{{ $aboutUs?->company_name ?? 'Admin' }}</span>
-                </a>
-
-                {{-- Icon only when collapsed --}}
-                <div x-show="sidebarCollapsed" x-cloak class="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white shrink-0 shadow-sm">
-                    <span class="font-bold text-sm">{{ strtoupper(substr($aboutUs?->company_name ?? 'A', 0, 2)) }}</span>
-                </div>
-            </div>
-
-            {{-- Search (hidden when collapsed) --}}
-            <div class="px-3 pt-3 pb-1" x-show="!sidebarCollapsed" x-cloak>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                    <input type="text" placeholder="Cari menu..."
-                        x-model="searchQuery"
-                        class="w-full pl-9 pr-9 py-2 text-sm rounded-lg bg-gray-100 dark:bg-white/6 border border-gray-200 dark:border-white/8 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                    {{-- Clear search button --}}
-                    <button x-show="searchQuery !== ''" 
-                        x-on:click="searchQuery = ''"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer focus:outline-none"
-                        title="Hapus pencarian">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
+            {{-- Section label: the current user's active role (hidden when collapsed) --}}
+            <div class="px-4 pt-4 pb-2" x-show="!sidebarCollapsed" x-cloak>
+                <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+                    {{ strtoupper(auth()->user()->role?->name ?? 'Menu') }}
+                </span>
             </div>
 
             {{-- Navigation --}}
@@ -123,9 +117,10 @@
                         @php $isActive = $currentRoute === $menu['route']; @endphp
                         <div
                             x-show="searchQuery === '' || '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase())"
-                            @mouseenter="$dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 })"
+                            @mouseenter="if (sidebarCollapsed && Date.now() > sidebarTooltipSuppressedUntil) { $dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 }) }"
                             @mouseleave="$dispatch('sidebar-tip-hide')">
                             <a href="{{ \App\Services\MenuService::safeRoute($menu['route']) }}" wire:navigate
+                                @click="$dispatch('sidebar-tip-hide'); $dispatch('hide-floating-menu', { force: true })"
                                 class="flex items-center rounded-lg text-sm font-medium transition-all duration-200"
                                 :class="[
                                     sidebarCollapsed
@@ -179,25 +174,21 @@
                             class="relative group/group">
                             <div
                                 @mouseenter="
-                                    if(sidebarCollapsed) { 
-                                        $dispatch('show-floating-menu', { 
-                                            name: '{{ addslashes($menu['name']) }}', 
-                                            children: {{ json_encode($childrenData) }}, 
-                                            top: $el.getBoundingClientRect().top 
-                                        }); 
-                                    } else {
-                                        $dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 });
+                                    if(sidebarCollapsed && Date.now() > sidebarTooltipSuppressedUntil) {
+                                        $dispatch('show-floating-menu', {
+                                            name: '{{ addslashes($menu['name']) }}',
+                                            children: {{ json_encode($childrenData) }},
+                                            top: $el.getBoundingClientRect().top
+                                        });
                                     }
                                 "
                                 @mouseleave="
-                                    if(sidebarCollapsed) { 
-                                        $dispatch('hide-floating-menu'); 
-                                    } else {
-                                        $dispatch('sidebar-tip-hide');
+                                    if(sidebarCollapsed) {
+                                        $dispatch('hide-floating-menu');
                                     }
                                 ">
                                 <button
-                                    @click="if(sidebarCollapsed) { sidebarCollapsed = false; $nextTick(() => expanded = true) } else { expanded = !expanded }"
+                                    @click="if(sidebarCollapsed) { $dispatch('sidebar-tip-hide'); $dispatch('hide-floating-menu', { force: true }); sidebarCollapsed = false; $nextTick(() => expanded = true) } else { expanded = !expanded }"
                                     class="w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white"
                                     :class="[
                                         sidebarCollapsed
@@ -232,9 +223,7 @@
                                 @foreach($menu['children'] as $child)
                                     @php $isChildActive = $currentRoute === $child['route']; @endphp
                                     <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
-                                        @mouseenter="$dispatch('sidebar-tip', { label: '{{ addslashes($child['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 })"
-                                        @mouseleave="$dispatch('sidebar-tip-hide')"
-                                        x-show="searchQuery === '' || 
+                                        x-show="searchQuery === '' ||
                                                 '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase()) || 
                                                 '{{ strtolower(addslashes($child['name'])) }}'.includes(searchQuery.toLowerCase())"
                                         class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-200"
@@ -261,9 +250,18 @@
         </div>
 
         {{-- Floating Expand/Collapse Button on Border (Notion-style) --}}
-        <button @click="sidebarCollapsed = !sidebarCollapsed"
-            class="absolute top-[18px] -right-3.5 z-50 hidden lg:flex items-center justify-center w-7 h-7 bg-white dark:bg-[#1e1e2d] border border-gray-200 dark:border-[#3d3d4e] rounded-full shadow-sm text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer transition-all duration-300 focus:outline-none hover:scale-110 hover:shadow-md"
-            :title="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+        {{-- Collapsing/expanding shifts the nav icons under a stationary cursor. Browsers
+             re-evaluate what's under the pointer on the next paint (not the next
+             microtask), so a genuine mouseenter can fire on whatever lands there and
+             reopen the tooltip/flyout — even after Alpine's own $nextTick. A short
+             timeout (a task, scheduled after that paint) reliably wins the race. --}}
+        <button
+            @mouseenter="suppressSidebarTooltips(600)"
+            @mousemove="suppressSidebarTooltips(250)"
+            @focus="suppressSidebarTooltips(600)"
+            @click="suppressSidebarTooltips(900); sidebarCollapsed = !sidebarCollapsed; setTimeout(() => { suppressSidebarTooltips(600); }, 50)"
+            class="absolute top-8 -translate-y-1/2 -right-3.5 z-50 hidden lg:flex items-center justify-center w-7 h-7 bg-white dark:bg-[#1e1e2d] border border-gray-200 dark:border-[#3d3d4e] rounded-full shadow-sm text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer transition-all duration-300 focus:outline-none hover:scale-110 hover:shadow-md"
+            :aria-label="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
             <svg class="w-4 h-4 transition-transform duration-300"
                 :class="sidebarCollapsed ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,8 +273,9 @@
     {{-- Global fixed tooltip for collapsed sidebar --}}
     <div
         x-data="{ show: false, label: '', top: 0 }"
-        @sidebar-tip.window="show = true; label = $event.detail.label; top = $event.detail.top"
+        @sidebar-tip.window="if (sidebarCollapsed && sidebarOpen && Date.now() > sidebarTooltipSuppressedUntil) { show = true; label = $event.detail.label; top = $event.detail.top }"
         @sidebar-tip-hide.window="show = false"
+        x-effect="if (!sidebarCollapsed || !sidebarOpen || Date.now() <= sidebarTooltipSuppressedUntil) show = false"
         x-show="show"
         x-cloak
         x-transition:enter="transition ease-out duration-100"
@@ -300,20 +299,29 @@
             hoverMenu: false, 
             hoverTrigger: false,
             updateShow() {
-                this.show = (this.hoverTrigger || this.hoverMenu);
+                this.show = sidebarCollapsed && sidebarOpen && (this.hoverTrigger || this.hoverMenu);
             }
         }"
         @show-floating-menu.window="
-            name = $event.detail.name; 
-            children = $event.detail.children; 
-            top = $event.detail.top; 
-            hoverTrigger = true; 
-            updateShow();
+            if (sidebarCollapsed && sidebarOpen && Date.now() > sidebarTooltipSuppressedUntil) {
+                name = $event.detail.name;
+                children = $event.detail.children;
+                top = $event.detail.top;
+                hoverTrigger = true;
+                updateShow();
+            }
         "
         @hide-floating-menu.window="
-            hoverTrigger = false; 
-            setTimeout(() => { updateShow(); }, 80);
+            if ($event.detail?.force) {
+                hoverTrigger = false;
+                hoverMenu = false;
+                show = false;
+            } else {
+                hoverTrigger = false;
+                setTimeout(() => { updateShow(); }, 80);
+            }
         "
+        x-effect="if (!sidebarCollapsed || !sidebarOpen || Date.now() <= sidebarTooltipSuppressedUntil) { hoverTrigger = false; hoverMenu = false; show = false }"
         x-show="show"
         x-cloak
         @mouseenter="hoverMenu = true; updateShow();"
@@ -336,6 +344,7 @@
             <div class="py-1 px-1.5 space-y-0.5">
                 <template x-for="child in children" :key="child.name">
                     <a :href="child.route" wire:navigate
+                        @click="$dispatch('hide-floating-menu', { force: true }); $dispatch('sidebar-tip-hide')"
                         class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150"
                         :class="child.isActive
                             ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
@@ -374,9 +383,7 @@
         {{-- =====================
              HEADER / NAVBAR
              ===================== --}}
-        <nav class="fixed top-0 right-0 left-0 z-30 bg-[#121a35] border-b border-[#1d2747] transition-all duration-300"
-            :style="sidebarOpen ? (sidebarCollapsed ? 'padding-left: 4rem' : 'padding-left: 16rem') : 'padding-left: 0'"
-            style="padding-left: 0">
+        <nav class="fixed top-0 right-0 left-0 z-30 bg-[#121a35] border-b border-[#1d2747] transition-all duration-300">
             <div class="px-4 h-16 flex items-center gap-x-3">
 
                 {{-- Mobile hamburger --}}
@@ -387,7 +394,52 @@
                     </svg>
                 </button>
 
-                {{-- Spacer --}}
+                {{-- Logo / Brand (two lines: name + tagline) --}}
+                <a href="/" class="flex items-center gap-3 min-w-0 shrink-0">
+                    @if($aboutUs?->logo)
+                        <img src="{{ Storage::url($aboutUs->logo) }}" alt="Logo" class="h-9 w-9 rounded-lg object-contain shrink-0">
+                    @else
+                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 text-white shrink-0 shadow-sm">
+                            <span class="font-bold text-sm">{{ strtoupper(substr($aboutUs?->company_name ?? 'A', 0, 2)) }}</span>
+                        </div>
+                    @endif
+                    <div class="min-w-0 hidden sm:block">
+                        <p class="font-bold text-white text-sm truncate leading-tight">{{ $aboutUs?->company_name ?? 'Admin' }}</p>
+                        <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400 truncate leading-tight">Portal Layanan Publik Terpadu</p>
+                    </div>
+                </a>
+
+                {{-- Global search (moved here from sidebar) --}}
+                <div class="hidden lg:flex w-80">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <input type="text" placeholder="Cari menu..."
+                            x-model="searchQuery"
+                            x-ref="globalSearch"
+                            class="w-full pl-9 pr-16 py-2 text-sm rounded-lg bg-white/6 border border-white/8 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                        {{-- Clear button (shown while typing) --}}
+                        <button x-show="searchQuery !== ''"
+                            x-on:click="searchQuery = ''"
+                            class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-300 cursor-pointer focus:outline-none"
+                            title="Hapus pencarian">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        {{-- Shortcut hint (hidden while typing) --}}
+                        <kbd x-show="searchQuery === ''"
+                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/10 bg-white/5 text-[10px] font-medium text-gray-500">
+                            Ctrl+K
+                        </kbd>
+                    </div>
+                </div>
+
+                {{-- Spacer: absorbs remaining space so the right side sits flush at the edge,
+                     whether or not the search box above is visible. --}}
                 <div class="flex-1"></div>
 
                 {{-- Right side --}}

@@ -1,93 +1,91 @@
-{{-- News Sidebar --}}
-<aside class="space-y-6 lg:sticky lg:top-28">
+<aside class="space-y-4 lg:sticky lg:top-24">
 
-    {{-- Categories --}}
-    <div class="bg-white dark:bg-dark-card rounded-2xl border border-slate-100 dark:border-dark-border overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-slate-100 dark:border-dark-border">
-            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2.5 text-sm">
-                <span class="w-7 h-7 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center shrink-0">
-                    <svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
-                </span>
-                Kategori
-            </h3>
-        </div>
-        <nav aria-label="Kategori berita" class="p-3">
-            <ul class="space-y-0.5">
-                {{-- All --}}
-                <li>
-                    <a href="{{ route('news.index') }}"
-                       class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ !request('category') ? 'bg-primary/10 dark:bg-primary/20 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white' }}">
-                        <span>Semua</span>
-                    </a>
-                </li>
-                @foreach($categories as $category)
+    {{-- Kategori --}}
+    <nav aria-label="Kategori berita"
+         class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft rounded-2xl overflow-hidden">
+        <h2 class="t-micro text-marigold-deep dark:text-marigold px-6 py-5 border-b border-hairline dark:border-pine-soft">
+            Kategori
+        </h2>
+
+        <ul class="p-3">
+            <li>
+                <a href="{{ route('news.index') }}"
+                   @if(! request('category')) aria-current="page" @endif
+                   class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-[0.9375rem] transition-colors
+                          {{ ! request('category')
+                                ? 'bg-marigold text-ink'
+                                : 'text-moss dark:text-bone-dim hover:bg-mineral dark:hover:bg-pine/30' }}">
+                    <span>Semua</span>
+                </a>
+            </li>
+
+            @foreach($categories as $category)
+                @php $isActive = request('category') === $category->slug; @endphp
                 <li>
                     <a href="{{ route('news.index', ['category' => $category->slug]) }}"
-                       class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group {{ request('category') == $category->slug ? 'bg-primary/10 dark:bg-primary/20 text-primary' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white' }}">
-                        <span>{{ $category->name }}</span>
-                        <span class="text-xs px-2 py-0.5 rounded-full {{ request('category') == $category->slug ? 'bg-primary/20 text-primary' : 'bg-slate-100 dark:bg-dark text-slate-500 dark:text-slate-400 group-hover:bg-primary/10 group-hover:text-primary' }} transition-colors">
+                       @if($isActive) aria-current="page" @endif
+                       class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-[0.9375rem] transition-colors
+                              {{ $isActive
+                                    ? 'bg-marigold text-ink'
+                                    : 'text-moss dark:text-bone-dim hover:bg-mineral dark:hover:bg-pine/30' }}">
+                        <span class="truncate">{{ $category->name }}</span>
+                        <span class="t-data text-[0.6875rem] shrink-0 px-2 py-0.5 rounded-md
+                                     {{ $isActive ? 'bg-ink/10 text-ink' : 'bg-mineral dark:bg-pine/40' }}">
                             {{ $category->news_count }}
                         </span>
                     </a>
                 </li>
+            @endforeach
+        </ul>
+    </nav>
+
+    {{-- Terkini --}}
+    @if($recentNews->count() > 0)
+        <div class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft rounded-2xl overflow-hidden">
+            <h2 class="t-micro text-marigold-deep dark:text-marigold px-6 py-5 border-b border-hairline dark:border-pine-soft">
+                Terkini
+            </h2>
+
+            <ul class="divide-y divide-hairline dark:divide-pine-soft">
+                @foreach($recentNews as $recent)
+                    <li>
+                        <a href="{{ route('news.show', $recent->slug) }}"
+                           class="group flex gap-4 px-6 py-4 hover:bg-mineral dark:hover:bg-pine/30 transition-colors">
+                            <span class="t-data text-[0.6875rem] text-moss/60 dark:text-bone-dim/60 shrink-0 pt-0.5">
+                                {{ 'REG-'.str_pad((string) $recent->id, 4, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="min-w-0">
+                                <span class="block text-[0.9375rem] leading-snug text-ink dark:text-bone
+                                             group-hover:text-marigold-deep dark:group-hover:text-marigold-deep dark:hover:text-marigold transition-colors line-clamp-2">
+                                    {{ $recent->title }}
+                                </span>
+                                <time datetime="{{ ($recent->published_at ?? $recent->created_at)?->toDateString() }}"
+                                      class="block t-data text-[0.6875rem] text-moss/70 dark:text-bone-dim/70 mt-1.5">
+                                    {{ ($recent->published_at ?? $recent->created_at)?->translatedFormat('d M Y') }}
+                                </time>
+                            </span>
+                        </a>
+                    </li>
                 @endforeach
             </ul>
-        </nav>
-    </div>
-
-    {{-- Recent Posts --}}
-    @if($recentNews->count() > 0)
-    <div class="bg-white dark:bg-dark-card rounded-2xl border border-slate-100 dark:border-dark-border overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-slate-100 dark:border-dark-border">
-            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2.5 text-sm">
-                <span class="w-7 h-7 bg-accent/10 dark:bg-accent/20 rounded-lg flex items-center justify-center shrink-0">
-                    <svg class="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </span>
-                Berita Terkini
-            </h3>
         </div>
-        <div class="p-3 space-y-1">
-            @foreach($recentNews as $recent)
-            <a href="{{ route('news.show', $recent->slug) }}"
-               class="flex gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200 group">
-                <div class="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 dark:bg-dark ring-1 ring-slate-100 dark:ring-dark-border group-hover:ring-primary/30 transition-all duration-200">
-                    @if($recent->image)
-                        <img src="{{ Storage::url($recent->image) }}" alt="{{ $recent->title }}"
-                             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                    @else
-                        <div class="w-full h-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-slate-400 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                    @endif
-                </div>
-                <div class="flex-1 min-w-0">
-                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-primary line-clamp-2 transition-colors duration-200 leading-snug mb-1">
-                        {{ $recent->title }}
-                    </h4>
-                    <span class="text-xs text-slate-400 dark:text-slate-500">
-                        {{ $recent->published_at?->format('d M Y') }}
-                    </span>
-                </div>
-            </a>
-            @endforeach
-        </div>
-    </div>
     @endif
 
-    {{-- CTA kontak --}}
-    <div class="bg-linear-to-br from-primary to-primary-dark rounded-2xl p-5 text-white">
-        <h3 class="font-bold text-base mb-1.5">Ada Pertanyaan?</h3>
-        <p class="text-white/80 text-sm mb-4">Tim kami siap membantu Anda.</p>
-        <a href="{{ route('about') }}#contact"
-           class="inline-flex items-center gap-2 w-full justify-center px-4 py-2.5 bg-white text-primary font-semibold rounded-xl hover:bg-white/90 transition-colors text-sm">
-            Hubungi Kami
+    {{-- Kontak --}}
+    <div class="bg-ink dark:bg-ink-card text-bone border border-transparent
+                dark:border-pine-soft rounded-2xl p-6">
+        <h2 class="t-card text-bone">Ada pertanyaan?</h2>
+        <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-bone-dim">
+            Kanal kontak dan jadwal layanan tercantum di halaman profil.
+        </p>
+        <a href="{{ route('about') }}"
+           class="mt-5 inline-flex items-center justify-center gap-2.5 w-full h-12 rounded-full
+                  bg-marigold text-ink hover:bg-marigold-dim transition-colors t-micro">
+            Hubungi kami
+            <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+                 stroke-width="1.8" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
         </a>
     </div>
-
 </aside>

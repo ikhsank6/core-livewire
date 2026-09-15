@@ -1,6 +1,6 @@
 # Laravel Livewire CMS Platform
 
-> **v2.3.1** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, a reusable autocomplete select component, advanced user filtering, bulk email verification, and IP/location-aware email notifications.
+> **v3.0.0** — Comprehensive Laravel 12 + Livewire 3 CMS with role-based access control, and a fully redesigned public portal ("Ink & Kunyit" design system) with hero, services, testimonials, FAQ and registration-rail sections, backed by a reproducible content seeder.
 
 ## 📸 Screenshots
 
@@ -41,23 +41,30 @@
 - Rate limiting: auth routes 10 req/min, public website 60 req/min
 - Role-based access control (RBAC)
 
-### 🌐 Public Website (v2.2.x Redesign)
+### 🌐 Public Website (v3.0.0 Redesign — "Ink & Kunyit")
 
-A fully redesigned public-facing website with a dedicated Aveit-inspired design system:
+A fully redesigned public-facing portal ("Satu Pintu") with its own dedicated design system, entirely separate from the admin panel:
 
 - **Hero Carousel** — Pure Alpine.js (no Swiper), autoplay, dot navigation, keyboard-friendly
-- **Home Page** — CMS-driven: carousel → about snippet → latest news → CTA. Zero hardcoded placeholder content.
+- **Home Page** — CMS-driven, section-based: hero → registration rail → services → about snippet → latest news → testimonials → FAQ → CTA. Zero hardcoded placeholder content.
+- **Services, Testimonials & FAQ sections** — New reusable partials backing the redesigned home page
+- **Registration Rail** — Standalone CTA strip for public service registration flows
 - **News Section** — Featured article (horizontal card), article grid, categories sidebar, related news
 - **About Page** — Company description, contact details, Google Maps embed
 - **Animated Navigation** — Sticky glass navbar with spring-based hover pill, animated active underline bar, shimmer sweep on hover
+- **Custom Pagination** — Dedicated website pagination view (`views/vendor/pagination/website.blade.php`) matching the new design tokens
 - **Dark/Light Mode** — System-aware default, persisted to localStorage, smooth transition
 - **AOS (Animate on Scroll)** — Custom IntersectionObserver implementation (no library dependency)
 - **SEO** — Meta tags, Open Graph, Twitter Cards
 - **Responsive** — Mobile-first, tested 360px → 1440px
 
-**Website design tokens** (separate from admin):
-- Primary: `#3a6cf4` (blue), Accent: `#f97316` (orange), Dark: `#0d1117` (navy)
-- Fonts: Quicksand (headings) + Nunito (body) via Google Fonts
+**Website design tokens** (separate from admin — "Ink & Kunyit"):
+- Ink: `#0C1A15`, Pine: `#1B4332` — dark ground colors
+- Marigold: `#E8A317` (single accent — use `marigold-deep` for text/icons on light surfaces per AA contrast)
+- Mineral `#F0F2EF` / Paper `#FFFFFF` — light surfaces
+- Fonts: Archivo (display, variable `wdth` axis) + IBM Plex Sans (body) + IBM Plex Mono (registry numbers, timestamps, data) via Google Fonts
+
+**Content Seeding**: `WebsiteContentSeeder` seeds About Us, News categories/articles, and Carousels for the public portal — idempotent (matched on natural keys) and generates its own placeholder illustration SVGs, so `migrate:fresh --seed` is fully reproducible on a clean clone.
 
 ### 📰 CMS (Content Management)
 
@@ -246,6 +253,8 @@ Website partials live in `resources/views/website/partials/`. Key reusable ones:
 ])
 ```
 
+Other home-page section partials: `hero`, `register-rail`, `services`, `testimonials`, `faq`.
+
 ---
 
 ## 🔧 Artisan Commands
@@ -260,6 +269,16 @@ php artisan migrate:fresh --seed  # Reset database
 ---
 
 ## 📋 Changelog
+
+### v3.0.0
+- **Public Website Redesign — "Ink & Kunyit"**: Replaced the v2.2.x Aveit-inspired blue/orange system with a new ink/marigold design system (Archivo display + IBM Plex Sans/Mono), overhauling `website.css`, `website.js`, and every website view/partial.
+- **New Home Page Sections**: `hero`, `register-rail`, `services`, `testimonials`, `faq` partials added; home page restructured into a section-based CMS-driven flow.
+- **Custom Website Pagination**: Added `views/vendor/pagination/website.blade.php` styled to match the new design tokens.
+- **WebsiteContentSeeder**: New idempotent seeder for About Us, News categories/articles, and Carousels — self-generates placeholder illustrations so `migrate:fresh --seed` works on a clean clone. Wired into `DatabaseSeeder`.
+- **Admin Sidebar UX**: Sidebar repositioned below a fixed top bar; tooltip/floating-menu suppression on collapse, navigation and search state changes; global search now supports Ctrl/Cmd+K focus shortcut.
+- **Auth Input Fixes**: Explicit border width/style on error-state input wrappers for consistent visibility in light and dark modes.
+- **Session-Persistent CSP Nonces**: Content Security Policy nonces now persist per session with automatic injection into HTML `<script>` tags, building on the nonce-based script protection introduced in v2.4.0.
+- **Dashboard Repository Refactor**: Dashboard stats decoupled from direct model access via the repository pattern; dashboard view access now restricted by role.
 
 ### v2.3.1
 - **Global Autocomplete Select** (`<x-ui.select>`): Komponen select reusable berbasis Tailwind + Alpine.js — mendukung single & multiple, search/autocomplete bawaan, clearable (per-item & "Hapus semua"), checkbox untuk multiple / checkmark untuk single, dan dark mode. Terima Eloquent collection, array `['value','label']`, atau custom `value-key`/`label-key`.

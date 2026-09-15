@@ -1,41 +1,33 @@
 {{--
     Props:
-    $eyebrow  (string, optional) – kecil di atas heading
-    $title    (string)           – heading utama (bisa berisi HTML untuk <span> gradient)
-    $subtitle (string, optional) – deskripsi di bawah heading
-    $align    (string)           – 'center' (default) | 'left'
-    $light    (bool, optional)   – true jika dalam dark section (teks putih)
+    $eyebrow  (string, optional) – mono micro-label; use only for real metadata
+    $title    (string)           – may contain HTML (e.g. <em> for the accent word)
+    $subtitle (string, optional)
+    $align    (string)           – 'left' (default) | 'center'
+    $light    (bool, optional)   – true when sitting on an ink ground
 --}}
 @php
-    $align = $align ?? 'center';
+    $align = $align ?? 'left';
     $light = $light ?? false;
-    $centerClass = $align === 'center' ? 'text-center items-center' : 'text-left items-start';
+    $alignClass = $align === 'center' ? 'text-center items-center' : 'text-left items-start';
 @endphp
 
-<div class="flex flex-col {{ $centerClass }} gap-3 mb-12">
-    {{-- Eyebrow pill --}}
+<div class="flex flex-col {{ $alignClass }} gap-4 mb-12">
     @if(!empty($eyebrow))
-        <span class="{{ $light ? 'eyebrow-pill-light' : 'eyebrow-pill' }}">
-            <span class="eyebrow-dot"></span>
+        <span class="t-micro flex items-center gap-2.5 {{ $light ? 'text-marigold' : 'text-moss dark:text-bone-dim' }}">
+            <span class="w-5 h-px {{ $light ? 'bg-marigold' : 'bg-marigold' }}"></span>
             {{ $eyebrow }}
         </span>
     @endif
 
-    {{-- Main heading --}}
-    <h2 class="font-heading font-bold leading-tight
-               {{ $light ? 'text-white' : 'text-slate-900 dark:text-white' }}
-               text-3xl sm:text-4xl lg:text-[2.75rem]">
+    <h2 class="t-section {{ $light ? 'text-bone' : 'text-ink dark:text-bone' }}">
         {!! $title !!}
     </h2>
 
-    {{-- Subtitle --}}
     @if(!empty($subtitle))
-        <p class="text-base leading-relaxed max-w-2xl
-                  {{ $align === 'center' ? 'mx-auto' : '' }}
-                  {{ $light ? 'text-white/70' : 'text-slate-500 dark:text-slate-400' }}">
+        <p class="t-lead {{ $align === 'center' ? 'mx-auto' : '' }}
+                  {{ $light ? 'text-bone-dim' : 'text-moss dark:text-bone-dim' }}">
             {{ $subtitle }}
         </p>
     @endif
 </div>
-
-

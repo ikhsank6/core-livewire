@@ -13,10 +13,11 @@
     @include('partials.meta-og')
     @include('partials.favicon')
 
-    {{-- Google Fonts: Quicksand (heading) + Nunito (body) --}}
+    {{-- Archivo (display, variable wdth axis) · IBM Plex Sans (body) · IBM Plex Mono (data) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
     @vite(['resources/css/website.css', 'resources/js/website.js'])
 
@@ -25,11 +26,13 @@
     @stack('styles')
 </head>
 
-<body class="font-sans antialiased bg-white dark:bg-dark text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body class="font-sans antialiased bg-mineral dark:bg-ink text-ink dark:text-bone transition-colors duration-300">
+
+    <a href="#main" class="skip-link">Lewati ke konten utama</a>
 
     @include('website.partials.nav')
 
-    <main>
+    <main id="main">
         @yield('content')
     </main>
 
