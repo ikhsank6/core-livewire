@@ -4,6 +4,10 @@
 
 ## 📸 Screenshots
 
+| Public Website — "Ink & Kunyit" |
+|---|
+| ![Website Home Page](docs/screenshots/website-home.png) |
+
 | Login | Dashboard |
 |---|---|
 | ![Login Page](docs/screenshots/login.png) | ![Dashboard Page](docs/screenshots/dashboard.png) |
