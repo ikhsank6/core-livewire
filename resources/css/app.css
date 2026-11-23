@@ -1,9 +1,14 @@
 @import "tailwindcss";
 @import "../../vendor/livewire/flux/dist/flux.css";
+@import "../../vendor/filament/support/resources/css/index.css";
+@import "../../vendor/filament/forms/resources/css/index.css";
+@import "../../vendor/filament/actions/resources/css/index.css";
+@import "../../vendor/filament/notifications/resources/css/index.css";
+@import "../../vendor/filament/schemas/resources/css/index.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
-@source '../../vendor/filament/**/*.blade.php';
+@source '../../vendor/filament/**/*.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
@@ -589,17 +594,17 @@ a,
    ============================================ */
 
 /* Make the required asterisk (*) red */
-.fi-fo-field-wrp .fi-fo-field-wrp-label sup,
-.fi-fo-field-wrp label sup,
-.fi-fo-field-wrp-label sup,
+.fi-fo-field .fi-fo-field-label sup,
+.fi-fo-field label sup,
+.fi-fo-field-label sup,
 .custom-modal-body sup {
     color: #f8285a !important;
     font-weight: 700 !important;
 }
 
 /* Also target the asterisk directly if it's rendered differently */
-.fi-fo-field-wrp .fi-fo-field-wrp-label span.text-danger-600,
-.fi-fo-field-wrp-label span[class*="text-danger"] {
+.fi-fo-field .fi-fo-field-label span.text-danger-600,
+.fi-fo-field-label span[class*="text-danger"] {
     color: #f8285a !important;
 }
 
@@ -644,12 +649,38 @@ p.fi-fo-field-wrp-error-message::before,
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f87171'%3E%3Cpath fill-rule='evenodd' d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E");
 }
 
+/* Default (non-error) input border — Filament v5's .fi-input-wrp ships border-width:0
+   and relies on a 10%-opacity box-shadow ring by default, which is practically invisible
+   against a white modal. Give it a real, visible border instead (same fix as the error
+   state below, just for the normal state). */
+.fi-input-wrp:not(.fi-invalid) {
+    box-shadow: none !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: #e4e4e7 !important;
+}
+
+.dark .fi-input-wrp:not(.fi-invalid) {
+    border-color: #3f3f46 !important;
+}
+
+.fi-input-wrp:not(.fi-invalid):focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.dark .fi-input-wrp:not(.fi-invalid):focus-within {
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15) !important;
+}
+
 /* Input wrapper error state: red border instead of Filament's heavy ring */
 /* NOTE: .fi-input-wrp has border-width:0 by default (Filament draws its ring via box-shadow),
    so border-color alone is invisible — border-width/style must be set explicitly or the
-   red never shows and only the faint box-shadow halo is visible (reads as pink). */
-.fi-input-wrp[class*="ring-danger"],
-.fi-input-wrp[class*="focus-within:ring-danger"] {
+   red never shows and only the faint box-shadow halo is visible (reads as pink).
+   v5 marks the invalid state with a semantic `.fi-invalid` class (previously an inline
+   `ring-danger-*` utility class), so that's what these selectors target now. */
+.fi-input-wrp.fi-invalid {
     --tw-ring-color: transparent !important;
     box-shadow: none !important;
     border-width: 1.5px !important;
@@ -657,22 +688,21 @@ p.fi-fo-field-wrp-error-message::before,
     border-color: #dc2626 !important;
 }
 
-.dark .fi-input-wrp[class*="ring-danger"],
-.dark .fi-input-wrp[class*="focus-within:ring-danger"] {
+.dark .fi-input-wrp.fi-invalid {
     border-color: #f87171 !important;
 }
 
 /* Fallback: any input inside an error field wrapper gets a red border matching the text */
-.fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
-.fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
+.fi-fo-field:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
+.fi-fo-field:has([data-validation-error]) .fi-input-wrp {
     border-width: 1.5px !important;
     border-style: solid !important;
     border-color: #dc2626 !important;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08) !important;
 }
 
-.dark .fi-fo-field-wrp:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
-.dark .fi-fo-field-wrp:has([data-validation-error]) .fi-input-wrp {
+.dark .fi-fo-field:has(p.fi-fo-field-wrp-error-message) .fi-input-wrp,
+.dark .fi-fo-field:has([data-validation-error]) .fi-input-wrp {
     border-color: #f87171 !important;
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
 }
