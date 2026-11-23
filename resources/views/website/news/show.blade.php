@@ -1,10 +1,9 @@
 @extends('layouts.website')
 
-@section('title', $news->title . ' — ' . ($aboutUs->company_name ?? config('app.name')))
+@section('title', $news->title . ' | ' . ($aboutUs->company_name ?? config('app.name')))
 @section('description', $news->excerpt ?? Str::limit(strip_tags($news->content), 160))
 
 @php
-    $registry = 'REG-'.str_pad((string) $news->id, 4, '0', STR_PAD_LEFT);
     $date = $news->published_at ?? $news->created_at;
 
     $shares = [
@@ -24,103 +23,65 @@
     'bgImage'    => $news->image ? Storage::url($news->image) : null,
 ])
 
-<section class="py-16 md:py-24">
-    <div class="mx-auto max-w-300 px-5 md:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] gap-8 lg:gap-12">
+<section class="py-14 md:py-20">
+    <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-16">
 
-            <div>
-                <article class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft
-                                rounded-2xl overflow-hidden">
-
-                    @if($news->image)
-                        <img src="{{ Storage::url($news->image) }}"
-                             alt="{{ $news->title }}"
-                             class="w-full aspect-video object-cover">
-                    @endif
-
-                    <div class="p-6 md:p-10">
-
-                        {{-- Record meta --}}
-                        <div class="flex flex-wrap items-center gap-x-4 gap-y-2.5 pb-6 mb-8
-                                    border-b border-hairline dark:border-pine-soft">
-                            <span class="t-data text-[0.6875rem] text-moss dark:text-bone-dim">{{ $registry }}</span>
-                            <span class="w-1 h-1 rounded-full bg-marigold" aria-hidden="true"></span>
-                            <time datetime="{{ $date?->toDateString() }}"
-                                  class="t-data text-[0.6875rem] text-moss dark:text-bone-dim">
-                                {{ $date?->translatedFormat('d M Y') }}
-                            </time>
-                            @if($news->category)
-                                <span class="t-micro px-2.5 py-1 rounded-md bg-mineral dark:bg-pine/40
-                                             text-moss dark:text-bone-dim">
-                                    {{ $news->category->name }}
-                                </span>
-                            @endif
-                        </div>
-
-                        @if($news->excerpt)
-                            <p class="t-lead mb-8 text-ink dark:text-bone">{{ $news->excerpt }}</p>
-                        @endif
-
-                        <div class="prose">{!! $news->content !!}</div>
-
-                        {{-- Share --}}
-                        <div class="mt-10 pt-7 border-t border-hairline dark:border-pine-soft
-                                    flex flex-wrap items-center gap-4">
-                            <span class="t-micro text-moss dark:text-bone-dim">Bagikan</span>
-                            <ul class="flex items-center gap-2">
-                                @foreach($shares as $share)
-                                    <li>
-                                        <a href="{{ $share['url'] }}" target="_blank" rel="noopener noreferrer"
-                                           aria-label="{{ $share['label'] }}"
-                                           class="w-11 h-11 rounded-full grid place-items-center border
-                                                  border-hairline dark:border-pine-soft text-moss dark:text-bone-dim
-                                                  hover:bg-marigold hover:border-marigold hover:text-ink transition-colors">
-                                            <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                                <path d="{{ $share['path'] }}"/>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </article>
-
-                {{-- Related --}}
-                @if($relatedNews->count() > 0)
-                    <div class="mt-12">
-                        <h2 class="t-card text-ink dark:text-bone mb-5">Catatan terkait</h2>
-
-                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            @foreach($relatedNews as $related)
-                                <li>
-                                    <a href="{{ route('news.show', $related->slug) }}"
-                                       class="group flex gap-4 h-full p-5 bg-paper dark:bg-ink-card border
-                                              border-hairline dark:border-pine-soft rounded-2xl
-                                              hover:border-marigold transition-colors">
-                                        <span class="t-data text-[0.6875rem] text-moss/60 dark:text-bone-dim/60 shrink-0 pt-0.5">
-                                            {{ 'REG-'.str_pad((string) $related->id, 4, '0', STR_PAD_LEFT) }}
-                                        </span>
-                                        <span class="min-w-0">
-                                            <span class="block text-[0.9375rem] leading-snug text-ink dark:text-bone
-                                                         group-hover:text-marigold-deep dark:group-hover:text-marigold-deep dark:hover:text-marigold transition-colors line-clamp-2">
-                                                {{ $related->title }}
-                                            </span>
-                                            <time datetime="{{ ($related->published_at ?? $related->created_at)?->toDateString() }}"
-                                                  class="block t-data text-[0.6875rem] text-moss/70 dark:text-bone-dim/70 mt-2">
-                                                {{ ($related->published_at ?? $related->created_at)?->translatedFormat('d M Y') }}
-                                            </time>
-                                        </span>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+        <div>
+            <article>
+                @if($news->image)
+                    <img src="{{ Storage::url($news->image) }}"
+                         alt="{{ $news->title }}"
+                         class="aspect-video w-full rounded-2xl object-cover">
                 @endif
-            </div>
 
-            @include('website.partials.news-sidebar')
+                <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
+                    @if($news->category)
+                        <span class="font-semibold text-accent-text">{{ $news->category->name }}</span>
+                    @endif
+                    <time datetime="{{ $date?->toDateString() }}">{{ $date?->translatedFormat('d M Y') }}</time>
+                </div>
+
+                @if($news->excerpt)
+                    <p class="mt-6 max-w-[56ch] font-display text-[1.5rem] font-medium leading-snug text-ink"
+                       style="font-variation-settings: 'wdth' 94;">{{ $news->excerpt }}</p>
+                @endif
+
+                <div class="prose mt-8">{!! $news->content !!}</div>
+
+                {{-- Share --}}
+                <div class="mt-12 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-line pt-6">
+                    <span class="text-sm font-semibold text-ink">Bagikan</span>
+                    <ul class="-ml-2 flex items-center">
+                        @foreach($shares as $share)
+                            <li>
+                                <a href="{{ $share['url'] }}" target="_blank" rel="noopener noreferrer"
+                                   aria-label="{{ $share['label'] }}"
+                                   class="grid h-11 w-11 place-items-center rounded-md text-muted transition-colors hover:text-ink">
+                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path d="{{ $share['path'] }}"/>
+                                    </svg>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </article>
+
+            {{-- Related --}}
+            @if($relatedNews->count() > 0)
+                <div class="mt-16 border-t border-line pt-12">
+                    <h2 class="subtitle">Berita terkait</h2>
+
+                    <div class="mt-8 grid gap-8 sm:grid-cols-2">
+                        @foreach($relatedNews as $related)
+                            @include('website.partials.news-card', ['item' => $related, 'variant' => 'row'])
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
+
+        @include('website.partials.news-sidebar')
     </div>
 </section>
 

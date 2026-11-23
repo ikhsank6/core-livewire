@@ -1,37 +1,31 @@
-<aside class="space-y-4 lg:sticky lg:top-24">
+<aside class="space-y-10 lg:sticky lg:top-24">
 
     {{-- Kategori --}}
-    <nav aria-label="Kategori berita"
-         class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft rounded-2xl overflow-hidden">
-        <h2 class="t-micro text-marigold-deep dark:text-marigold px-6 py-5 border-b border-hairline dark:border-pine-soft">
-            Kategori
-        </h2>
+    <nav aria-label="Kategori berita">
+        <h2 class="subtitle">Kategori</h2>
 
-        <ul class="p-3">
-            <li>
+        <ul class="mt-4 border-t border-line">
+            <li class="border-b border-line">
                 <a href="{{ route('news.index') }}"
                    @if(! request('category')) aria-current="page" @endif
-                   class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-[0.9375rem] transition-colors
-                          {{ ! request('category')
-                                ? 'bg-marigold text-ink'
-                                : 'text-moss dark:text-bone-dim hover:bg-mineral dark:hover:bg-pine/30' }}">
+                   class="flex items-center justify-between gap-3 min-h-12 px-1 text-[0.9375rem] transition-colors
+                          {{ ! request('category') ? 'font-bold text-ink' : 'text-body hover:text-ink' }}">
                     <span>Semua</span>
+                    @if(! request('category'))<span class="w-1.5 h-1.5 rounded-full bg-kunyit" aria-hidden="true"></span>@endif
                 </a>
             </li>
 
             @foreach($categories as $category)
                 @php $isActive = request('category') === $category->slug; @endphp
-                <li>
+                <li class="border-b border-line">
                     <a href="{{ route('news.index', ['category' => $category->slug]) }}"
                        @if($isActive) aria-current="page" @endif
-                       class="flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-[0.9375rem] transition-colors
-                              {{ $isActive
-                                    ? 'bg-marigold text-ink'
-                                    : 'text-moss dark:text-bone-dim hover:bg-mineral dark:hover:bg-pine/30' }}">
+                       class="flex items-center justify-between gap-3 min-h-12 px-1 text-[0.9375rem] transition-colors
+                              {{ $isActive ? 'font-bold text-ink' : 'text-body hover:text-ink' }}">
                         <span class="truncate">{{ $category->name }}</span>
-                        <span class="t-data text-[0.6875rem] shrink-0 px-2 py-0.5 rounded-md
-                                     {{ $isActive ? 'bg-ink/10 text-ink' : 'bg-mineral dark:bg-pine/40' }}">
+                        <span class="flex items-center gap-2 shrink-0 tabular-nums text-sm text-muted">
                             {{ $category->news_count }}
+                            @if($isActive)<span class="w-1.5 h-1.5 rounded-full bg-kunyit" aria-hidden="true"></span>@endif
                         </span>
                     </a>
                 </li>
@@ -41,29 +35,20 @@
 
     {{-- Terkini --}}
     @if($recentNews->count() > 0)
-        <div class="bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft rounded-2xl overflow-hidden">
-            <h2 class="t-micro text-marigold-deep dark:text-marigold px-6 py-5 border-b border-hairline dark:border-pine-soft">
-                Terkini
-            </h2>
+        <div>
+            <h2 class="subtitle">Terkini</h2>
 
-            <ul class="divide-y divide-hairline dark:divide-pine-soft">
+            <ul class="mt-4 border-t border-line">
                 @foreach($recentNews as $recent)
-                    <li>
-                        <a href="{{ route('news.show', $recent->slug) }}"
-                           class="group flex gap-4 px-6 py-4 hover:bg-mineral dark:hover:bg-pine/30 transition-colors">
-                            <span class="t-data text-[0.6875rem] text-moss/60 dark:text-bone-dim/60 shrink-0 pt-0.5">
-                                {{ 'REG-'.str_pad((string) $recent->id, 4, '0', STR_PAD_LEFT) }}
+                    <li class="border-b border-line">
+                        <a href="{{ route('news.show', $recent->slug) }}" class="group block py-4 px-1">
+                            <span class="block text-[0.9375rem] font-semibold leading-snug text-ink group-hover:text-link transition-colors line-clamp-2">
+                                {{ $recent->title }}
                             </span>
-                            <span class="min-w-0">
-                                <span class="block text-[0.9375rem] leading-snug text-ink dark:text-bone
-                                             group-hover:text-marigold-deep dark:group-hover:text-marigold-deep dark:hover:text-marigold transition-colors line-clamp-2">
-                                    {{ $recent->title }}
-                                </span>
-                                <time datetime="{{ ($recent->published_at ?? $recent->created_at)?->toDateString() }}"
-                                      class="block t-data text-[0.6875rem] text-moss/70 dark:text-bone-dim/70 mt-1.5">
-                                    {{ ($recent->published_at ?? $recent->created_at)?->translatedFormat('d M Y') }}
-                                </time>
-                            </span>
+                            <time datetime="{{ ($recent->published_at ?? $recent->created_at)?->toDateString() }}"
+                                  class="mt-1.5 block text-sm text-muted">
+                                {{ ($recent->published_at ?? $recent->created_at)?->translatedFormat('d M Y') }}
+                            </time>
                         </a>
                     </li>
                 @endforeach
@@ -72,20 +57,11 @@
     @endif
 
     {{-- Kontak --}}
-    <div class="bg-ink dark:bg-ink-card text-bone border border-transparent
-                dark:border-pine-soft rounded-2xl p-6">
-        <h2 class="t-card text-bone">Ada pertanyaan?</h2>
-        <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-bone-dim">
-            Kanal kontak dan jadwal layanan tercantum di halaman profil.
+    <div class="on-dark rounded-2xl bg-nila p-6 text-white">
+        <h2 class="subtitle text-white">Ada pertanyaan?</h2>
+        <p class="mt-2 text-[0.9375rem] leading-relaxed text-white/75">
+            Kanal kontak dan jadwal layanan ada di halaman profil.
         </p>
-        <a href="{{ route('about') }}"
-           class="mt-5 inline-flex items-center justify-center gap-2.5 w-full h-12 rounded-full
-                  bg-marigold text-ink hover:bg-marigold-dim transition-colors t-micro">
-            Hubungi kami
-            <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                 stroke-width="1.8" aria-hidden="true">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </a>
+        <a href="{{ route('about') }}#kontak" class="ticket mt-5 w-full">Lihat kontak</a>
     </div>
 </aside>

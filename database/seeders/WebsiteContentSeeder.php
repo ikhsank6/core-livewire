@@ -66,21 +66,21 @@ class WebsiteContentSeeder extends Seeder
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="presentation">
           <defs>
             <pattern id="lattice" width="120" height="120" patternUnits="userSpaceOnUse">
-              <g fill="none" stroke="#E8A317" stroke-width="1.5">
+              <g fill="none" stroke="#1B84FF" stroke-width="1.5">
                 <circle cx="0"   cy="0"   r="42"/>
                 <circle cx="120" cy="0"   r="42"/>
                 <circle cx="0"   cy="120" r="42"/>
                 <circle cx="120" cy="120" r="42"/>
                 <circle cx="60"  cy="60"  r="42"/>
               </g>
-              <g fill="#E8A317" opacity="0.5">
+              <g fill="#1B84FF" opacity="0.5">
                 <circle cx="60" cy="60" r="2.5"/>
                 <circle cx="0"  cy="0"  r="2.5"/>
                 <circle cx="120" cy="120" r="2.5"/>
               </g>
             </pattern>
           </defs>
-          <rect width="1600" height="900" fill="#0C1A15"/>
+          <rect width="1600" height="900" fill="#071437"/>
           <rect width="1600" height="900" fill="url(#lattice)"/>
         </svg>
         SVG;
@@ -134,10 +134,13 @@ class WebsiteContentSeeder extends Seeder
 
     private function categoryIllustrationSvg(string $slug, string $iconTemplate): string
     {
-        $ink = '#0C1A15';
-        $pine = '#1B4332';
-        $marigold = '#E8A317';
-        $bone = '#E8EDEA';
+        // Palette follows the public portal design system (design.md): deep navy
+        // ground, brand-blue glow, light-blue accent. The placeholder name
+        // {marigold} is kept because the icon templates reference it.
+        $ink = '#071437';
+        $pine = '#1B4FD6';
+        $marigold = '#4DA3FF';
+        $bone = '#EAF2FF';
 
         $icon = str_replace(['{bone}', '{marigold}', '{ink}'], [$bone, $marigold, $ink], $iconTemplate);
 

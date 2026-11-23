@@ -1,85 +1,56 @@
 @php
-    /**
-     * Static content — there is no Layanan model. Each card is labelled by its
-     * category rather than a sequence number, because the services are not a
-     * sequence and numbering them would be decoration.
-     */
+    // Static content: there is no Layanan model yet. The heading count below is
+    // derived from this list so the two can never disagree.
     $services = [
-        [
-            'category' => 'Perizinan',
-            'title' => 'Izin usaha dan operasional',
-            'body' => 'Izin usaha mikro, reklame, dan bangunan. Berkas lengkap terbit dalam tiga hari kerja.',
-            'icon' => 'M4.5 6.5h15M4.5 12h15M4.5 17.5h9',
-        ],
-        [
-            'category' => 'Kependudukan',
-            'title' => 'Dokumen kependudukan',
-            'body' => 'Kartu keluarga, akta kelahiran, akta kematian, dan perekaman KTP elektronik.',
-            'icon' => 'M12 12.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM5 19.5a7 7 0 0 1 14 0',
-        ],
-        [
-            'category' => 'Perpajakan',
-            'title' => 'Pajak dan retribusi',
-            'body' => 'Pendaftaran objek pajak, penetapan, dan pembayaran retribusi daerah secara mandiri.',
-            'icon' => 'M12 3v18M8 7.5h6a2.5 2.5 0 0 1 0 5h-4a2.5 2.5 0 0 0 0 5h6',
-        ],
-        [
-            'category' => 'Pengaduan',
-            'title' => 'Pengaduan layanan',
-            'body' => 'Sampaikan keluhan atas layanan atau fasilitas publik. Setiap laporan memperoleh nomor tindak lanjut.',
-            'icon' => 'M20 14.5a2.5 2.5 0 0 1-2.5 2.5H8l-4 3.5v-14A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5Z',
-        ],
-        [
-            'category' => 'Informasi',
-            'title' => 'Informasi publik',
-            'body' => 'Permohonan informasi publik melalui pejabat pengelola informasi dan dokumentasi.',
-            'icon' => 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 11v5.5M12 7.75h.01',
-        ],
-        [
-            'category' => 'Verifikasi',
-            'title' => 'Verifikasi dokumen',
-            'body' => 'Periksa keaslian dokumen terbitan portal menggunakan kode verifikasi tanpa datang ke loket.',
-            'icon' => 'M9 12.5l2.25 2.25L15.5 10.5M12 3l7 3v5.5c0 4.2-2.9 7.7-7 9.5-4.1-1.8-7-5.3-7-9.5V6Z',
-        ],
+        ['category' => 'Perizinan',    'title' => 'Izin usaha dan operasional',
+         'body' => 'Izin usaha mikro, reklame, dan bangunan.'],
+        ['category' => 'Kependudukan', 'title' => 'Dokumen kependudukan',
+         'body' => 'Kartu keluarga, akta kelahiran, akta kematian, dan perekaman KTP elektronik.'],
+        ['category' => 'Perpajakan',   'title' => 'Pajak dan retribusi',
+         'body' => 'Pendaftaran objek pajak, penetapan, dan pembayaran retribusi daerah.'],
+        ['category' => 'Pengaduan',    'title' => 'Pengaduan layanan',
+         'body' => 'Sampaikan keluhan atas layanan atau fasilitas publik. Setiap laporan mendapat nomor tindak lanjut.'],
+        ['category' => 'Informasi',    'title' => 'Informasi publik',
+         'body' => 'Permohonan informasi publik melalui pejabat pengelola informasi dan dokumentasi.'],
+        ['category' => 'Verifikasi',   'title' => 'Verifikasi dokumen',
+         'body' => 'Periksa keaslian dokumen terbitan portal dengan kode verifikasinya.'],
     ];
+
+    $numberWords = [1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima', 6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan'];
+    $count = $numberWords[count($services)] ?? count($services);
 @endphp
 
-<section id="layanan" class="py-20 md:py-28 scroll-mt-24">
-    <div class="mx-auto max-w-300 px-5 md:px-8">
+<section id="layanan" class="scroll-mt-16 py-20 md:py-28">
+    <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-20">
 
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
-            <div class="max-w-2xl">
-                @include('website.partials.section-heading', [
-                    'eyebrow' => 'Layanan',
-                    'title' => 'Enam pintu, satu antrean.',
-                    'subtitle' => 'Setiap layanan berbagi satu alur verifikasi, satu nomor registrasi, dan satu tempat untuk melacaknya.',
-                ])
-            </div>
+        <div class="lg:sticky lg:top-28 lg:self-start">
+            <h2 class="title">{{ $count }} jenis urusan, satu akun.</h2>
+            <p class="lead mt-5 max-w-[34ch]">
+                Pilih urusan Anda. Data diri cukup diisi sekali saat membuat akun.
+            </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul class="border-t border-line">
             @foreach($services as $service)
-                <article class="aos-init group relative bg-paper dark:bg-ink-card border border-hairline dark:border-pine-soft
-                                rounded-2xl p-7 transition-transform duration-200 hover:-translate-y-1">
+                <li class="border-b border-line">
+                    <a href="{{ route('login') }}"
+                       class="group grid gap-x-8 gap-y-2 py-7 px-1 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-baseline
+                              transition-colors duration-200 hover:bg-sunken sm:px-4 sm:-mx-4">
+                        <span class="text-sm font-medium text-muted">{{ $service['category'] }}</span>
 
-                    <span class="w-11 h-11 rounded-xl bg-mineral dark:bg-pine/40 grid place-items-center mb-6
-                                 group-hover:bg-marigold transition-colors">
-                        <svg class="w-5 h-5 text-ink dark:text-bone group-hover:text-ink transition-colors"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="{{ $service['icon'] }}"/>
-                        </svg>
-                    </span>
+                        <span class="min-w-0">
+                            <span class="subtitle block text-ink transition-transform duration-200 group-hover:translate-x-1">{{ $service['title'] }}</span>
+                            <span class="mt-2 block max-w-[52ch] text-[0.9375rem] leading-relaxed">{{ $service['body'] }}</span>
+                        </span>
 
-                    <span class="t-micro text-marigold-deep dark:text-marigold">{{ $service['category'] }}</span>
-
-                    <h3 class="t-card mt-3 text-ink dark:text-bone">{{ $service['title'] }}</h3>
-
-                    <p class="mt-3 text-[0.9375rem] leading-relaxed text-moss dark:text-bone-dim">
-                        {{ $service['body'] }}
-                    </p>
-                </article>
+                        <span class="mt-2 sm:mt-0 text-[0.9375rem] font-semibold text-link underline decoration-transparent underline-offset-[6px]
+                                     transition-colors group-hover:decoration-current">
+                            Ajukan
+                            <span class="sr-only">{{ $service['title'] }}</span>
+                        </span>
+                    </a>
+                </li>
             @endforeach
-        </div>
+        </ul>
     </div>
 </section>

@@ -1,76 +1,72 @@
 {{--
     Props:
-    $item     (News)
-    $featured (bool, optional) – larger treatment for the lead story
+    $item    (News)
+    $variant (string, optional) – 'card' (default) | 'lead' | 'row'
 --}}
 @php
-    $featured = $featured ?? false;
-    $registry = 'REG-'.str_pad((string) $item->id, 4, '0', STR_PAD_LEFT);
+    $variant = $variant ?? 'card';
     $date = $item->published_at ?? $item->created_at;
+    $image = $item->image ? Storage::url($item->image) : null;
 @endphp
 
-<article class="aos-init group flex flex-col bg-paper dark:bg-ink-card border border-hairline
-                dark:border-pine-soft rounded-2xl overflow-hidden h-full
-                transition-transform duration-200 hover:-translate-y-1">
-
-    <a href="{{ route('news.show', $item->slug) }}" class="flex flex-col h-full">
-
-        {{-- Visual --}}
-        <div class="relative overflow-hidden {{ $featured ? 'aspect-video' : 'aspect-3/2' }} bg-mineral dark:bg-pine/30">
-            @if($item->image)
-                <img src="{{ Storage::url($item->image) }}"
-                     alt="{{ $item->title }}"
-                     loading="lazy"
-                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-            @else
-                {{-- No image: show the record's own identity rather than a stock placeholder. --}}
-                <div class="absolute inset-0 grid place-items-center" aria-hidden="true">
-                    <span class="t-data text-moss/30 dark:text-bone-dim/25 {{ $featured ? 'text-5xl' : 'text-3xl' }}">
-                        {{ $registry }}
-                    </span>
-                </div>
-                <div class="absolute inset-0 opacity-[0.07]"
-                     style="background-image:radial-gradient(circle,currentColor 1px,transparent 1px);background-size:18px 18px;"
-                     aria-hidden="true"></div>
-            @endif
-
-            @if($item->category)
-                <span class="absolute top-4 left-4 t-micro px-2.5 py-1.5 rounded-md
-                             bg-paper/90 dark:bg-ink/85 backdrop-blur-sm text-ink dark:text-bone">
-                    {{ $item->category->name }}
-                </span>
-            @endif
-        </div>
-
-        {{-- Body --}}
-        <div class="flex flex-col flex-1 p-6 {{ $featured ? 'md:p-8' : '' }}">
-
-            <div class="flex items-center gap-3 t-micro text-moss dark:text-bone-dim mb-4">
-                <span class="t-data">{{ $registry }}</span>
-                <span class="w-1 h-1 rounded-full bg-marigold" aria-hidden="true"></span>
-                <time datetime="{{ $date?->toDateString() }}" class="t-data">
-                    {{ $date?->translatedFormat('d M Y') }}
-                </time>
+@if($variant === 'row')
+    <article class="group">
+        <a href="{{ route('news.show', $item->slug) }}" class="grid grid-cols-[6.5rem_minmax(0,1fr)] sm:grid-cols-[8rem_minmax(0,1fr)] gap-5">
+            <div class="relative aspect-4/3 overflow-hidden rounded-lg bg-sunken">
+                @if($image)
+                    <img src="{{ $image }}" alt="" loading="lazy"
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                @else
+                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                @endif
             </div>
+            <div class="min-w-0 self-center">
+                <p class="text-sm text-muted">
+                    @if($item->category)<span class="mr-4 font-semibold text-accent-text">{{ $item->category->name }}</span>@endif
+                    <time datetime="{{ $date?->toDateString() }}">{{ $date?->translatedFormat('d M Y') }}</time>
+                </p>
+                <h3 class="subtitle mt-1.5 text-[1.125rem] group-hover:text-link transition-colors line-clamp-3">{{ $item->title }}</h3>
+            </div>
+        </a>
+    </article>
 
-            <h3 class="{{ $featured ? 't-section text-[1.75rem] md:text-[2.25rem]' : 't-card' }}
-                       text-ink dark:text-bone group-hover:text-marigold-deep dark:group-hover:text-marigold-deep dark:hover:text-marigold transition-colors">
-                {{ $item->title }}
-            </h3>
-
-            <p class="mt-3 text-[0.9375rem] leading-relaxed text-moss dark:text-bone-dim
-                      {{ $featured ? 'line-clamp-3' : 'line-clamp-2' }}">
-                {{ $item->excerpt }}
+@elseif($variant === 'lead')
+    <article class="group h-full">
+        <a href="{{ route('news.show', $item->slug) }}" class="flex h-full flex-col">
+            <div class="relative aspect-16/10 overflow-hidden rounded-2xl bg-sunken">
+                @if($image)
+                    <img src="{{ $image }}" alt="{{ $item->title }}" loading="lazy"
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]">
+                @else
+                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                @endif
+            </div>
+            <p class="mt-6 text-sm text-muted">
+                @if($item->category)<span class="mr-4 font-semibold text-accent-text">{{ $item->category->name }}</span>@endif
+                <time datetime="{{ $date?->toDateString() }}">{{ $date?->translatedFormat('d M Y') }}</time>
             </p>
+            <h3 class="title mt-2 text-[clamp(1.75rem,3vw,2.5rem)] group-hover:text-link transition-colors">{{ $item->title }}</h3>
+            <p class="mt-4 max-w-[58ch] leading-relaxed line-clamp-3">{{ $item->excerpt }}</p>
+        </a>
+    </article>
 
-            <span class="mt-6 pt-5 border-t border-hairline dark:border-pine-soft
-                         inline-flex items-center gap-2 t-micro text-ink dark:text-bone">
-                Baca selengkapnya
-                <svg class="w-3.5 h-3.5 text-marigold-deep dark:text-marigold transition-transform duration-200 group-hover:translate-x-1"
-                     viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </span>
-        </div>
-    </a>
-</article>
+@else
+    <article class="group h-full">
+        <a href="{{ route('news.show', $item->slug) }}" class="flex h-full flex-col">
+            <div class="relative aspect-16/10 overflow-hidden rounded-xl bg-sunken">
+                @if($image)
+                    <img src="{{ $image }}" alt="{{ $item->title }}" loading="lazy"
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                @else
+                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                @endif
+            </div>
+            <p class="mt-5 text-sm text-muted">
+                @if($item->category)<span class="mr-4 font-semibold text-accent-text">{{ $item->category->name }}</span>@endif
+                <time datetime="{{ $date?->toDateString() }}">{{ $date?->translatedFormat('d M Y') }}</time>
+            </p>
+            <h3 class="subtitle mt-2 group-hover:text-link transition-colors line-clamp-2">{{ $item->title }}</h3>
+            <p class="mt-3 text-[0.9375rem] leading-relaxed line-clamp-2">{{ $item->excerpt }}</p>
+        </a>
+    </article>
+@endif

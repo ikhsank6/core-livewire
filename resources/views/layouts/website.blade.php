@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth" x-data="{
+<html lang="id" x-data="{
     theme: localStorage.getItem('theme') || 'light',
     get isDark() { return this.theme === 'dark'; }
 }" x-init="$watch('theme', val => {
@@ -8,16 +8,18 @@
 })" :class="{ 'dark': isDark }">
 
 <head>
+    {{-- Apply the saved theme before anything paints, so dark mode never flashes white first --}}
+    @include('partials.fouc-prevention')
     @include('partials.meta-base')
     <title>@yield('title', $aboutUs->company_name ?? config('app.name'))</title>
     @include('partials.meta-og')
     @include('partials.favicon')
 
-    {{-- Archivo (display, variable wdth axis) · IBM Plex Sans (body) · IBM Plex Mono (data) --}}
+    {{-- Bricolage Grotesque (display, width axis) + Plus Jakarta Sans (body) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 
     @vite(['resources/css/website.css', 'resources/js/website.js'])
 
@@ -26,7 +28,7 @@
     @stack('styles')
 </head>
 
-<body class="font-sans antialiased bg-mineral dark:bg-ink text-ink dark:text-bone transition-colors duration-300">
+<body class="font-sans antialiased bg-page text-body transition-colors duration-300">
 
     <a href="#main" class="skip-link">Lewati ke konten utama</a>
 

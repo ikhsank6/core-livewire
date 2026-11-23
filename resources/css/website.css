@@ -9,45 +9,59 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ================================================================
-   SATU PINTU — "Ink & Kunyit"
-   Public portal design system. Entirely separate from the admin
-   panel (app.css); the two palettes must never be mixed.
+   SATU PINTU: public portal design system
+   Identity: a door and a service counter. One accent (kunyit, the
+   light coming through the door) on a deep indigo ground (nila).
+   Separate from the admin panel (app.css). Do not mix the two.
    ================================================================ */
 
+/* Semantic tokens: these flip with the theme, so components rarely
+   need dark: variants. Brand constants live in @theme below. */
+:root {
+    --page:        #F5F6F3;
+    --surface:     #FFFFFF;
+    --sunken:      #ECEEE9;
+    --ink:         #0E1424;
+    --body:        #3F485C;
+    --muted:       #5B6478;
+    --line:        #DADED8;
+    --accent-text: #8A5C00;
+    --link:        #1A3E9A;
+}
+.dark {
+    --page:        #0A1126;
+    --surface:     #111B38;
+    --sunken:      #0E1730;
+    --ink:         #F2F5FF;
+    --body:        #C3CBE0;
+    --muted:       #94A0BE;
+    --line:        #223056;
+    --accent-text: #FFB81C;
+    --link:        #8DB4FF;
+}
+
+@theme inline {
+    --color-page:        var(--page);
+    --color-surface:     var(--surface);
+    --color-sunken:      var(--sunken);
+    --color-ink:         var(--ink);
+    --color-body:        var(--body);
+    --color-muted:       var(--muted);
+    --color-line:        var(--line);
+    --color-accent-text: var(--accent-text);
+    --color-link:        var(--link);
+}
+
 @theme {
-    /* ── Typeface roles ──────────────────────────────────────────
-       display : Archivo, driven on its `wdth` variable axis
-       sans    : IBM Plex Sans — body copy
-       mono    : IBM Plex Mono — registry numbers, timestamps, data
-       ──────────────────────────────────────────────────────────── */
-    --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
-    --font-sans:    "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-    --font-mono:    "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+    /* Display: Bricolage Grotesque (width axis gives the headings their
+       compressed, signage-like voice). Body: Plus Jakarta Sans, drawn in
+       Jakarta and very legible at small sizes. */
+    --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    --font-sans:    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-    /* ── Ground & ink ── */
-    --color-ink:       #0C1A15;
-    --color-ink-card:  #13211C;
-    --color-pine:      #1B4332;
-    --color-pine-soft: #1E3A2E;
-
-    /* ── The single accent ──
-       marigold is AA-safe on ink (8.5:1) but only 1.9:1 on paper/mineral.
-       Use `marigold-deep` for TEXT and meaningful icons on light surfaces
-       (5.3:1 on paper, 4.7:1 on mineral); plain marigold stays for fills,
-       rules, dots, and anything sitting on ink. */
-    --color-marigold:      #E8A317;
-    --color-marigold-dim:  #C4870F;
-    --color-marigold-deep: #96610A;
-
-    /* ── Light surfaces ── */
-    --color-mineral:      #F0F2EF;
-    --color-paper:        #FFFFFF;
-    --color-moss:         #4A5A54;
-    --color-hairline:     #DDE2DC;
-
-    /* ── Dark-theme text ── */
-    --color-bone:      #E8EDEA;
-    --color-bone-dim:  #8FA39B;
+    --color-nila:   #0B1B4D;
+    --color-kobalt: #1A3E9A;
+    --color-kunyit: #FFB81C;
 }
 
 /* ================================================================
@@ -55,12 +69,10 @@
    ================================================================ */
 [x-cloak] { display: none !important; }
 
-html { color-scheme: light; scroll-behavior: smooth; }
+html { color-scheme: light; background-color: var(--page); scroll-behavior: smooth; scroll-padding-top: 5rem; }
 html.dark { color-scheme: dark; }
 
-/* Reveal offsets and the scaled hero ground would otherwise push past the
-   viewport and create horizontal scroll. `clip` rather than `hidden`: it does
-   not establish a scroll container, so position:sticky still works. */
+/* `clip` keeps position:sticky working (hidden would break the navbar). */
 html, body { overflow-x: clip; }
 
 body {
@@ -70,78 +82,175 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Display face — the width axis is what gives the headings their
-   authority. Falls back to normal width if the axis fails to load. */
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-variation-settings: "wdth" 110;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+@layer base {
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-display);
+        color: var(--ink);
+    }
 }
 
-/* ── Type scale ─────────────────────────────────────────────── */
-.t-display {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-variation-settings: "wdth" 115;
-    font-size: clamp(2.75rem, 6vw, 5.5rem);
-    letter-spacing: -0.03em;
-    line-height: 0.95;
-}
-
-.t-section {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-variation-settings: "wdth" 110;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-}
-
-.t-card {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-variation-settings: "wdth" 105;
-    font-size: 1.25rem;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
-}
-
-.t-lead {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    max-width: 60ch;
-}
-
-/* Micro-label: mono, caps, wide tracking. Used only for real
-   metadata — never as decoration. */
-.t-micro {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    line-height: 1.4;
-}
-
-/* Data figures — tabular so columns of numbers never shift. */
-.t-figure {
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
-    line-height: 1;
-}
-
-.t-data {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
+/* ── Type scale (components layer, so utilities can still override) ── */
+@layer components {
+    .display {
+        font-family: var(--font-display);
+        text-wrap: balance;
+        font-weight: 750;
+        font-variation-settings: "wdth" 90;
+        font-size: clamp(2.6rem, 5.6vw, 4.75rem);
+        letter-spacing: -0.022em;
+        line-height: 1.03;
+    }
+    .title {
+        font-family: var(--font-display);
+        text-wrap: balance;
+        font-weight: 700;
+        font-variation-settings: "wdth" 92;
+        font-size: clamp(2rem, 3.6vw, 3.1rem);
+        letter-spacing: -0.02em;
+        line-height: 1.08;
+    }
+    .subtitle {
+        font-family: var(--font-display);
+        text-wrap: balance;
+        font-weight: 650;
+        font-variation-settings: "wdth" 94;
+        font-size: 1.375rem;
+        letter-spacing: -0.01em;
+        line-height: 1.22;
+    }
+    .lead {
+        font-size: 1.125rem;
+        line-height: 1.75;
+    }
 }
 
 /* ================================================================
-   FOCUS — visible on every interactive element, never removed.
+   COMPONENTS
+   ================================================================ */
+@layer components {
+    .wrap { @apply mx-auto w-full max-w-312 px-5 md:px-8; }
+
+    /* Buttons: small radius, not pills */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-md text-[0.9375rem]
+               font-semibold whitespace-nowrap transition-colors duration-150 cursor-pointer;
+    }
+    .btn-lg { @apply h-12 px-6 text-base; }
+    .btn-solid { @apply bg-ink text-page hover:bg-kobalt hover:text-white; }
+    .btn-line  { @apply border border-line text-ink hover:bg-sunken; }
+    .btn-kunyit { @apply bg-kunyit text-nila hover:brightness-95; }
+
+    .panel { @apply rounded-2xl border border-line bg-surface; }
+}
+
+@layer components {
+    /* Ticket (karcis): the signature call-to-action shape. Notches are cut
+       with a mask, so the keyboard focus ring is drawn inside the shape. */
+    .ticket {
+        --notch: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        height: 2.75rem;
+        padding: 0 1.6rem;
+        border-radius: 4px;
+        background: var(--color-kunyit);
+        color: var(--color-nila);
+        font-weight: 700;
+        font-size: 0.9375rem;
+        white-space: nowrap;
+        cursor: pointer;
+        -webkit-mask:
+            radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+            radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+        mask:
+            radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+            radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+        transition: filter 150ms ease, transform 150ms ease;
+    }
+    .ticket:hover { filter: brightness(0.94); }
+    .ticket:active { transform: translateY(1px); }
+    .ticket:focus-visible {
+        outline: none;
+        box-shadow: inset 0 0 0 2px var(--color-nila), inset 0 0 0 4px #fff;
+    }
+    .ticket-lg { height: 3.25rem; padding: 0 2rem; font-size: 1rem; }
+}
+
+/* ================================================================
+   KAWUNG: batik motif used as the hero ground. Overlapping circles.
+   Two layers: a faint base, and a bright copy revealed by a mask that
+   follows the pointer (the light of the door).
+   ================================================================ */
+.kawung,
+.kawung-lit {
+    background-size: 72px 72px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1' stroke-opacity='.13'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
+}
+.kawung-lit {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1.2' stroke-opacity='.75'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-image: radial-gradient(circle 22rem at var(--mx, 72%) var(--my, 46%), #000 0%, transparent 72%);
+    mask-image: radial-gradient(circle 22rem at var(--mx, 72%) var(--my, 46%), #000 0%, transparent 72%);
+}
+/* Quiet variant for light inner-page headers */
+.kawung-ink {
+    background-size: 72px 72px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%231A3E9A' stroke-width='1' stroke-opacity='.10'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 70%);
+    mask-image: linear-gradient(to left, #000 0%, transparent 70%);
+}
+.dark .kawung-ink {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1' stroke-opacity='.10'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ================================================================
+   THE DOOR: arch frame for the hero slider
+   ================================================================ */
+.arch {
+    border-radius: 9999px 9999px 0 0;
+    animation: door-open 1100ms cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+@keyframes door-open {
+    from { clip-path: inset(100% 0 0 0); }
+    to   { clip-path: inset(0 0 0 0); }
+}
+.door-spill {
+    background: radial-gradient(60% 55% at 50% 100%, rgba(255, 184, 28, 0.28), transparent 70%);
+}
+
+/* ================================================================
+   NAV LAMP: hangs from the top edge of the bar and lights the
+   hovered or current item, like the sign above a service window.
+   ================================================================ */
+.lamp {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    pointer-events: none;
+    transition: transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1), width 320ms ease, opacity 200ms ease;
+}
+.lamp::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 14%;
+    right: 14%;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--color-kunyit);
+}
+.lamp::after {
+    content: "";
+    position: absolute;
+    inset: 3px 0 0 0;
+    background: linear-gradient(to bottom, rgba(255, 184, 28, 0.30), rgba(255, 184, 28, 0) 92%);
+    clip-path: polygon(14% 0, 86% 0, 100% 100%, 0 100%);
+}
+
+/* ================================================================
+   FOCUS: always visible. On dark bands the ring turns kunyit.
    ================================================================ */
 a:focus-visible,
 button:focus-visible,
@@ -150,179 +259,70 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-    outline: 2px solid var(--color-marigold);
-    outline-offset: 2px;
+    outline: 2px solid var(--link);
+    outline-offset: 3px;
     border-radius: 4px;
 }
+.on-dark a:focus-visible,
+.on-dark button:focus-visible,
+.on-dark [tabindex]:focus-visible {
+    outline-color: var(--color-kunyit);
+}
 
-/* Skip link — first focusable element on the page. */
 .skip-link {
     position: absolute;
     left: 1rem;
     top: -100px;
     z-index: 200;
-    background: var(--color-marigold);
-    color: var(--color-ink);
+    background: var(--color-kunyit);
+    color: var(--color-nila);
     padding: 0.75rem 1.25rem;
-    border-radius: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    font-weight: 500;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 700;
     transition: top 160ms ease-out;
 }
 .skip-link:focus { top: 1rem; }
 
 /* ================================================================
-   REGISTER RAIL — the signature element.
-   A paper rail straddling the seam between the ink hero and the
-   mineral ground below it.
-   ================================================================ */
-.rail-viewport {
-    height: 7.5rem;
-    overflow: hidden;
-    position: relative;
-}
-
-.rail-track {
-    animation: rail-scroll 48s linear infinite;
-    will-change: transform;
-}
-
-/* The duplicated half scrolls away and wraps seamlessly. */
-@keyframes rail-scroll {
-    from { transform: translateY(0); }
-    to   { transform: translateY(-50%); }
-}
-
-/* Pause on hover AND on keyboard focus within — a keyboard user
-   tabbing through rows must not have them slide away. */
-.rail:hover .rail-track,
-.rail:focus-within .rail-track {
-    animation-play-state: paused;
-}
-
-/* Fade the rail's top and bottom edges into the surface. */
-.rail-viewport::before,
-.rail-viewport::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1.75rem;
-    pointer-events: none;
-    z-index: 2;
-}
-.rail-viewport::before {
-    top: 0;
-    background: linear-gradient(to bottom, var(--color-paper), transparent);
-}
-.rail-viewport::after {
-    bottom: 0;
-    background: linear-gradient(to top, var(--color-paper), transparent);
-}
-.dark .rail-viewport::before {
-    background: linear-gradient(to bottom, var(--color-ink-card), transparent);
-}
-.dark .rail-viewport::after {
-    background: linear-gradient(to top, var(--color-ink-card), transparent);
-}
-
-/* Below md the rail stops moving and shows a short static list. */
-@media (max-width: 767px) {
-    .rail-viewport { height: auto; overflow: visible; }
-    .rail-track { animation: none; }
-    .rail-viewport::before,
-    .rail-viewport::after { display: none; }
-    .rail-duplicate { display: none; }
-}
-
-/* ================================================================
-   AOS — reveal on scroll (IntersectionObserver in website.js)
-   ================================================================ */
-.aos-init {
-    opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 520ms ease-out, transform 520ms ease-out;
-}
-.aos-init.aos-left  { transform: translateX(-24px); }
-.aos-init.aos-right { transform: translateX(24px); }
-.aos-init.aos-scale { transform: scale(0.96); }
-
-/* On narrow screens there is no room for a horizontal reveal — fall back to
-   the vertical one so nothing starts off-canvas. */
-@media (max-width: 767px) {
-    .aos-init.aos-left,
-    .aos-init.aos-right { transform: translateY(18px); }
-}
-
-.aos-animated {
-    opacity: 1;
-    transform: none;
-}
-
-/* ================================================================
-   PROSE — article body (news detail, about description)
+   PROSE: article body (news detail, profile)
    ================================================================ */
 .prose { max-width: 68ch; }
-
-.prose p {
-    margin-bottom: 1.15rem;
-    line-height: 1.75;
-    color: var(--color-moss);
-}
-.dark .prose p { color: var(--color-bone-dim); }
-
+.prose p { margin-bottom: 1.15rem; line-height: 1.8; color: var(--body); }
 .prose h2 {
     font-family: var(--font-display);
-    font-variation-settings: "wdth" 108;
-    font-size: 1.625rem;
+    font-size: 1.65rem;
     font-weight: 700;
-    margin: 2rem 0 0.875rem;
-    color: var(--color-ink);
+    letter-spacing: -0.02em;
+    margin: 2.25rem 0 0.875rem;
+    color: var(--ink);
 }
 .prose h3 {
     font-family: var(--font-display);
-    font-variation-settings: "wdth" 105;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 650;
     margin: 1.5rem 0 0.75rem;
-    color: var(--color-ink);
+    color: var(--ink);
 }
-.dark .prose h2,
-.dark .prose h3 { color: var(--color-bone); }
-
-.prose ul, .prose ol { margin-left: 1.25rem; margin-bottom: 1.15rem; color: var(--color-moss); }
-.dark .prose ul, .dark .prose ol { color: var(--color-bone-dim); }
+.prose ul, .prose ol { margin-left: 1.25rem; margin-bottom: 1.15rem; color: var(--body); }
 .prose ul { list-style: disc; }
 .prose ol { list-style: decimal; }
 .prose li { margin-bottom: 0.4rem; }
-
-.prose a {
-    color: var(--color-ink);
-    text-decoration: underline;
-    text-decoration-color: var(--color-marigold);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 3px;
-}
-.dark .prose a { color: var(--color-bone); }
-
+.prose a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .prose img { border-radius: 0.75rem; margin: 1.5rem 0; }
-
 .prose blockquote {
-    border-left: 3px solid var(--color-marigold);
+    border-left: 3px solid var(--color-kunyit);
     padding: 0.25rem 0 0.25rem 1.25rem;
-    margin: 1.5rem 0;
-    color: var(--color-ink);
-    font-size: 1.0625rem;
+    margin: 1.75rem 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    line-height: 1.35;
+    color: var(--ink);
 }
-.dark .prose blockquote { color: var(--color-bone); }
-
-.prose strong { color: var(--color-ink); font-weight: 600; }
-.dark .prose strong { color: var(--color-bone); }
+.prose strong { color: var(--ink); font-weight: 650; }
 
 /* ================================================================
-   REDUCED MOTION
-   Everything that moves must come to rest here.
+   REDUCED MOTION: everything that moves comes to rest.
    ================================================================ */
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -334,17 +334,5 @@ summary:focus-visible {
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
     }
-
-    /* The rail becomes a plain static list. */
-    .rail-track { animation: none !important; transform: none !important; }
-    .rail-viewport { height: auto; overflow: visible; }
-    .rail-viewport::before,
-    .rail-viewport::after { display: none; }
-    .rail-duplicate { display: none; }
-
-    /* Reveals resolve immediately rather than never firing. */
-    .aos-init {
-        opacity: 1 !important;
-        transform: none !important;
-    }
+    .arch { animation: none; clip-path: none; }
 }
