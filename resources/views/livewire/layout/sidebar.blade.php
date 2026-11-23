@@ -84,7 +84,7 @@
                         </a>
 
                         <!-- Tooltip: position fixed agar tidak terpotong overflow -->
-                        <div x-show="tipVisible"
+                        <div x-show="sidebarCollapsed && tipVisible"
                              x-transition:enter="transition ease-out duration-150"
                              x-transition:enter-start="opacity-0 translate-x-1"
                              x-transition:enter-end="opacity-100 translate-x-0"
@@ -142,7 +142,7 @@
                         </button>
 
                         <!-- Tooltip for parent: position fixed -->
-                        <div x-show="tipVisible"
+                        <div x-show="sidebarCollapsed && tipVisible"
                              x-transition:enter="transition ease-out duration-150"
                              x-transition:enter-start="opacity-0 translate-x-1"
                              x-transition:enter-end="opacity-100 translate-x-0"
