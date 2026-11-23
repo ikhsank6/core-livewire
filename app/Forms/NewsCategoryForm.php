@@ -5,7 +5,7 @@ namespace App\Forms;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Str;
 
 class NewsCategoryForm

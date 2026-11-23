@@ -4,7 +4,7 @@ namespace App\Livewire\Settings;
 
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -35,7 +35,7 @@ class SystemSettingIndex extends Component implements HasForms
         }
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema(\App\Forms\SystemSettingForm::schema())
