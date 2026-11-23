@@ -60,7 +60,7 @@ class Login extends Component
             if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
                 RateLimiter::hit($this->throttleKey(), 300); // 5 minutes = 300 seconds
 
-                $this->addError('email', 'These credentials do not match our records.');
+                $this->addError('email', 'Email atau kata sandi tidak cocok dengan data kami.');
 
                 // No need for dispatch('notify') here, addError handles the message
                 return;
@@ -73,7 +73,7 @@ class Login extends Component
             // Check if email is verified
             if (! $user->hasVerifiedEmail()) {
                 Auth::logout();
-                $this->addError('email', 'Please verify your email address before logging in. Check your inbox for the verification link.');
+                $this->addError('email', 'Verifikasi alamat email Anda sebelum masuk. Cek kotak masuk untuk tautan verifikasinya.');
 
                 // No need for dispatch('notify') here, addError handles the message
                 return;
@@ -81,7 +81,7 @@ class Login extends Component
 
             if (! $user->is_active) {
                 Auth::logout();
-                $this->addError('email', 'Your account has been deactivated.');
+                $this->addError('email', 'Akun Anda sudah dinonaktifkan.');
                 $this->dispatch('notify', text: 'Account deactivated.', variant: 'danger');
 
                 return;

@@ -7,8 +7,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
             </div>
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Cek Email Anda</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+            <h1 class="text-xl font-bold text-[#0E1424] dark:text-white mb-2">Cek Email Anda</h1>
+            <p class="text-sm text-[#5B6478] dark:text-[#94A0BE] leading-relaxed mb-6">
                 Kami telah mengirim link verifikasi ke
                 <span class="font-semibold text-gray-800 dark:text-gray-200">{{ $email }}</span>.
                 Klik link tersebut untuk mengaktifkan akun Anda.
@@ -19,7 +19,7 @@
                 </p>
             </div>
             <a href="{{ route('auth.login') }}" wire:navigate
-                class="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors">
+                class="inline-flex items-center gap-2 rounded-md bg-[#FFB81C] hover:brightness-95 px-5 py-2.5 text-sm font-bold text-[#0B1B4D] transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"/>
                 </svg>
@@ -29,11 +29,11 @@
     @else
         {{-- Register form --}}
         <div class="mb-6">
-            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Buat akun baru</h2>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <h1 class="text-[2rem] font-bold leading-tight text-[#0E1424] dark:text-white" style="text-wrap: balance;">Buat akun baru</h1>
+            <p class="mt-1 text-sm text-[#5B6478] dark:text-[#94A0BE]">
                 Sudah punya akun?
                 <a href="{{ route('auth.login') }}" wire:navigate
-                    class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 transition-colors">
+                    class="inline-block -my-3 py-3 font-semibold text-[#1A3E9A] hover:text-[#0B1B4D] dark:text-[#8DB4FF] dark:hover:text-white transition-colors">
                     Masuk di sini
                 </a>
             </p>
@@ -47,11 +47,11 @@
                     Nama Lengkap
                 </label>
                 <input id="name" wire:model="name" type="text" autocomplete="name"
-                    placeholder="John Doe"
+                    placeholder="Nama lengkap Anda"
                     @class([
-                        'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
-                        'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500' => !$errors->has('name'),
-                        'border-red-400 dark:border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900/10' => $errors->has('name'),
+                        'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-white dark:bg-[#0A1126] text-[#0E1424] dark:text-white placeholder-[#667089] dark:placeholder-[#6C7899] focus:outline-none focus:ring-2 transition-colors',
+                        'border-[#C9CEC6] dark:border-[#2C3B66] focus:ring-[#1A3E9A] focus:border-[#1A3E9A]' => !$errors->has('name'),
+                        'border-red-400 dark:border-red-500 focus:ring-red-400' => $errors->has('name'),
                     ])>
                 @error('name')
                     <p class="mt-1.5 text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
@@ -69,9 +69,9 @@
                 <input id="email" wire:model="email" type="email" autocomplete="email"
                     placeholder="nama@contoh.com"
                     @class([
-                        'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
-                        'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500' => !$errors->has('email'),
-                        'border-red-400 dark:border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900/10' => $errors->has('email'),
+                        'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-white dark:bg-[#0A1126] text-[#0E1424] dark:text-white placeholder-[#667089] dark:placeholder-[#6C7899] focus:outline-none focus:ring-2 transition-colors',
+                        'border-[#C9CEC6] dark:border-[#2C3B66] focus:ring-[#1A3E9A] focus:border-[#1A3E9A]' => !$errors->has('email'),
+                        'border-red-400 dark:border-red-500 focus:ring-red-400' => $errors->has('email'),
                     ])>
                 @error('email')
                     <p class="mt-1.5 text-xs text-red-600 dark:text-red-400 flex items-center gap-1">
@@ -90,9 +90,9 @@
                     <input id="password" wire:model.live="password" :type="show ? 'text' : 'password'"
                         autocomplete="new-password" placeholder="••••••••"
                         @class([
-                            'block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
-                            'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500' => !$errors->has('password'),
-                            'border-red-400 dark:border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900/10' => $errors->has('password'),
+                            'block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm bg-white dark:bg-[#0A1126] text-[#0E1424] dark:text-white placeholder-[#667089] dark:placeholder-[#6C7899] focus:outline-none focus:ring-2 transition-colors',
+                            'border-[#C9CEC6] dark:border-[#2C3B66] focus:ring-[#1A3E9A] focus:border-[#1A3E9A]' => !$errors->has('password'),
+                            'border-red-400 dark:border-red-500 focus:ring-red-400' => $errors->has('password'),
                         ])>
                     <button type="button" @click="show = !show"
                         class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -126,9 +126,9 @@
                         :type="show ? 'text' : 'password'"
                         autocomplete="new-password" placeholder="••••••••"
                         @class([
-                            'block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
-                            'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500' => !$errors->has('password_confirmation'),
-                            'border-red-400 dark:border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900/10' => $errors->has('password_confirmation'),
+                            'block w-full rounded-lg border px-3.5 py-2.5 pr-10 text-sm bg-white dark:bg-[#0A1126] text-[#0E1424] dark:text-white placeholder-[#667089] dark:placeholder-[#6C7899] focus:outline-none focus:ring-2 transition-colors',
+                            'border-[#C9CEC6] dark:border-[#2C3B66] focus:ring-[#1A3E9A] focus:border-[#1A3E9A]' => !$errors->has('password_confirmation'),
+                            'border-red-400 dark:border-red-500 focus:ring-red-400' => $errors->has('password_confirmation'),
                         ])>
                     <button type="button" @click="show = !show"
                         class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -152,7 +152,7 @@
             {{-- Submit --}}
             <div class="pt-1">
                 <button type="submit"
-                    class="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-5 py-2.5 text-sm font-semibold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
+                    class="w-full flex items-center justify-center gap-2 rounded-md bg-[#FFB81C] hover:brightness-95 active:brightness-90 px-5 py-2.5 text-sm font-bold text-[#0B1B4D] transition-colors focus:outline-none focus:ring-2 focus:ring-[#1A3E9A] focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
                     wire:loading.attr="disabled">
                     <svg wire:loading class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -169,9 +169,9 @@
 
         <p class="mt-5 text-center text-xs text-gray-400 dark:text-gray-500">
             Dengan membuat akun, Anda menyetujui
-            <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline">Syarat Layanan</a>
+            <a href="#" class="text-[#1A3E9A] dark:text-[#8DB4FF] hover:underline">Syarat Layanan</a>
             dan
-            <a href="#" class="text-blue-600 dark:text-blue-500 hover:underline">Kebijakan Privasi</a> kami.
+            <a href="#" class="text-[#1A3E9A] dark:text-[#8DB4FF] hover:underline">Kebijakan Privasi</a> kami.
         </p>
     @endif
 </div>

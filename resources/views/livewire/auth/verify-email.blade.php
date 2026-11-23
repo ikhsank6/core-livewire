@@ -9,9 +9,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 Email Verified!
-            </h2>
+            </h1>
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 Your email has been successfully verified. You can now log in to your account.
             </p>
@@ -23,15 +23,15 @@
         @elseif($alreadyVerified)
             {{-- Already Verified --}}
             <div
-                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4">
-                <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#FFF1CC] dark:bg-[#FFB81C]/15 mb-4">
+                <svg class="w-8 h-8 text-[#8A5C00] dark:text-[#FFB81C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 Already Verified
-            </h2>
+            </h1>
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 Your email address has already been verified. You can proceed to login.
             </p>
@@ -47,9 +47,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 Invalid Verification Link
-            </h2>
+            </h1>
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 The verification link is invalid or has expired. Please try registering again.
             </p>
@@ -68,9 +68,9 @@
                     </path>
                 </svg>
             </div>
-            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
                 Verifying...
-            </h2>
+            </h1>
             <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                 Please wait while we verify your email address.
             </p>
