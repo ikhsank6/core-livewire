@@ -1,4 +1,7 @@
 {{-- Alpine Theme Store - for theme state management across Livewire navigations --}}
+<style data-navigate-once>
+    html.is-navigating *, html.is-navigating *::before, html.is-navigating *::after { transition: none !important; }
+</style>
 <script data-navigate-once nonce="{{ csp_nonce() }}">
     // Apply theme immediately on every navigation (before Alpine loads)
     (function () {
@@ -27,16 +30,24 @@
             }
         });
 
-        @if(isset($includeSidebarState) && $includeSidebarState)
-            // Sidebar state store (only for app layout)
-            Alpine.store('sidebarState', {
-                open: true,
-                toggle() {
-                    this.open = !this.open;
-                }
-            });
-        @endif
     });
+
+    // wire:navigate (Alpine's navigate plugin) overwrites the <html> class attribute with the
+    // incoming page's, which knows nothing about the theme. That drops `dark` for a few
+    // milliseconds and the page flashes white before the theme is re-applied. A MutationObserver
+    // callback runs as a microtask right after the swap and before the browser paints, so
+    // restoring the class here means a light frame is never drawn.
+    new MutationObserver(() => {
+        const wantsDark = (localStorage.getItem('theme') || 'light') === 'dark';
+        const root = document.documentElement;
+        if (wantsDark && !root.classList.contains('dark')) {
+            // Freeze transitions in the same style change as the restore. The new <body> may already
+            // have been styled in its light state, and without the freeze it would fade to dark
+            // (app.css gives body, main, a, button, input... a 0.2s colour transition).
+            root.classList.add('is-navigating', 'dark');
+            requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-navigating')));
+        }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     // Ensure stores exist and sync after Livewire navigation
     document.addEventListener('livewire:navigated', () => {
@@ -62,16 +73,6 @@
             }
         }
 
-        @if(isset($includeSidebarState) && $includeSidebarState)
-            if (!Alpine.store('sidebarState')) {
-                Alpine.store('sidebarState', {
-                    open: true,
-                    toggle() {
-                        this.open = !this.open;
-                    }
-                });
-            }
-        @endif
 
         // Always ensure DOM class is correct
         const isDark = storedTheme === 'dark';

@@ -12,7 +12,7 @@
         <div class="text-sm">
             <span class="font-semibold text-blue-900 dark:text-blue-100">Selamat datang kembali, {{ auth()->user()->name }}!</span>
             <div class="mt-1 text-xs text-blue-700 dark:text-blue-300/90 leading-relaxed">
-                Anda masuk sebagai <span class="font-semibold text-blue-800 dark:text-blue-200">{{ auth()->user()->role->name ?? '-' }}</span>. Gunakan sidebar untuk berpindah antar halaman.
+                Anda masuk sebagai <span class="font-semibold text-blue-800 dark:text-blue-200">{{ auth()->user()->role->name ?? '-' }}</span>. Gunakan menu di atas untuk berpindah antar halaman.
             </div>
         </div>
     </div>

@@ -12,6 +12,11 @@
     @include('partials.alpine-cloak')
 
     <style>
+        /* Canvas colour follows the theme, so a page swap never shows a white frame in dark mode */
+        html { background-color: #f9fafb; }
+        html.dark { background-color: #1b1c22; }
+
+
         [data-flux-modal-backdrop] {
             backdrop-filter: blur(8px) !important;
             background-color: rgba(27, 28, 34, 0.8) !important;
@@ -26,418 +31,170 @@
         }
     </style>
 
-    @include('partials.theme-scripts', ['includeSidebarState' => true])
+    @include('partials.theme-scripts')
 </head>
 
 <body class="antialiased bg-gray-50 dark:bg-[#1b1c22] text-gray-900 dark:text-white"
-    x-data="{
-        sidebarOpen: window.innerWidth >= 1024,
-        sidebarCollapsed: false,
-        sidebarTooltipSuppressedUntil: 0,
-        searchQuery: '',
-        get sidebarWidth() { return this.sidebarCollapsed ? 'w-16' : 'w-64' },
-        suppressSidebarTooltips(duration = 350) {
-            this.sidebarTooltipSuppressedUntil = Date.now() + duration;
-            window.dispatchEvent(new CustomEvent('sidebar-tip-hide'));
-            window.dispatchEvent(new CustomEvent('hide-floating-menu', { detail: { force: true } }));
-        }
-    }"
-    x-init="
-        if ($store.sidebarState) { sidebarOpen = $store.sidebarState.open }
-        $watch('sidebarOpen', val => { if ($store.sidebarState) $store.sidebarState.open = val })
+    x-data="{ mobileMenuOpen: false }"
+    @resize.window="if (window.innerWidth >= 1024) mobileMenuOpen = false">
 
-        // Auto-hide/show sidebar based on screen width (autohide if width < 1024px)
-        const checkResponsive = () => {
-            if (window.innerWidth < 1024) {
-                sidebarOpen = false;
-            } else {
-                sidebarOpen = true;
+    @php
+        $menuTree = app(\App\Services\MenuService::class)->getMenuTreeForUser();
+        $currentRoute = request()->route()?->getName() ?? '';
+
+        // Icon markup from the menu master (heroicon name). Falls back to a generic glyph
+        // (top level) or a dot (child) when the master has no icon or the name is unknown.
+        $menuIcon = function (?string $name, string $class, bool $dotFallback = false): string {
+            if ($name) {
+                try {
+                    return svg('heroicon-o-'.$name, $class)->toHtml();
+                } catch (\Throwable $e) {
+                    // fall through to the fallback below
+                }
             }
+
+            return $dotFallback
+                ? '<span class="block w-1.5 h-1.5 rounded-full bg-current"></span>'
+                : '<svg class="'.$class.'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>';
         };
-        checkResponsive();
-        window.addEventListener('resize', checkResponsive);
-        $watch('sidebarCollapsed', () => {
-            $dispatch('sidebar-tip-hide');
-            $dispatch('hide-floating-menu', { force: true });
-        });
-        $watch('sidebarOpen', () => {
-            $dispatch('sidebar-tip-hide');
-            $dispatch('hide-floating-menu', { force: true });
-        });
-        $watch('searchQuery', () => {
-            $dispatch('sidebar-tip-hide');
-            $dispatch('hide-floating-menu', { force: true });
-        });
 
-        // Ctrl+K / Cmd+K focuses the global search in the navbar.
-        window.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                e.preventDefault();
-                $refs.globalSearch?.focus();
-            }
-        });
+        // Flattened menu (url + active flags) consumed by the Alpine top bar and the menu search.
+        $navItems = collect($menuTree)->map(function ($menu) use ($currentRoute, $menuIcon) {
+            $children = collect($menu['children'] ?? [])->map(fn ($child) => [
+                'name' => $child['name'],
+                'icon' => $menuIcon($child['icon'] ?? null, 'w-4 h-4', true),
+                'url' => \App\Services\MenuService::safeRoute($child['route']),
+                'active' => $currentRoute === $child['route'],
+            ])->values()->all();
 
-        window.addEventListener('livewire:navigating', () => {
-            $dispatch('sidebar-tip-hide');
-            $dispatch('hide-floating-menu', { force: true });
-        });
-    ">
+            return [
+                'name' => $menu['name'],
+                'icon' => $menuIcon($menu['icon'] ?? null, 'w-[18px] h-[18px]'),
+                'url' => empty($children) ? \App\Services\MenuService::safeRoute($menu['route']) : null,
+                'active' => empty($children)
+                    ? $currentRoute === $menu['route']
+                    : collect($children)->contains('active', true),
+                'children' => $children,
+            ];
+        })->values()->all();
 
-    {{-- =====================
-         SIDEBAR
-         ===================== --}}
-    <aside
-        :class="[
-            'fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] transition-all duration-300 ease-in-out',
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-            sidebarCollapsed ? 'w-16' : 'w-64'
-        ]"
-        aria-label="Sidebar">
-
-        <div class="h-full flex flex-col bg-white dark:bg-[#1e1e2d] border-r border-gray-200 dark:border-white/6 overflow-hidden">
-
-            {{-- Section label: the current user's active role (hidden when collapsed) --}}
-            <div class="px-4 pt-4 pb-2" x-show="!sidebarCollapsed" x-cloak>
-                <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                    {{ strtoupper(auth()->user()->role?->name ?? 'Menu') }}
-                </span>
-            </div>
-
-            {{-- Navigation --}}
-            <nav class="flex-1 overflow-y-auto py-2 space-y-0.5"
-                :class="sidebarCollapsed ? 'px-1.5' : 'px-2'">
-                @php
-                    $menuService = app(\App\Services\MenuService::class);
-                    $menuTree = $menuService->getMenuTreeForUser();
-                    $currentRoute = request()->route()?->getName() ?? '';
-                @endphp
-
-                @foreach($menuTree as $menu)
-                    @if(empty($menu['children']))
-                        @php $isActive = $currentRoute === $menu['route']; @endphp
-                        <div
-                            x-show="searchQuery === '' || '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase())"
-                            @mouseenter="if (sidebarCollapsed && Date.now() > sidebarTooltipSuppressedUntil) { $dispatch('sidebar-tip', { label: '{{ addslashes($menu['name']) }}', top: $el.getBoundingClientRect().top + $el.getBoundingClientRect().height / 2 }) }"
-                            @mouseleave="$dispatch('sidebar-tip-hide')">
-                            <a href="{{ \App\Services\MenuService::safeRoute($menu['route']) }}" wire:navigate
-                                @click="$dispatch('sidebar-tip-hide'); $dispatch('hide-floating-menu', { force: true })"
-                                class="flex items-center rounded-lg text-sm font-medium transition-all duration-200"
-                                :class="[
-                                    sidebarCollapsed
-                                        ? 'w-10 h-10 justify-center mx-auto'
-                                        : 'gap-3 px-3 py-2.5',
-                                    {!! $isActive ? 'true' : 'false' !!}
-                                        ? 'bg-blue-600 text-white shadow-sm'
-                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white'
-                                ]">
-                                <div class="shrink-0 flex items-center justify-center w-5 h-5">
-                                    @if($menu['icon'])
-                                        @svg('heroicon-o-' . $menu['icon'], 'w-5 h-5')
-                                    @else
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                                        </svg>
-                                    @endif
-                                </div>
-                                <span x-show="!sidebarCollapsed" x-cloak class="whitespace-nowrap truncate">{{ $menu['name'] }}</span>
-                            </a>
-                        </div>
-
-                    @else
-                        @php 
-                            $hasActiveChild = collect($menu['children'])->contains('route', $currentRoute); 
-                            $childNamesJson = json_encode(collect($menu['children'])->map(fn($c) => strtolower($c['name']))->toArray());
-                            $childrenData = collect($menu['children'])->map(fn($c) => [
-                                'name' => $c['name'],
-                                'route' => \App\Services\MenuService::safeRoute($c['route']),
-                                'isActive' => $currentRoute === $c['route']
-                            ])->toArray();
-                        @endphp
-                        <div x-data="{ 
-                                expanded: {!! $hasActiveChild ? 'true' : 'false' !!},
-                                childNames: {{ $childNamesJson }}
-                            }"
-                            data-has-active="{!! $hasActiveChild ? 'true' : 'false' !!}"
-                            x-on:livewire:navigated.window="expanded = ($el.getAttribute('data-has-active') === 'true')"
-                            x-show="searchQuery === '' || 
-                                    '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase()) || 
-                                    childNames.some(name => name.includes(searchQuery.toLowerCase()))"
-                            x-effect="
-                                if (searchQuery !== '') {
-                                    if (childNames.some(name => name.includes(searchQuery.toLowerCase()))) {
-                                        expanded = true;
-                                    }
-                                } else {
-                                    expanded = ($el.getAttribute('data-has-active') === 'true');
-                                }
-                            "
-                            class="relative group/group">
-                            <div
-                                @mouseenter="
-                                    if(sidebarCollapsed && Date.now() > sidebarTooltipSuppressedUntil) {
-                                        $dispatch('show-floating-menu', {
-                                            name: '{{ addslashes($menu['name']) }}',
-                                            children: {{ json_encode($childrenData) }},
-                                            top: $el.getBoundingClientRect().top
-                                        });
-                                    }
-                                "
-                                @mouseleave="
-                                    if(sidebarCollapsed) {
-                                        $dispatch('hide-floating-menu');
-                                    }
-                                ">
-                                <button
-                                    @click="if(sidebarCollapsed) { $dispatch('sidebar-tip-hide'); $dispatch('hide-floating-menu', { force: true }); sidebarCollapsed = false; $nextTick(() => expanded = true) } else { expanded = !expanded }"
-                                    class="w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white"
-                                    :class="[
-                                        sidebarCollapsed
-                                            ? 'w-10 h-10 justify-center mx-auto'
-                                            : 'gap-3 px-3 py-2.5',
-                                        {!! $hasActiveChild ? 'true' : 'false' !!}
-                                            ? (sidebarCollapsed ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400' : 'text-blue-600 dark:text-blue-400')
-                                            : 'text-gray-600 dark:text-gray-300'
-                                    ]">
-                                    <div class="shrink-0 flex items-center justify-center w-5 h-5">
-                                        @if($menu['icon'])
-                                            @svg('heroicon-o-' . $menu['icon'], 'w-5 h-5')
-                                        @else
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                                            </svg>
-                                        @endif
-                                    </div>
-                                    <span x-show="!sidebarCollapsed" x-cloak class="flex-1 text-left whitespace-nowrap truncate">{{ $menu['name'] }}</span>
-                                    <svg x-show="!sidebarCollapsed" x-cloak class="w-3.5 h-3.5 transition-transform duration-200 shrink-0"
-                                        :class="expanded ? 'rotate-180' : ''"
-                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                    </svg>
-                                </button>
-                            </div>
-
-                            {{-- Children --}}
-                            <div x-show="expanded && !sidebarCollapsed"
-                                x-collapse
-                                class="mt-0.5 space-y-0.5 pl-7 pr-1">
-                                @foreach($menu['children'] as $child)
-                                    @php $isChildActive = $currentRoute === $child['route']; @endphp
-                                    <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
-                                        x-show="searchQuery === '' ||
-                                                '{{ strtolower(addslashes($menu['name'])) }}'.includes(searchQuery.toLowerCase()) || 
-                                                '{{ strtolower(addslashes($child['name'])) }}'.includes(searchQuery.toLowerCase())"
-                                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-200"
-                                        :class="{{ $isChildActive ? 'true' : 'false' }}
-                                            ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
-                                            : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-800 dark:hover:text-white'">
-                                        @if($child['icon'])
-                                            <div class="shrink-0">
-                                                @svg('heroicon-o-' . $child['icon'], 'w-4 h-4')
-                                            </div>
-                                        @else
-                                            <div class="w-1.5 h-1.5 rounded-full bg-current shrink-0 ml-0.5 mt-0.5"></div>
-                                        @endif
-                                        <span>{{ $child['name'] }}</span>
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </nav>
-
-
-        </div>
-
-        {{-- Floating Expand/Collapse Button on Border (Notion-style) --}}
-        {{-- Collapsing/expanding shifts the nav icons under a stationary cursor. Browsers
-             re-evaluate what's under the pointer on the next paint (not the next
-             microtask), so a genuine mouseenter can fire on whatever lands there and
-             reopen the tooltip/flyout — even after Alpine's own $nextTick. A short
-             timeout (a task, scheduled after that paint) reliably wins the race. --}}
-        <button
-            @mouseenter="suppressSidebarTooltips(600)"
-            @mousemove="suppressSidebarTooltips(250)"
-            @focus="suppressSidebarTooltips(600)"
-            @click="suppressSidebarTooltips(900); sidebarCollapsed = !sidebarCollapsed; setTimeout(() => { suppressSidebarTooltips(600); }, 50)"
-            class="absolute top-8 -translate-y-1/2 -right-3.5 z-50 hidden lg:flex items-center justify-center w-7 h-7 bg-white dark:bg-[#1e1e2d] border border-gray-200 dark:border-[#3d3d4e] rounded-full shadow-sm text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer transition-all duration-300 focus:outline-none hover:scale-110 hover:shadow-md"
-            :aria-label="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
-            <svg class="w-4 h-4 transition-transform duration-300"
-                :class="sidebarCollapsed ? 'rotate-180' : ''"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-            </svg>
-        </button>
-    </aside>
-
-    {{-- Global fixed tooltip for collapsed sidebar --}}
-    <div
-        x-data="{ show: false, label: '', top: 0 }"
-        @sidebar-tip.window="if (sidebarCollapsed && sidebarOpen && Date.now() > sidebarTooltipSuppressedUntil) { show = true; label = $event.detail.label; top = $event.detail.top }"
-        @sidebar-tip-hide.window="show = false"
-        x-effect="if (!sidebarCollapsed || !sidebarOpen || Date.now() <= sidebarTooltipSuppressedUntil) show = false"
-        x-show="show"
-        x-cloak
-        x-transition:enter="transition ease-out duration-100"
-        x-transition:enter-start="opacity-0 translate-x-1"
-        x-transition:enter-end="opacity-100 translate-x-0"
-        x-transition:leave="transition ease-in duration-75"
-        x-transition:leave-start="opacity-100 translate-x-0"
-        x-transition:leave-end="opacity-0 translate-x-1"
-        :style="`top: ${top}px; transform: translateY(-50%); left: ${sidebarCollapsed ? '68px' : '260px'};`"
-        class="fixed z-[9999] pointer-events-none px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white text-xs font-semibold rounded-lg shadow-xl border border-white/10 whitespace-nowrap">
-        <span x-text="label"></span>
-    </div>
-
-    {{-- Global Fixed Floating Sub-Menu Dropdown for Collapsed Sidebar --}}
-    <div
-        x-data="{ 
-            show: false, 
-            name: '', 
-            children: [], 
-            top: 0, 
-            hoverMenu: false, 
-            hoverTrigger: false,
-            updateShow() {
-                this.show = sidebarCollapsed && sidebarOpen && (this.hoverTrigger || this.hoverMenu);
-            }
-        }"
-        @show-floating-menu.window="
-            if (sidebarCollapsed && sidebarOpen && Date.now() > sidebarTooltipSuppressedUntil) {
-                name = $event.detail.name;
-                children = $event.detail.children;
-                top = $event.detail.top;
-                hoverTrigger = true;
-                updateShow();
-            }
-        "
-        @hide-floating-menu.window="
-            if ($event.detail?.force) {
-                hoverTrigger = false;
-                hoverMenu = false;
-                show = false;
-            } else {
-                hoverTrigger = false;
-                setTimeout(() => { updateShow(); }, 80);
-            }
-        "
-        x-effect="if (!sidebarCollapsed || !sidebarOpen || Date.now() <= sidebarTooltipSuppressedUntil) { hoverTrigger = false; hoverMenu = false; show = false }"
-        x-show="show"
-        x-cloak
-        @mouseenter="hoverMenu = true; updateShow();"
-        @mouseleave="hoverMenu = false; hoverTrigger = false; updateShow();"
-        x-transition:enter="transition ease-out duration-150"
-        x-transition:enter-start="opacity-0 scale-95 translate-y-1"
-        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-100"
-        x-transition:leave-start="opacity-100 scale-100"
-        x-transition:leave-end="opacity-0 scale-95"
-        :style="`top: ${top}px; left: 60px;`"
-        class="fixed z-[9999] min-w-[200px] whitespace-nowrap">
-        
-        <div class="bg-white dark:bg-[#1e1e2d] text-gray-800 dark:text-gray-200 rounded-xl shadow-xl border border-gray-250/50 dark:border-[#2d2d3a] overflow-hidden">
-            {{-- Parent Name Header --}}
-            <div class="px-4 py-2 bg-gray-50 dark:bg-[#252535] border-b border-gray-150 dark:border-[#2d2d3a] font-bold text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400" x-text="name">
-            </div>
-            
-            {{-- Children Links --}}
-            <div class="py-1 px-1.5 space-y-0.5">
-                <template x-for="child in children" :key="child.name">
-                    <a :href="child.route" wire:navigate
-                        @click="$dispatch('hide-floating-menu', { force: true }); $dispatch('sidebar-tip-hide')"
-                        class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150"
-                        :class="child.isActive
-                            ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
-                            : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-800 dark:hover:text-white'">
-                        
-                        {{-- Icon --}}
-                        <div class="shrink-0 text-current opacity-80">
-                            <div class="w-1.5 h-1.5 rounded-full bg-current"></div>
-                        </div>
-                        
-                        <span x-text="child.name"></span>
-                    </a>
-                </template>
-            </div>
-        </div>
-    </div>
-
-    {{-- Mobile sidebar backdrop --}}
-    <div x-show="sidebarOpen && window.innerWidth < 1024"
-        x-transition:enter="transition-opacity ease-linear duration-300"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition-opacity ease-linear duration-300"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0"
-        @click="sidebarOpen = false"
-        class="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden">
-    </div>
+        $flatMenu = collect($navItems)->flatMap(fn ($item) => empty($item['children'])
+            ? [['name' => $item['name'], 'parent' => null, 'url' => $item['url']]]
+            : collect($item['children'])->map(fn ($child) => [
+                'name' => $child['name'],
+                'parent' => $item['name'],
+                'url' => $child['url'],
+            ])->all()
+        )->values()->all();
+    @endphp
 
     {{-- =====================
          MAIN WRAPPER
          ===================== --}}
-    <div class="min-h-screen transition-all duration-300"
-        :class="sidebarOpen ? (sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64') : 'lg:ml-0'">
+    <div class="min-h-screen">
 
         {{-- =====================
              HEADER / NAVBAR
              ===================== --}}
-        <nav class="fixed top-0 right-0 left-0 z-30 bg-[#121a35] border-b border-[#1d2747] transition-all duration-300">
+        <nav class="fixed top-0 right-0 left-0 z-40 bg-[#1a3e9a] border-b border-[#2450b4] shadow-[0_6px_18px_-4px_rgba(10,25,70,0.55)] transition-all duration-300">
             <div class="px-4 h-16 flex items-center gap-x-3">
 
-                {{-- Mobile hamburger --}}
-                <button @click="sidebarOpen = !sidebarOpen"
-                    class="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors shrink-0">
+                {{-- Mobile hamburger — opens the vertical menu drawer --}}
+                <button @click="mobileMenuOpen = !mobileMenuOpen"
+                    class="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+                    :aria-expanded="mobileMenuOpen" aria-label="Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
 
                 {{-- Logo / Brand (two lines: name + tagline) --}}
-                <a href="/" class="flex items-center gap-3 min-w-0 shrink-0">
+                <a href="/" class="group flex items-center gap-3 min-w-0 shrink-0 rounded-md">
                     @if($aboutUs?->logo)
                         <img src="{{ Storage::url($aboutUs->logo) }}" alt="Logo" class="h-9 w-9 rounded-lg object-contain shrink-0">
                     @else
-                        <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 text-white shrink-0 shadow-sm">
-                            <span class="font-bold text-sm">{{ strtoupper(substr($aboutUs?->company_name ?? 'A', 0, 2)) }}</span>
-                        </div>
+                        {{-- Same doorway mark as the public website; the leaf swings open on hover --}}
+                        <svg class="w-9 h-9 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                            <path d="M5 33V16C5 8.82 10.82 3 18 3s13 5.82 13 13v17" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
+                            <path d="M2.5 33h31" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
+                            <path d="M18 8c4.4 0 8 3.6 8 8v17H10V16c0-4.4 3.6-8 8-8Z" fill="#FFB81C"
+                                  style="transform-origin: 10px 33px; transition: transform 380ms cubic-bezier(.3,1.2,.4,1);"
+                                  class="group-hover:[transform:scaleX(0.52)] group-focus-visible:[transform:scaleX(0.52)]"/>
+                        </svg>
                     @endif
                     <div class="min-w-0 hidden sm:block">
                         <p class="font-bold text-white text-sm truncate leading-tight">{{ $aboutUs?->company_name ?? 'Admin' }}</p>
-                        <p class="text-[10px] font-medium uppercase tracking-wider text-gray-400 truncate leading-tight">Portal Layanan Publik Terpadu</p>
+                        <p class="text-[10px] font-medium uppercase tracking-wider text-blue-200/80 truncate leading-tight">Portal Layanan Publik Terpadu</p>
                     </div>
                 </a>
 
-                {{-- Global search (moved here from sidebar) --}}
+                {{-- Global menu search: results dropdown, Ctrl+K / Cmd+K focuses it --}}
                 <div class="hidden lg:flex w-80">
-                    <div class="relative w-full">
+                    <div class="relative w-full"
+                        x-data="{
+                            q: '',
+                            open: false,
+                            active: 0,
+                            items: @js($flatMenu),
+                            get results() {
+                                const s = this.q.trim().toLowerCase();
+                                if (!s) return [];
+                                return this.items.filter(i => i.name.toLowerCase().includes(s) || (i.parent || '').toLowerCase().includes(s)).slice(0, 8);
+                            },
+                            go(item) {
+                                if (!item || item.url === '#') return;
+                                this.q = '';
+                                this.open = false;
+                                Livewire.navigate(item.url);
+                            }
+                        }"
+                        @click.outside="open = false"
+                        @keydown.window="if (($event.ctrlKey || $event.metaKey) && $event.key.toLowerCase() === 'k') { $event.preventDefault(); $refs.search.focus(); }">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-blue-200/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </div>
-                        <input type="text" placeholder="Cari menu..."
-                            x-model="searchQuery"
-                            x-ref="globalSearch"
-                            class="w-full pl-9 pr-16 py-2 text-sm rounded-lg bg-white/6 border border-white/8 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                        <input type="text" placeholder="Cari menu..." autocomplete="off"
+                            x-model="q"
+                            x-ref="search"
+                            @focus="open = true"
+                            @input="open = true; active = 0"
+                            @keydown.arrow-down.prevent="active = Math.min(active + 1, results.length - 1)"
+                            @keydown.arrow-up.prevent="active = Math.max(active - 1, 0)"
+                            @keydown.enter.prevent="go(results[active])"
+                            @keydown.escape="open = false; q = ''; $refs.search.blur()"
+                            class="w-full pl-9 pr-16 py-2 text-sm rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-200/60 focus:outline-none focus:border-white/60 focus:ring-1 focus:ring-white/40 transition-colors">
                         {{-- Clear button (shown while typing) --}}
-                        <button x-show="searchQuery !== ''"
-                            x-on:click="searchQuery = ''"
-                            class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-300 cursor-pointer focus:outline-none"
+                        <button x-show="q !== ''"
+                            x-on:click="q = ''; $refs.search.focus()"
+                            class="absolute inset-y-0 right-2 flex items-center text-blue-200/70 hover:text-white cursor-pointer focus:outline-none"
                             title="Hapus pencarian">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                         {{-- Shortcut hint (hidden while typing) --}}
-                        <kbd x-show="searchQuery === ''"
-                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/10 bg-white/5 text-[10px] font-medium text-gray-500">
+                        <kbd x-show="q === ''"
+                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/20 bg-white/10 text-[10px] font-medium text-blue-100/80">
                             Ctrl+K
                         </kbd>
+
+                        {{-- Results --}}
+                        <div x-show="open && q.trim() !== ''" style="display: none"
+                            class="absolute left-0 right-0 top-full mt-2 z-50 p-1.5 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+                            <template x-for="(item, i) in results" :key="item.url + item.name">
+                                <button type="button" @click="go(item)" @mouseenter="active = i"
+                                    class="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-sm text-left cursor-pointer transition-colors"
+                                    :class="i === active ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300' : 'text-gray-700 dark:text-gray-300'">
+                                    <span class="truncate" x-text="item.name"></span>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500 truncate" x-text="item.parent"></span>
+                                </button>
+                            </template>
+                            <p x-show="results.length === 0" class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">Menu tidak ditemukan</p>
+                        </div>
                     </div>
                 </div>
-
                 {{-- Spacer: absorbs remaining space so the right side sits flush at the edge,
                      whether or not the search box above is visible. --}}
                 <div class="flex-1"></div>
@@ -592,10 +349,13 @@
             </div>
         </nav>
 
+        @include('partials.admin-topnav', ['menuTree' => $menuTree, 'navItems' => $navItems, 'currentRoute' => $currentRoute])
+
+
         {{-- =====================
              MAIN CONTENT
              ===================== --}}
-        <main class="pt-16 min-h-screen flex flex-col">
+        <main class="pt-16 lg:pt-28 min-h-screen flex flex-col">
             <div class="flex-1">
                 {{-- Breadcrumbs --}}
                 @isset($breadcrumbs)
@@ -619,7 +379,7 @@
                     <p>&copy; {{ date('Y') }} <span class="font-semibold text-gray-700 dark:text-gray-300">{{ $aboutUs->company_name ?? 'Laravel Admin' }}</span>. All Rights Reserved.</p>
                     <div class="flex items-center gap-x-4">
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 font-semibold tracking-wide uppercase scale-90">
-                            v1.0.0
+                            v3.0.0
                         </span>
                     </div>
                 </div>
@@ -629,33 +389,65 @@
 
     @include('partials.toast-notifications')
 
-    <x-ui.modal name="logout-modal" title="Konfirmasi Logout" maxWidth="md">
-        <div class="text-center py-4">
-            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20 mb-6">
-                <svg class="h-8 w-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-            </div>
-            <p class="text-gray-600 dark:text-gray-400 text-base">Apakah Anda yakin ingin keluar dari aplikasi?</p>
-        </div>
+    {{-- Logout confirmation: compact single-surface dialog (opened via the open-modal event) --}}
+    <div x-data="{ show: false }"
+        x-on:open-modal.window="if ($event.detail.name === 'logout-modal') show = true"
+        x-on:close-modal.window="if ($event.detail.name === 'logout-modal') show = false"
+        x-show="show" style="display: none;"
+        class="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="logout-title">
 
-        <x-slot name="footer">
-            <button type="button" x-on:click="show = false"
-                class="flex-1 inline-flex justify-center items-center gap-1.5 rounded-full px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="stroke: currentColor !important;" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                Batal
-            </button>
-            <a href="{{ route('logout') }}"
-                class="flex-1 inline-flex justify-center items-center gap-1.5 rounded-full px-4 py-2.5 bg-red-600 text-sm font-bold text-white hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="stroke: currentColor !important;" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-                Ya, Logout
-            </a>
-        </x-slot>
-    </x-ui.modal>
+        <div x-show="show"
+            x-transition:enter="ease-out duration-200"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm" aria-hidden="true"></div>
+
+        {{-- Clicking outside the card intentionally does nothing: close only via X, Batal, or Logout --}}
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div x-show="show"
+                x-transition:enter="ease-out duration-200"
+                x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                x-transition:leave="ease-in duration-150"
+                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                x-transition:leave-end="opacity-0 scale-95 translate-y-2"
+                class="relative w-full max-w-sm px-6 pt-6 pb-5 text-center rounded-2xl bg-white dark:bg-[#1e1e2d] border border-zinc-200 dark:border-[#2d2d3a] shadow-[0_24px_60px_-12px_rgba(15,23,42,0.45)]">
+
+                <button type="button" @click="show = false" aria-label="Tutup"
+                    class="absolute top-3 right-3 p-1.5 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-white dark:hover:bg-zinc-800 transition-colors cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
+                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-900/20 ring-8 ring-red-50/60 dark:ring-red-900/10">
+                    <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                </div>
+
+                <h3 id="logout-title" class="mt-4 text-lg font-bold text-zinc-900 dark:text-white">Konfirmasi Logout</h3>
+                <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">Apakah Anda yakin ingin keluar dari aplikasi?</p>
+
+                <div class="mt-6 flex gap-3">
+                    <button type="button" @click="show = false"
+                        class="flex-1 h-10 inline-flex items-center justify-center gap-1.5 rounded-full text-sm font-semibold bg-zinc-100 text-zinc-700 hover:bg-zinc-200 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 dark:border-zinc-700 transition-colors cursor-pointer">
+                        Batal
+                    </button>
+                    <a href="{{ route('logout') }}"
+                        class="flex-1 h-10 inline-flex items-center justify-center gap-1.5 rounded-full text-sm font-semibold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/25 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Ya, Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <x-ui.delete-confirm-modal />
 

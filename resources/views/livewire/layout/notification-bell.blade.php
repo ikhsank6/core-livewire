@@ -36,12 +36,12 @@
 
     <flux:dropdown position="bottom" align="end">
         {{-- Notification Bell Trigger --}}
-        <button type="button" class="relative inline-flex items-center justify-center p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:outline-none transition-colors group">
+        <button type="button" class="relative inline-flex items-center justify-center p-2 rounded-lg hover:bg-white/10 focus:outline-none transition-colors group">
             {{-- Bell Icon Container --}}
             <div class="relative">
                 {{-- Bell Icon --}}
                 <svg 
-                    class="size-5 text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-700 dark:group-hover:text-zinc-200 transition-colors {{ $this->unreadCount > 0 ? 'bell-ring' : '' }}" 
+                    class="size-5 text-blue-100/80 group-hover:text-white transition-colors {{ $this->unreadCount > 0 ? 'bell-ring' : '' }}" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke-width="1.5" 
