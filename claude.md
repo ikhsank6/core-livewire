@@ -2,18 +2,18 @@
 
 > File ini adalah sumber utama konteks bagi AI assistant (Claude, Gemini, dll.) ketika bekerja dengan codebase ini.
 > Ditulis dari perspektif **Senior Fullstack Engineer** yang memahami setiap lapisan arsitektur.
-> **Versi dokumen**: v2.3.1
+> **Versi dokumen**: v3.0.0
 
 ---
 
 ## 🏗️ Project Overview
 
 **Nama**: Laravel Livewire CMS Platform
-**Versi**: 2.3.1
-**Stack**: Laravel 12 + Livewire 3 + Tailwind CSS 4 + Vite 7 + Alpine.js 3
+**Versi**: 3.0.0
+**Stack**: Laravel 13 + Livewire 4 + Filament Forms 5 + Tailwind CSS 4 + Vite 8 + Alpine.js 3
 **Database**: SQLite (development), bisa di-swap ke MySQL/PostgreSQL
 **PHP**: >= 8.2
-**Tipe Aplikasi**: Content Management System (CMS) dengan role-based access control (RBAC), public-facing website (Aveit-inspired design), dan admin panel yang dibangun sepenuhnya dengan Livewire full-page components.
+**Tipe Aplikasi**: Content Management System (CMS) dengan role-based access control (RBAC), public-facing website (identitas "pintu dan loket"), dan admin panel yang dibangun sepenuhnya dengan Livewire full-page components.
 
 ---
 
@@ -33,7 +33,7 @@ app/
 │   ├── AboutUs/       # AboutUsIndex
 │   ├── Carousels/     # CarouselIndex
 │   ├── Concerns/      # Shared traits (HasTableView, WithPasswordValidation, WithNotifications, WithSearchablePagination, WithRateLimiting)
-│   ├── Layout/        # NotificationBell, NotificationIndex, Sidebar
+│   ├── Layout/        # NotificationBell, NotificationIndex, Sidebar (Sidebar TIDAK dipakai lagi: navigasi admin pindah ke top bar)
 │   ├── Menus/         # MenuIndex, RoleMenuAccess
 │   ├── News/          # NewsIndex
 │   ├── NewsCategories/# NewsCategoryIndex
@@ -53,20 +53,20 @@ app/
 resources/
 ├── css/
 │   ├── app.css        # Admin panel styles (Metronic/Filament/Flux — JANGAN dipakai di website)
-│   └── website.css    # Public website styles (Aveit design system, terpisah dari admin)
+│   └── website.css    # Public website styles (design system "pintu dan loket", terpisah dari admin)
 ├── js/
 │   ├── app.js         # Admin panel JS (Highcharts, Flowbite init)
-│   └── website.js     # Public website JS (Alpine.js bundle + AOS + counter)
+│   └── website.js     # Public website JS (hanya Alpine.js + collapse; efek lain inline di view)
 └── views/
     ├── components/
-    │   ├── layouts/   # app.blade.php (admin), auth.blade.php (split-screen auth)
+    │   ├── layouts/   # app.blade.php (admin, top navigation), auth.blade.php (split-screen auth)
     │   ├── ui/        # Reusable UI components (modal, table, card, badge, pagination, etc.)
     │   └── emails/    # Email templates
     ├── livewire/      # Blade views untuk setiap Livewire component
     ├── layouts/       # website.blade.php (public website layout)
     ├── website/       # Public website pages (home, about, news)
-    │   └── partials/  # section-heading, news-card, nav, footer, page-header, logo, dll.
-    └── partials/      # Shared partials (meta, favicon, fonts, alpine-cloak, dll.)
+    │   └── partials/  # nav, hero, services, journey, faq, cta, footer, news-card, news-sidebar, page-header, logo, social-links
+    └── partials/      # Shared partials (meta, favicon, fonts, alpine-cloak, admin-topnav, dll.)
 
 routes/
 ├── web.php            # Main route file, loads modular routes
@@ -149,6 +149,8 @@ class UserForm
 
 **Penting**: Filament Forms hanya digunakan untuk **form schema**, BUKAN Filament panel/admin.
 
+**v5 breaking change (sejak 2026-11-02)**: `Filament\Forms\Form` → `Filament\Schemas\Schema`. Semua `public function form(Schema $form): Schema` di Livewire components — body `$form->schema(...)` tetap jalan (alias bawaan, tidak perlu diganti ke `->components()`). Komponen layout seperti `Section` pindah ke `Filament\Schemas\Components\Section`, dan `Set`/`Get` pindah ke `Filament\Schemas\Components\Utilities\{Set,Get}`. Komponen field (`TextInput`, `Select`, dll.) tetap di `Filament\Forms\Components\*`.
+
 ### 4. Actions Pattern
 
 Single-responsibility invokable classes untuk operasi yang bukan CRUD:
@@ -188,21 +190,35 @@ Menu → has parent/children (self-referencing, nested tree)
 
 ---
 
-## 🌐 Public Website (v2.2.x — Redesign)
+## 🌐 Public Website (v3.0.0)
+
+Detail warna, huruf, dan komponen lengkap ada di **`design.md`** (sumber kebenaran desain). Ringkasannya di sini.
 
 ### Design System
 
-Website public menggunakan design system **Aveit-inspired** yang **sepenuhnya terpisah** dari admin:
+Identitas **"pintu dan loket"**: satu aksen (kunyit, cahaya dari balik pintu) di atas dasar indigo gelap. **Sepenuhnya terpisah** dari admin (`app.css`). Dikerjakan dengan aturan **antislop** (mode "selama").
 
 | Token | Value | Catatan |
 |-------|-------|---------|
-| `--color-primary` | `#3a6cf4` | Blue vibrant (berbeda dari admin) |
-| `--color-primary-dark` | `#2451d6` | |
-| `--color-accent` | `#f97316` | Orange CTA |
-| `--color-dark` | `#0d1117` | Dark navy background |
-| `--color-dark-card` | `#161b25` | |
-| `--font-heading` | Quicksand | Google Fonts |
-| `--font-sans` | Nunito + Inter | Google Fonts |
+| `nila` | `#0B1B4D` | Dasar hero, navbar, footer, pita gelap |
+| `kobalt` | `#1A3E9A` | Warna brand (sama dengan header admin), link |
+| `kunyit` | `#FFB81C` | Satu-satunya aksen (karcis, lampu navbar, fokus di area gelap) |
+| `page` / `surface` / `ink` / `body` / `muted` / `line` | berganti per tema | Token semantik di `:root` dan `.dark`, dipetakan via `@theme inline` |
+| `--font-display` | Bricolage Grotesque | Judul, sumbu lebar `wdth` |
+| `--font-sans` | Plus Jakarta Sans | Teks isi |
+
+Semua pasangan teks sudah dicek lolos WCAG AA (terendah 4,97:1). Jika mengganti warna, cek ulang kontras.
+
+### Elemen khas
+
+- **Navbar "papan loket"** (`partials/nav`): bar nila, lampu kunyit (`.lamp`) menggantung di tepi atas dan meluncur ke menu yang dihover atau difokus, kembali ke halaman aktif saat kursor pergi. CTA berbentuk karcis (`.ticket`, bergerigi lewat `mask`, ring fokus digambar DI DALAM bentuk karena `outline` ikut terpotong mask). Logo = pintu yang terbuka sedikit saat hover.
+- **Latar kawung** (`.kawung`, `.kawung-lit`, `.kawung-ink`): pola batik di hero. Salinan terangnya diperlihatkan mask radial yang mengikuti kursor lewat CSS variable `--mx` / `--my`; diam di sisi pintu jika tanpa kursor.
+- **Pintu lengkung** (`.arch`): slider CMS Carousel, naik terbuka sekali saat load. Satu lengkung kedua sebagai daun pintu.
+- **Perjalanan berkas** (`partials/journey`): tab interaktif 4 tahap (urutan nyata, jadi bernomor). Panel diberi label "Contoh tampilan, bukan data nyata".
+
+### Aturan konten (antislop)
+
+**JANGAN** menambahkan angka statistik, rating, testimoni, atau deretan logo instansi yang karangan (R-17, R-18, R-36). Boleh hanya jika datanya nyata atau diberi label contoh yang terlihat. Teks buatan agent tanpa em dash (R-02), CTA spesifik (bukan "Get Started"), tanpa badge di atas judul.
 
 ### Build Pipeline (Vite Entry Points)
 
@@ -211,42 +227,22 @@ Website public menggunakan design system **Aveit-inspired** yang **sepenuhnya te
 input: [
     'resources/css/app.css',    // Admin — Metronic/Flux/Filament
     'resources/js/app.js',      // Admin — Highcharts, Flowbite re-init
-    'resources/css/website.css',// Website — Aveit design system
-    'resources/js/website.js',  // Website — Alpine.js bundle + AOS
+    'resources/css/website.css',// Website — design system pintu dan loket
+    'resources/js/website.js',  // Website — Alpine.js + collapse
 ]
 ```
 
-**PENTING**: Jangan mix kedua CSS. `app.css` mengandung Flux/Filament/Metronic styles yang tidak relevan untuk public website.
+**PENTING**: Jangan mix kedua CSS. `app.css` mengandung Flux/Filament/Metronic styles yang tidak relevan untuk public website. Kelas Tailwind baru baru muncul setelah `npm run dev` atau `npm run build`.
 
 ### Alpine.js di Website
 
-Alpine.js di-bundle via npm di `website.js` (bukan CDN):
-
-```js
-// resources/js/website.js
-import Alpine from 'alpinejs';
-import collapse from '@alpinejs/collapse';
-Alpine.plugin(collapse);
-window.Alpine = Alpine;
-Alpine.start();
-// AOS & counter — run langsung (JANGAN bungkus DOMContentLoaded, lihat Gotcha #9)
-initAos();
-initCounters();
-```
-
-### AOS (Animate on Scroll)
-
-Custom IntersectionObserver di `website.js`:
-- Class `aos-init` → `opacity: 0` + `transform`
-- Class `aos-left` / `aos-right` / `aos-scale` untuk arah animasi
-- Observer menambahkan `aos-animated` saat elemen masuk viewport
-- Safety timeout 500ms: reveal semua elemen yang belum animated
+`website.js` hanya memuat Alpine dan plugin `collapse` (bukan CDN). Semua interaksi (lampu navbar, cahaya kursor, slider, tab, accordion, toggle tema) ditulis **inline** sebagai `x-data` di view, dan masing-masing mengecek `prefers-reduced-motion` sendiri. Tidak ada lagi AOS atau counter.
 
 ### Route Structure (rate limited: 60 req/min)
 
 | Route | Action | Description |
 |-------|--------|-------------|
-| `GET /` | `ShowHomePage` | Landing page (carousel + about snippet + news) |
+| `GET /` | `ShowHomePage` | Beranda (hero + layanan + perjalanan berkas + berita + profil + FAQ) |
 | `GET /news` | `ShowNewsList` | News listing dengan pagination & sidebar |
 | `GET /news/{slug}` | `ShowNewsDetail` | News detail + related news |
 | `GET /about` | `ShowAboutPage` | About us + kontak + Google Maps |
@@ -255,11 +251,40 @@ Custom IntersectionObserver di `website.js`:
 
 | Partial | Props | Keterangan |
 |---------|-------|-----------|
-| `partials/section-heading` | `eyebrow`, `title`, `subtitle`, `align` | Section header reusable |
-| `partials/news-card` | `item` (News), `featured` (bool) | Kartu berita (standard & featured) |
-| `partials/page-header` | `title`, `breadcrumb`, `subtitle`, `bgImage` | Dark hero header halaman inner |
-| `partials/nav` | — | Sticky glass navbar + spring hover animations |
-| `partials/footer` | — | 4-column footer, data dari `$aboutUs` |
+| `partials/nav` | — | Navbar papan loket + panel mobile |
+| `partials/hero` | `$carousels`, `$aboutUs` | Judul, karcis, pintu lengkung + slider |
+| `partials/services` | — | Daftar layanan bergaya buku loket (data statis) |
+| `partials/journey` | — | Tab perjalanan berkas (data statis) |
+| `partials/faq` | — | Accordion FAQ (data statis) |
+| `partials/cta` | — | Pita penutup |
+| `partials/news-card` | `item` (News), `variant` (`card` / `lead` / `row`) | Kartu berita |
+| `partials/news-sidebar` | `$categories`, `$recentNews` | Sidebar halaman berita |
+| `partials/page-header` | `title`, `breadcrumb`, `subtitle` | Header halaman dalam |
+| `partials/footer` | — | Footer: kontak di kiri, satu kolom link besar di kanan, baris hak cipta + sosial. Data dari `$aboutUs` |
+
+---
+
+## 🧭 Admin Layout (Top Navigation)
+
+Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**. Dua baris fixed:
+
+| Baris | Isi |
+|-------|-----|
+| Header `h-16` (`bg-[#1a3e9a]`, `z-40`) | Logo, pencarian menu (Ctrl+K), tanggal, notifikasi, profil, hamburger (mobile) |
+| Bar menu `h-12` (`partials/admin-topnav`, `z-30`, hanya `lg+`) | Menu dari master, dropdown grup, "More" untuk yang tidak muat |
+
+- **Sumber menu**: `MenuService::getMenuTreeForUser()` (RBAC + cache tidak berubah). Layout meratakan tree menjadi `$navItems` (url, ikon, active) untuk Alpine, dan `$flatMenu` untuk pencarian.
+- **Ikon**: dari kolom `icon` tabel `menus` (nama heroicon outline). Kosong atau tidak dikenal → ikon garis tiga (level atas) atau titik (anak menu).
+- **"More"**: Alpine mengukur lebar tiap item (baris ukur tersembunyi) dan memindahkan yang tidak muat ke dropdown. Bar menu TIDAK boleh `overflow-hidden`, kalau tidak dropdown terpotong.
+- **Navigasi**: tautan di Alpine memakai `Livewire.navigate(url)` (menghormati Ctrl/Cmd/Shift-klik).
+- **Mobile**: hamburger membuka drawer vertikal (Blade loop biasa dengan `wire:navigate`).
+- **Dialog logout**: dialog ringkas khusus di `app.blade.php` (event `open-modal` dengan `name: 'logout-modal'`). Sengaja TIDAK tertutup oleh klik di luar atau Esc; hanya lewat tombol X, Batal, atau Ya, Logout.
+- **Footer** menampilkan versi `v3.0.0` (hardcode di `app.blade.php`).
+- Warna dan bayangan: lihat `design.md`.
+
+### Halaman Auth (`components/layouts/auth.blade.php`)
+
+Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (nila + pola kawung) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG orang menunjuk ke form di depan pintu (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#0B1B4D]`, `bg-[#FFB81C]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus jadi kunyit). Detail: `design.md`.
 
 ---
 
@@ -268,15 +293,15 @@ Custom IntersectionObserver di `website.js`:
 ### Admin Panel
 
 - **Tailwind CSS 4** via `@tailwindcss/vite` plugin
-- **Flowbite** (CDN) — sidebar, header, responsive shell, Alpine.js interactivity
+- **Flowbite** (CDN) — header, responsive shell, Alpine.js interactivity
 - **Highcharts** (npm, ^12.6.0) — Dashboard donut/bar chart, exposed via `window.Highcharts`
 - **Livewire Flux** (v2.10) — Premium UI components (breadcrumbs, badges, form inputs)
 - **Filament Forms** — Form schema only (bukan Filament panel)
 
 ### Auth Pages
 
-- Layout: **Split-screen** — Left panel (dark branding + floating CMS mockup), Right panel (form)
-- Font: Quicksand (heading) + Nunito (body) via Google Fonts
+- Layout: satu latar penuh bernuansa pintu dan kawung, form dalam kotak di atasnya (bukan split-screen)
+- Font: Bricolage Grotesque (heading) + Plus Jakarta Sans (body) via Google Fonts, sama dengan portal publik
 - Theme toggle: icon sun/moon **di dalam** toggle button (bukan di luar)
 - Dark mode: didukung penuh dengan smooth transition
 
@@ -467,26 +492,18 @@ File upload via model `Media` sebagai intermediary. Model dengan file upload pun
 ### 8. Queue Connection
 Queue `database` driver. Pastikan `php artisan queue:listen` berjalan saat development.
 
-### 9. website.js — Module Script (PENTING)
-Vite menghasilkan `type="module"` script. Module scripts dieksekusi setelah DOM ready tapi SETELAH `DOMContentLoaded` sudah fired. Akibatnya, `document.addEventListener('DOMContentLoaded', callback)` di dalam `website.js` **tidak akan pernah terpanggil**. Selalu run kode langsung (tanpa wrapper DOMContentLoaded):
-```js
-// ✅ Benar
-initAos();
-initCounters();
-
-// ❌ Salah — callback tidak akan jalan
-document.addEventListener('DOMContentLoaded', () => { initAos(); });
-```
+### 9. website.js — Module Script
+Vite menghasilkan `type="module"` script yang dieksekusi SETELAH `DOMContentLoaded`. Jangan membungkus kode di `website.js` dengan `document.addEventListener('DOMContentLoaded', ...)`, callback itu tidak akan pernah jalan. Saat ini `website.js` hanya menyalakan Alpine; logika interaksi ada inline di view.
 
 ### 10. Website CSS Terpisah dari Admin
 `resources/css/website.css` dan `resources/js/website.js` adalah entry point **khusus public website**. Jangan import atau mix dengan `app.css`/`app.js` (mengandung Metronic/Flux/Filament/Highcharts yang tidak relevan untuk public).
 
-### 11. Sidebar Tooltip — position: fixed
-Tooltip sidebar admin menggunakan `position: fixed` dengan koordinat Alpine `@mouseenter`. JANGAN ganti ke `position: absolute` — akan di-clip oleh `overflow-y: auto` pada elemen nav parent (CSS spec: overflow-y:auto memaksa overflow-x minimal auto, sehingga clip absolute descendants).
+### 11. Dropdown Bar Menu Admin — Jangan Clip
+Bar menu admin (`partials/admin-topnav`) memakai dropdown `absolute` di bawah item. Jangan beri `overflow-hidden`/`overflow-x-auto` pada baris itu atau pada leluhurnya, dropdown akan terpotong. Baris ukur tersembunyi untuk "More" memakai `invisible` + `absolute`, bukan `display:none`, agar lebar item bisa diukur.
 
-### 12. Warna Primary Website ≠ Admin
-Website public: `--color-primary: #3a6cf4` (blue)
-Admin panel: menggunakan Metronic primary `#1b84ff` via `app.css`
+### 12. Warna Website ≠ Admin
+Website publik: nila `#0B1B4D` + aksen kunyit `#FFB81C` (lihat `design.md`).
+Admin: header `#1a3e9a`, primary Metronic `#1b84ff` via `app.css`.
 Keduanya tidak boleh dicampur.
 
 ### 13. Alpine `<template x-if>` Tidak Bisa Nested
@@ -497,6 +514,28 @@ Notification/job yang butuh data request (IP, user-agent) **HARUS** menangkapnya
 
 ### 15. Filter Pattern di Index Component
 Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persist ke URL) + `pendingX` (state sementara di modal). `openFilterModal()` copy `filterX→pendingX`, `applyFilters()` copy balik `pendingX→filterX` lalu `resetPage()`. Repository sediakan method `searchWithFilters(...)`. Lihat `UserIndex`.
+
+### 16. Filament Package Upgrade — Wajib `php artisan filament:assets`
+Setelah `composer update` filament/*, JS statis di `public/js/filament/*` TIDAK ikut ter-update otomatis — jalankan `php artisan filament:assets`, kalau tidak form modal akan error di browser console (`filamentSchemaComponent is not defined`) meskipun PHP-side sudah benar. CSS tidak perlu di-republish: `@filamentStyles` v5 cuma emit CSS variables, styling komponen datang dari Tailwind `@source` scan ke `vendor/filament/**/*.blade.php` (lihat `resources/css/app.css`), bukan dari `public/css/filament/*.css` (file itu legacy/tidak dipakai lagi).
+
+### 17. `settings/logs` — Local `php-fpm.log` Bisa Bikin Memory Exhausted
+`config/log-viewer.php` meng-include path lokal `/opt/homebrew/var/log/php-fpm.log` (Homebrew). Kalau file itu tumbuh besar (ratusan MB), halaman `settings/logs` fatal error memory exhausted saat scan. Ini masalah environment lokal developer, bukan bug Laravel/opcodesio/log-viewer — rotate/hapus file tsb kalau kejadian.
+
+### 18. CSS Dasar Wajib di `@layer` (website.css)
+Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.ticket { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.ticket`, skala huruf) di `@layer components`.
+
+### 19. Aturan Atribut Alpine (Blade)
+- Jangan pakai tanda kutip ganda di dalam atribut `x-data`/`x-init`/`@click`, termasuk di komentar `//`. Itu menutup atribut lebih awal dan sisa kodenya bocor sebagai teks halaman.
+- Ekspresi `x-init` tidak boleh diawali `try`. Bungkus: `(() => { try { ... } catch (e) { ... } })()`.
+- `@js($data)` aman dipakai di atribut (kutipnya di-escape).
+
+### 20. Flash Putih di Mode Gelap
+Ada dua sumber, dan keduanya sudah ditangani di `partials/theme-scripts` (dimuat semua layout):
+1. **Muat penuh:** setiap layout HARUS memuat `partials.fouc-prevention` paling awal di `<head>`. Tema yang hanya dipasang Alpine baru berlaku setelah halaman tergambar. Latar `html` juga mengikuti tema (`website.css` dan blok `<style>` di `app.blade.php`).
+2. **`wire:navigate`:** Alpine menimpa atribut `class` pada `<html>` dengan milik halaman baru, sehingga `dark` hilang sesaat, lalu `app.css` (yang memberi `body, main, a, button, input...` transisi warna 0,2 detik) membuatnya memudar putih ke gelap. `MutationObserver` di `theme-scripts` memulihkan `dark` seketika dan menambahkan kelas `is-navigating` yang mematikan transisi pada perubahan gaya yang sama. Jangan hanya memulihkan kelas, dan jangan hanya membekukan transisi: keduanya perlu bersamaan. Diukur per frame: 0 frame terang dari 8 perpindahan antar menu admin.
+
+### 21. Halaman Tidak Berubah Setelah Edit View/Kelas
+Aset dipakai dari `public/build`. Jalankan `npm run build` (atau `npm run dev`) setelah menambah kelas Tailwind baru, dan `php artisan view:clear` bila Blade tampak tidak berubah.
 
 ---
 
@@ -518,7 +557,7 @@ Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persi
 
 ## 🧪 Testing
 
-- Framework: PHPUnit 11
+- Framework: PHPUnit 13
 - Test directory: `tests/`
 - Run: `php artisan test` atau `composer test`
 
@@ -528,18 +567,18 @@ Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persi
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| `laravel/framework` | ^12.0 | Core framework |
-| `livewire/livewire` | ^3.0 | Full-page reactive components |
-| `livewire/flux` | ^2.10 | Premium Livewire UI components (admin) |
-| `filament/forms` | ^3.0 | Form builder (schema-only) |
-| `opcodesio/log-viewer` | ^3.21 | Log viewer UI (super-admin only) |
-| `tailwindcss` | ^4.0.0 | Utility-first CSS framework |
-| `vite` | ^7.0.7 | Frontend build tool |
-| `highcharts` | ^12.6.0 (npm) | Dashboard charts (admin only) |
-| `alpinejs` | ^3.15 (npm) | Reactive JS — di-bundle via website.js |
-| `@alpinejs/collapse` | ^3.15 (npm) | Alpine collapse plugin (FAQ/accordion) |
+| `laravel/framework` | ^13.0 | Core framework |
+| `livewire/livewire` | ^4.0 | Full-page reactive components |
+| `livewire/flux` | ^2.21 | Premium Livewire UI components (admin) |
+| `filament/forms` | ^5.0 | Form builder (schema-only, pakai `filament/schemas` internal) |
+| `opcodesio/log-viewer` | ^3.24 | Log viewer UI (super-admin only) |
+| `tailwindcss` | ^4.3.3 | Utility-first CSS framework |
+| `vite` | ^8.3.5 | Frontend build tool |
+| `highcharts` | ^13.1.1 (npm) | Dashboard charts (admin only) |
+| `alpinejs` | ^3.17 (npm) | Reactive JS — di-bundle via website.js |
+| `@alpinejs/collapse` | ^3.17 (npm) | Alpine collapse plugin (FAQ/accordion) |
 
-> **Flowbite** digunakan via CDN untuk admin layout (sidebar, header). Tidak di-bundle via npm.
+> **Flowbite** digunakan via CDN untuk admin layout (header). Tidak di-bundle via npm.
 
 ### Dev Dependencies
 
