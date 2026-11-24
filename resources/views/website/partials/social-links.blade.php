@@ -1,4 +1,4 @@
-{{-- Props: $dark (bool, optional): true when sitting on the nila ground --}}
+{{-- Props: $dark (bool, optional): true when sitting on the rimba ground --}}
 @php
     $dark = $dark ?? false;
 
@@ -18,7 +18,7 @@
                 <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer"
                    aria-label="{{ $social['label'] }}"
                    class="w-11 h-11 rounded-md grid place-items-center transition-colors
-                          {{ $dark ? 'text-white/70 hover:text-kunyit' : 'text-muted hover:text-ink' }}">
+                          {{ $dark ? 'text-white/70 hover:text-cap-soft' : 'text-muted hover:text-ink' }}">
                     <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path d="{{ $social['path'] }}"/>
                     </svg>

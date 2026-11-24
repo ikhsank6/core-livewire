@@ -13,7 +13,7 @@
 **Stack**: Laravel 13 + Livewire 4 + Filament Forms 5 + Tailwind CSS 4 + Vite 8 + Alpine.js 3
 **Database**: SQLite (development), bisa di-swap ke MySQL/PostgreSQL
 **PHP**: >= 8.2
-**Tipe Aplikasi**: Content Management System (CMS) dengan role-based access control (RBAC), public-facing website (identitas "pintu dan loket"), dan admin panel yang dibangun sepenuhnya dengan Livewire full-page components.
+**Tipe Aplikasi**: Content Management System (CMS) dengan role-based access control (RBAC), public-facing website (tema lembaga sertifikasi profesi, identitas "berkas asesmen"), dan admin panel yang dibangun sepenuhnya dengan Livewire full-page components.
 
 ---
 
@@ -53,7 +53,7 @@ app/
 resources/
 ├── css/
 │   ├── app.css        # Admin panel styles (Metronic/Filament/Flux — JANGAN dipakai di website)
-│   └── website.css    # Public website styles (design system "pintu dan loket", terpisah dari admin)
+│   └── website.css    # Public website styles (design system LSP "berkas asesmen", terpisah dari admin)
 ├── js/
 │   ├── app.js         # Admin panel JS (Highcharts, Flowbite init)
 │   └── website.js     # Public website JS (hanya Alpine.js + collapse; efek lain inline di view)
@@ -65,7 +65,7 @@ resources/
     ├── livewire/      # Blade views untuk setiap Livewire component
     ├── layouts/       # website.blade.php (public website layout)
     ├── website/       # Public website pages (home, about, news)
-    │   └── partials/  # nav, hero, services, journey, faq, cta, footer, news-card, news-sidebar, page-header, logo, social-links
+    │   └── partials/  # nav, hero, skema, alur, jadwal, sorotan, faq, cta, footer, news-card, news-sidebar, page-header, logo, social-links
     └── partials/      # Shared partials (meta, favicon, fonts, alpine-cloak, admin-topnav, dll.)
 
 routes/
@@ -196,29 +196,30 @@ Detail warna, huruf, dan komponen lengkap ada di **`design.md`** (sumber kebenar
 
 ### Design System
 
-Identitas **"pintu dan loket"**: satu aksen (kunyit, cahaya dari balik pintu) di atas dasar indigo gelap. **Sepenuhnya terpisah** dari admin (`app.css`). Dikerjakan dengan aturan **antislop** (mode "selama").
+Tema **lembaga sertifikasi profesi (LSP)**, identitas **"berkas asesmen"**: dasar hijau rimba, kertas, dan satu aksen merah cap (stempel KOMPETEN). **Sepenuhnya terpisah** dari admin (`app.css`). Dikerjakan dengan aturan **antislop** (mode "selama"). Halaman auth memakai identitas yang sama.
 
 | Token | Value | Catatan |
 |-------|-------|---------|
-| `nila` | `#0B1B4D` | Dasar hero, navbar, footer, pita gelap |
-| `kobalt` | `#1A3E9A` | Warna brand (sama dengan header admin), link |
-| `kunyit` | `#FFB81C` | Satu-satunya aksen (karcis, lampu navbar, fokus di area gelap) |
+| `rimba` | `#0D2B27` | Dasar hero, footer, pita gelap, latar auth |
+| `rimba-2` | `#14403A` | Panel di atas pita gelap |
+| `cap` | `#E4472D` | Satu-satunya aksen (tombol utama, stempel, segel). Teks di atasnya `#1B0B07` |
+| `cap-deep` / `cap-soft` | `#B2301D` / `#FF8A70` | Cap sebagai teks di atas terang / di atas gelap (juga ring fokus gelap) |
 | `page` / `surface` / `ink` / `body` / `muted` / `line` | berganti per tema | Token semantik di `:root` dan `.dark`, dipetakan via `@theme inline` |
-| `--font-display` | Bricolage Grotesque | Judul, sumbu lebar `wdth` |
-| `--font-sans` | Plus Jakarta Sans | Teks isi |
+| `--font-display` / `--font-sans` | Plus Jakarta Sans | **Satu keluarga saja** (400 sampai 800). Jangan menambah keluarga lain |
 
-Semua pasangan teks sudah dicek lolos WCAG AA (terendah 4,97:1). Jika mengganti warna, cek ulang kontras.
+Semua pasangan teks sudah dicek lolos WCAG AA. Jika mengganti warna, cek ulang kontras.
 
 ### Elemen khas
 
-- **Navbar "papan loket"** (`partials/nav`): bar nila, lampu kunyit (`.lamp`) menggantung di tepi atas dan meluncur ke menu yang dihover atau difokus, kembali ke halaman aktif saat kursor pergi. CTA berbentuk karcis (`.ticket`, bergerigi lewat `mask`, ring fokus digambar DI DALAM bentuk karena `outline` ikut terpotong mask). Logo = pintu yang terbuka sedikit saat hover.
-- **Latar kawung** (`.kawung`, `.kawung-lit`, `.kawung-ink`): pola batik di hero. Salinan terangnya diperlihatkan mask radial yang mengikuti kursor lewat CSS variable `--mx` / `--my`; diam di sisi pintu jika tanpa kursor.
-- **Pintu lengkung** (`.arch`): slider CMS Carousel, naik terbuka sekali saat load. Satu lengkung kedua sebagai daun pintu.
-- **Perjalanan berkas** (`partials/journey`): tab interaktif 4 tahap (urutan nyata, jadi bernomor). Panel diberi label "Contoh tampilan, bukan data nyata".
+- **Latar guilloche** (`.rosette`): rosette garis halus dari `public/images/guilloche.svg`, dipakai sebagai **mask** (warna lewat `currentColor`), berputar mengikuti kursor lewat `--rot`.
+- **Navbar** (`partials/nav`): bar kertas dengan tepi bawah bergerigi (`.torn`, mask), bingkai stempel (`.nav-stamp`) meluncur ke menu yang dihover atau difokus. Logo = segel kompetensi, centang tergambar ulang saat hover. Tombol utama `.btn-cap` (bayangan bawah menekan saat diklik).
+- **Hero**: sertifikat spesimen berisi pengisi (diberi label "Contoh") dan stempel KOMPETEN yang mendarat sekali (`.stamp`).
+- **Skema / Alur / Jadwal** (`partials/skema`, `alur`, `jadwal`): data statis berlabel "Contoh". Alur memuat langkah bernomor lalu pita Kompeten (K) / Belum Kompeten (BK).
+- **Sorotan** (`partials/sorotan`): slider CMS Carousel; tidak dirender bila tidak ada slide aktif.
 
 ### Aturan konten (antislop)
 
-**JANGAN** menambahkan angka statistik, rating, testimoni, atau deretan logo instansi yang karangan (R-17, R-18, R-36). Boleh hanya jika datanya nyata atau diberi label contoh yang terlihat. Teks buatan agent tanpa em dash (R-02), CTA spesifik (bukan "Get Started"), tanpa badge di atas judul.
+**JANGAN** menambahkan angka statistik, rating, testimoni, deretan logo instansi, atau klaim kepatuhan ("berlisensi BNSP", "terakreditasi") yang karangan (R-17, R-18, R-36). Fitur seperti cek keaslian sertifikat atau pencarian asesor tidak dibuat karena tidak ada datanya. Boleh hanya jika datanya nyata atau diberi label contoh yang terlihat. Teks buatan agent tanpa em dash (R-02), CTA spesifik (bukan "Get Started"), tanpa badge di atas judul.
 
 ### Build Pipeline (Vite Entry Points)
 
@@ -227,7 +228,7 @@ Semua pasangan teks sudah dicek lolos WCAG AA (terendah 4,97:1). Jika mengganti 
 input: [
     'resources/css/app.css',    // Admin — Metronic/Flux/Filament
     'resources/js/app.js',      // Admin — Highcharts, Flowbite re-init
-    'resources/css/website.css',// Website — design system pintu dan loket
+    'resources/css/website.css',// Website — design system LSP berkas asesmen
     'resources/js/website.js',  // Website — Alpine.js + collapse
 ]
 ```
@@ -236,13 +237,13 @@ input: [
 
 ### Alpine.js di Website
 
-`website.js` hanya memuat Alpine dan plugin `collapse` (bukan CDN). Semua interaksi (lampu navbar, cahaya kursor, slider, tab, accordion, toggle tema) ditulis **inline** sebagai `x-data` di view, dan masing-masing mengecek `prefers-reduced-motion` sendiri. Tidak ada lagi AOS atau counter.
+`website.js` hanya memuat Alpine dan plugin `collapse` (bukan CDN). Semua interaksi (bingkai stempel navbar, rosette mengikuti kursor, slider, filter skema, accordion, toggle tema) ditulis **inline** sebagai `x-data` di view, dan masing-masing mengecek `prefers-reduced-motion` sendiri. Tidak ada lagi AOS atau counter.
 
 ### Route Structure (rate limited: 60 req/min)
 
 | Route | Action | Description |
 |-------|--------|-------------|
-| `GET /` | `ShowHomePage` | Beranda (hero + layanan + perjalanan berkas + berita + profil + FAQ) |
+| `GET /` | `ShowHomePage` | Beranda (hero + skema + alur + jadwal + sorotan + berita + profil + FAQ) |
 | `GET /news` | `ShowNewsList` | News listing dengan pagination & sidebar |
 | `GET /news/{slug}` | `ShowNewsDetail` | News detail + related news |
 | `GET /about` | `ShowAboutPage` | About us + kontak + Google Maps |
@@ -251,10 +252,12 @@ input: [
 
 | Partial | Props | Keterangan |
 |---------|-------|-----------|
-| `partials/nav` | — | Navbar papan loket + panel mobile |
-| `partials/hero` | `$carousels`, `$aboutUs` | Judul, karcis, pintu lengkung + slider |
-| `partials/services` | — | Daftar layanan bergaya buku loket (data statis) |
-| `partials/journey` | — | Tab perjalanan berkas (data statis) |
+| `partials/nav` | — | Navbar kertas bergerigi + panel mobile |
+| `partials/hero` | `$carousels`, `$aboutUs` | Judul, tombol daftar, sertifikat spesimen, tautan cepat |
+| `partials/skema` | — | Daftar skema + filter bidang (data contoh) |
+| `partials/alur` | — | Langkah sertifikasi + pita K / BK |
+| `partials/jadwal` | — | Jadwal uji (data contoh) |
+| `partials/sorotan` | `$carousels` | Slider CMS Carousel |
 | `partials/faq` | — | Accordion FAQ (data statis) |
 | `partials/cta` | — | Pita penutup |
 | `partials/news-card` | `item` (News), `variant` (`card` / `lead` / `row`) | Kartu berita |
@@ -284,7 +287,7 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 
 ### Halaman Auth (`components/layouts/auth.blade.php`)
 
-Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (nila + pola kawung) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG orang menunjuk ke form di depan pintu (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#0B1B4D]`, `bg-[#FFB81C]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus jadi kunyit). Detail: `design.md`.
+Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (rimba + rosette guilloche) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG asesor dengan papan jalan berisi centang yang menunjuk ke form, di samping sertifikat berbingkai (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#0D2B27]`, `bg-[#E4472D]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus jadi cap-soft). Detail: `design.md`.
 
 ---
 
@@ -300,8 +303,8 @@ Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar 
 
 ### Auth Pages
 
-- Layout: satu latar penuh bernuansa pintu dan kawung, form dalam kotak di atasnya (bukan split-screen)
-- Font: Bricolage Grotesque (heading) + Plus Jakarta Sans (body) via Google Fonts, sama dengan portal publik
+- Layout: satu latar penuh rimba dengan rosette guilloche, form dalam kotak di atasnya (bukan split-screen)
+- Font: Plus Jakarta Sans saja via Google Fonts, sama dengan portal publik
 - Theme toggle: icon sun/moon **di dalam** toggle button (bukan di luar)
 - Dark mode: didukung penuh dengan smooth transition
 
@@ -502,7 +505,7 @@ Vite menghasilkan `type="module"` script yang dieksekusi SETELAH `DOMContentLoad
 Bar menu admin (`partials/admin-topnav`) memakai dropdown `absolute` di bawah item. Jangan beri `overflow-hidden`/`overflow-x-auto` pada baris itu atau pada leluhurnya, dropdown akan terpotong. Baris ukur tersembunyi untuk "More" memakai `invisible` + `absolute`, bukan `display:none`, agar lebar item bisa diukur.
 
 ### 12. Warna Website ≠ Admin
-Website publik: nila `#0B1B4D` + aksen kunyit `#FFB81C` (lihat `design.md`).
+Website publik dan auth: rimba `#0D2B27` + aksen cap `#E4472D` (lihat `design.md`).
 Admin: header `#1a3e9a`, primary Metronic `#1b84ff` via `app.css`.
 Keduanya tidak boleh dicampur.
 
@@ -522,7 +525,7 @@ Setelah `composer update` filament/*, JS statis di `public/js/filament/*` TIDAK 
 `config/log-viewer.php` meng-include path lokal `/opt/homebrew/var/log/php-fpm.log` (Homebrew). Kalau file itu tumbuh besar (ratusan MB), halaman `settings/logs` fatal error memory exhausted saat scan. Ini masalah environment lokal developer, bukan bug Laravel/opcodesio/log-viewer — rotate/hapus file tsb kalau kejadian.
 
 ### 18. CSS Dasar Wajib di `@layer` (website.css)
-Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.ticket { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.ticket`, skala huruf) di `@layer components`.
+Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.btn { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.btn-cap`, skala huruf) di `@layer components`.
 
 ### 19. Aturan Atribut Alpine (Blade)
 - Jangan pakai tanda kutip ganda di dalam atribut `x-data`/`x-init`/`@click`, termasuk di komentar `//`. Itu menutup atribut lebih awal dan sisa kodenya bocor sebagai teks halaman.

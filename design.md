@@ -3,7 +3,7 @@
 Dua design system yang terpisah dan tidak boleh dicampur:
 
 1. **Admin panel**: top navigation, header biru. Bagian pertama dokumen ini.
-2. **Website publik**: identitas pintu dan loket, nila dengan satu aksen kunyit. Lihat bagian [Website publik](#website-publik) di bawah.
+2. **Website publik dan auth**: identitas lembaga sertifikasi profesi ("berkas asesmen"), hijau rimba dengan satu aksen merah cap. Lihat bagian [Website publik](#website-publik) di bawah.
 
 ---
 
@@ -97,77 +97,65 @@ Header `z-40` harus lebih tinggi dari bar menu `z-30` supaya dropdown pencarian 
 
 Portal publik di `/` (beranda, berita, detail berita, profil). Aset terpisah dari admin: `resources/css/website.css` dan `resources/js/website.js`.
 
-**Identitas: pintu dan loket.** Satu aksen (kunyit, cahaya dari balik pintu) di atas dasar indigo gelap. Dikerjakan dengan aturan antislop mode "selama".
+**Tema: lembaga sertifikasi profesi (LSP).** Identitas "berkas asesmen": dasar hijau rimba, kertas, dan satu aksen merah cap (stempel KOMPETEN). Dikerjakan dengan aturan antislop mode "selama". Riset komponen mengacu pada pola situs lembaga sertifikasi (BNSP dan LSP): tautan cepat tugas utama, skema, alur sertifikasi, jadwal uji, berita, FAQ, kontak.
 
 ## Warna
 
 Token tema (`:root` dan `.dark` di `website.css`) berganti otomatis mengikuti tema. Konstanta brand tidak berganti.
 
-| Token | Terang | Gelap | Dipakai untuk |
-|-------|--------|-------|---------------|
-| `page` | `#F5F6F3` | `#0A1126` | Latar halaman |
-| `surface` | `#FFFFFF` | `#111B38` | Panel |
-| `sunken` | `#ECEEE9` | `#0E1730` | Hover baris |
-| `ink` | `#0E1424` | `#F2F5FF` | Judul dan teks kuat |
-| `body` | `#3F485C` | `#C3CBE0` | Teks isi |
-| `muted` | `#5B6478` | `#94A0BE` | Teks sekunder |
-| `line` | `#DADED8` | `#223056` | Garis pemisah |
-| `accent-text` | `#8A5C00` | `#FFB81C` | Kategori berita |
-| `link` | `#1A3E9A` | `#8DB4FF` | Tautan, fokus keyboard |
-
-Konstanta: `nila #0B1B4D` (hero, navbar, footer, pita gelap), `kobalt #1A3E9A` (warna brand admin), `kunyit #FFB81C` (satu-satunya aksen). Semua pasangan teks sudah dicek lolos WCAG AA (terendah 4,97:1).
+Konstanta: `rimba #0D2B27` (hero, footer, pita gelap), `rimba-2 #14403A` (panel di atas pita gelap), `cap #E4472D` (satu-satunya aksen: tombol utama, stempel, segel), `cap-deep #B2301D` (cap sebagai teks di atas kertas, dan bayangan tombol), `cap-soft #FF8A70` (cap sebagai teks atau fokus di atas gelap). Teks di atas `cap` memakai `#1B0B07` (4,77:1). Token semantik (`page`, `surface`, `sunken`, `ink`, `body`, `muted`, `line`, `accent-text`, `link`) ada di bagian atas `website.css`. Jika mengganti warna, cek ulang kontras (WCAG AA).
 
 ## Huruf
 
-- Judul: **Bricolage Grotesque** (sumbu lebar `wdth`, bobot 650 sampai 800)
-- Isi: **Plus Jakarta Sans** (dirancang di Jakarta)
-- Kelas: `.display`, `.title`, `.subtitle`, `.lead`. Judul memakai `text-wrap: balance`.
+Satu keluarga saja: **Plus Jakarta Sans** (400 sampai 800). Judul memakai bobot 800 dengan tracking rapat dan `text-wrap: balance`. Kelas: `.display`, `.title`, `.subtitle`, `.lead`. Jangan menambah keluarga huruf kedua.
 
 ## Elemen khas
 
-- **Navbar "papan loket":** bar nila dengan lampu kunyit yang menggantung di tepi atas dan meluncur ke menu yang dihover atau difokus, lalu kembali ke halaman aktif. Logo berupa pintu yang terbuka sedikit saat dihover. Tombol utama berbentuk **karcis** (`.ticket`, bergerigi lewat mask, ring fokus digambar di dalam bentuknya).
-- **Latar kawung:** pola batik kawung redup di hero. Salinan terangnya hanya terlihat di sekitar kursor (cahaya dari pintu), dan diam di sisi pintu bila tidak ada kursor. Lihat `.kawung`, `.kawung-lit`, `.kawung-ink`.
-- **Pintu lengkung:** slider CMS Carousel di dalam bingkai lengkung (`.arch`) yang naik terbuka sekali saat halaman dimuat, dengan satu lengkung kedua sebagai daun pintu.
+- **Latar guilloche:** rosette garis halus seperti cetakan pengaman sertifikat, dari `public/images/guilloche.svg` yang dipakai sebagai **mask** (`.rosette`), jadi warnanya mengikuti `currentColor`. Berputar beberapa derajat mengikuti kursor (`--rot`).
+- **Navbar:** bar kertas dengan tepi bawah bergerigi seperti kertas sobekan (`.torn`, lewat mask). Bingkai stempel (`.nav-stamp`) meluncur ke menu yang dihover atau difokus, lalu kembali ke halaman aktif. Logo berupa segel kompetensi dengan centang yang tergambar ulang saat hover.
+- **Tombol utama `.btn-cap`:** merah cap dengan bayangan bawah yang menekan saat diklik.
+- **Sertifikat spesimen di hero:** isi pengisi saja (nama, nomor, tanda tangan) dan diberi label "Contoh". Stempel KOMPETEN mendarat sekali (`.stamp`).
 - **Footer:** kontak di kiri, satu kolom tautan besar di kanan, lalu baris hak cipta dan media sosial.
 
 ## Susunan beranda
 
-1. Hero: judul, karcis, pintu lengkung
-2. Layanan: judul menempel di kiri, daftar bergaya buku loket di kanan
-3. Perjalanan berkas: pita gelap, tab interaktif (Diajukan, Diverifikasi, Diproses, Terbit) dengan panel contoh
-4. Berita: satu besar dan dua baris
-5. Profil: pernyataan besar dan papan kontak
-6. FAQ, penutup, footer
+1. Hero: judul, tombol daftar, sertifikat spesimen, tiga tautan cepat (skema, alur, jadwal)
+2. Skema sertifikasi (`#skema`): daftar dengan filter bidang (data contoh, berlabel)
+3. Alur sertifikasi (`#alur`): langkah bernomor, lalu pita gelap Kompeten (K) dan Belum Kompeten (BK)
+4. Jadwal uji (`#jadwal`): contoh berlabel
+5. Sorotan: slider CMS Carousel (tidak tampil bila tidak ada slide aktif)
+6. Berita: satu besar dan dua baris
+7. Profil: pernyataan besar dan papan kontak
+8. FAQ (`#faq`), penutup, footer
 
 ## Data
 
 Dinamis dari CMS: slider (Carousel), berita, kategori, profil dan kontak (`aboutUs`).
-Statis di view: daftar layanan, tahap perjalanan berkas, FAQ. Panel di tahap perjalanan diberi label "Contoh tampilan, bukan data nyata".
+Statis di view: daftar skema, langkah alur, jadwal, FAQ. Semuanya diberi label "Contoh" yang terlihat.
 
-**Sengaja tidak ada:** angka statistik, rating, testimoni, dan deretan logo instansi. Semuanya karangan tanpa sumber, dan antislop melarangnya (R-17, R-18, R-36). Tambahkan kembali hanya bila datanya nyata atau diberi label contoh.
+**Sengaja tidak ada:** angka statistik, rating, testimoni, deretan logo instansi, dan klaim kepatuhan seperti "berlisensi BNSP" atau "terakreditasi". Semuanya tidak boleh muncul sebelum datanya nyata (antislop R-17, R-18, R-36). Fitur seperti "cek keaslian sertifikat" dan "cari asesor" juga tidak dibuat karena tidak ada datanya.
 
-Ilustrasi berita dan latar carousel bawaan dibuat `WebsiteContentSeeder` (SVG navy dan biru). Seeder tidak menimpa file yang sudah ada.
+`WebsiteContentSeeder` mengisi data contoh LSP fiktif ("LSP Kompeta Nusantara", domain surel `.example`). Seeder menimpa gambar carousel urutan 1 sampai 3, menghapus (soft delete) berita dan kategori contoh lama bertema layanan publik, dan tidak menimpa file ilustrasi yang sudah ada.
 
 ## Catatan teknis
 
 - CSS dasar, skala huruf, dan komponen harus berada di `@layer` (base atau components). Di luar layer, aturan itu mengalahkan utilitas Tailwind (misalnya `text-white` atau `hidden`).
 - Setelah mengubah kelas Tailwind, jalankan `npm run dev` atau `npm run build`.
 - Jangan pakai tanda kutip ganda di atribut Alpine, dan jangan mulai ekspresi `x-init` dengan `try`.
-- Gerak yang ada: masuknya pintu, lampu navbar, cahaya kursor, tab, dan accordion. Semuanya berhenti di bawah `prefers-reduced-motion`.
+- Gerak yang ada: rosette mengikuti kursor, bingkai stempel navbar, stempel KOMPETEN, centang segel, tab, dan accordion. Semuanya berhenti di bawah `prefers-reduced-motion`.
 
 ---
 
 # Halaman auth (login, daftar, lupa dan reset sandi, verifikasi surel)
 
-Satu layout bersama: `resources/views/components/layouts/auth.blade.php`. Memakai `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer dan `<style>` inline di layout. Identitas visualnya sama dengan portal publik.
+Satu layout bersama: `resources/views/components/layouts/auth.blade.php`. Memakai `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer dan `<style>` inline di layout. Identitas visualnya sama dengan portal publik (Plus Jakarta Sans saja).
 
-- **Satu latar penuh, formnya kotak di atasnya.** Latar nila dengan pola kawung (terang di sekitar kursor). Tidak dibagi dua kolom. Di layar `lg` ke atas kartu berada di sisi kanan; di bawah itu kartu di tengah dan ilustrasi disembunyikan.
-- **Ilustrasi (digambar sendiri, bukan stok):** seorang warga berdiri di depan pintu (tiga lengkung yang tergambar sekali) sambil memegang map berkas dan menunjuk ke kartu login. Terhubung langsung dengan konsep "satu pintu" dan alur berkas. Antislop R-22 melarang ilustrasi stok generik (Undraw, Storyset), jadi jangan diganti dengan itu. SVG-nya inline di layout, dengan `aria-hidden`.
+- **Satu latar penuh, formnya kotak di atasnya.** Latar rimba `#0D2B27` dengan rosette guilloche (mask `/images/guilloche.svg`, berputar mengikuti kursor). Di layar `lg` ke atas kartu berada di sisi kanan; di bawah itu kartu di tengah dan ilustrasi disembunyikan.
+- **Ilustrasi (digambar sendiri, bukan stok):** seorang asesor dengan tanda pengenal merah memegang papan jalan berisi centang dan menunjuk ke kartu login, di samping sertifikat berbingkai (bingkai tergambar sekali, segel merah). Antislop R-22 melarang ilustrasi stok generik, jadi jangan diganti. SVG inline di layout, `aria-hidden`.
 - **Ikon di form login:** amplop (email) dan gembok (kata sandi) di dalam kolom, berubah warna saat fokus; ikon masuk di tombol, digantikan spinner saat memproses.
-- **Kartu form:** putih di mode terang, `#111B38` di mode gelap. Kolom input di mode gelap `#0A1126` supaya terlihat terpisah dari kartu. Tombol utama kunyit dengan teks nila.
-- **Kalimat penutup** "Satu akun untuk semua urusan Anda." di bawah logo, hanya tampil bila layar cukup (lebar 1280px dan tinggi 720px ke atas, kelas `.auth-statement`), dan di luar alur supaya tidak menambah tinggi halaman.
-- **Aksesibilitas:** label terlihat di setiap kolom, error dengan `role="alert"` dan `aria-invalid`, tombol tampilkan/sembunyikan sandi berlabel dan ber-`aria-pressed`, target sentuh minimal 44px, ring fokus terlihat (di area gelap berwarna kunyit).
+- **Kartu form:** putih di mode terang, `#0F2F2B` di mode gelap. Kolom input gelap `#0A1F1C`. Tombol utama merah cap `#E4472D` dengan teks `#1B0B07` dan bayangan bawah `#B2301D`. Tautan `#14403A` (gelap: `#8FD3C2`).
+- **Kalimat penutup** "Satu akun untuk mengikuti uji kompetensi Anda." di bawah logo, hanya tampil bila layar cukup (lebar 1280px dan tinggi 720px ke atas, kelas `.auth-statement`).
+- **Aksesibilitas:** label terlihat di setiap kolom, error dengan `role="alert"` dan `aria-invalid`, tombol tampilkan/sembunyikan sandi berlabel dan ber-`aria-pressed`, target sentuh minimal 44px, ring fokus terlihat (di area gelap berwarna `cap-soft`).
 - **Sengaja tidak ada:** mockup dashboard, grafik, daftar fitur, dan klaim keamanan di panel samping. Semuanya karangan.
 - **Keadaan error di semua form auth sama:** hanya border dan ring fokus yang menjadi merah (`border-red-400`, di mode gelap `red-500`), latar kolom tidak berubah, dan pesan kecil (`text-xs`, merah) dengan ikon tanda seru di bawah kolom. Jangan menambah latar merah muda.
-- Pesan error bawaan komponen Login sudah berbahasa Indonesia.
-
+- Halaman reset sandi masih memakai komponen Flux dengan teks bahasa Inggris. Tampilannya mengikuti kartu, tetapi belum diterjemahkan.

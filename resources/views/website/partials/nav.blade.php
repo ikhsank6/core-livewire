@@ -1,20 +1,22 @@
 @php
     $navItems = [
-        ['label' => 'Beranda', 'href' => route('landing'),            'active' => request()->routeIs('landing')],
-        ['label' => 'Layanan', 'href' => route('landing').'#layanan', 'active' => false],
-        ['label' => 'Berita',  'href' => route('news.index'),         'active' => request()->routeIs('news.*')],
-        ['label' => 'Profil',  'href' => route('about'),              'active' => request()->routeIs('about')],
-        ['label' => 'FAQ',     'href' => route('landing').'#faq',     'active' => false],
+        ['label' => 'Beranda', 'href' => route('landing'),             'active' => request()->routeIs('landing')],
+        ['label' => 'Skema',   'href' => route('landing').'#skema',    'active' => false],
+        ['label' => 'Alur',    'href' => route('landing').'#alur',     'active' => false],
+        ['label' => 'Jadwal',  'href' => route('landing').'#jadwal',   'active' => false],
+        ['label' => 'Berita',  'href' => route('news.index'),          'active' => request()->routeIs('news.*')],
+        ['label' => 'Profil',  'href' => route('about'),               'active' => request()->routeIs('about')],
+        ['label' => 'FAQ',     'href' => route('landing').'#faq',      'active' => false],
     ];
 
     $registerUrl = Route::has('auth.register') ? route('auth.register') : route('login');
 @endphp
 
-{{-- Papan loket: a dark counter board. A lamp hangs from the top edge and
-     lights the item you point at; it rests over the current page. --}}
+{{-- A paper strip with a torn, perforated lower edge. A stamp-shaped frame slides to the item
+     you point at and rests on the current page. --}}
 <header x-data="{ open: false }"
         @keydown.escape.window="open = false"
-        class="on-dark sticky top-0 z-50 bg-nila text-white border-b border-white/10">
+        class="torn sticky top-0 z-50 bg-surface text-ink pb-[9px]">
 
     <div class="wrap">
         <div class="flex items-center h-16 gap-6">
@@ -23,7 +25,6 @@
                 @include('website.partials.logo')
             </a>
 
-            {{-- Counter windows --}}
             <nav aria-label="Navigasi utama"
                  x-data="{
                     x: 0,
@@ -37,10 +38,10 @@
                  x-init="$nextTick(() => rest()); window.addEventListener('resize', () => rest())"
                  @mouseleave="rest()"
                  @focusout="rest()"
-                 class="relative hidden lg:block h-full ml-4">
-                <span class="lamp" aria-hidden="true"
+                 class="relative hidden lg:block h-full ml-2">
+                <span class="nav-stamp" aria-hidden="true"
                       :class="w === 0 ? 'opacity-0' : 'opacity-100'"
-                      :style="`transform: translateX(${x}px); width: ${w}px`"></span>
+                      :style="`transform: translateX(${x}px) rotate(-1.5deg); width: ${w}px`"></span>
 
                 <ul x-ref="row" class="relative flex items-stretch h-full">
                     @foreach($navItems as $item)
@@ -48,8 +49,8 @@
                             <a href="{{ $item['href'] }}"
                                @if($item['active']) aria-current="page" @endif
                                @mouseenter="place($el)" @focus="place($el)"
-                               class="flex items-center h-full px-4 text-[0.9375rem] font-semibold transition-colors duration-200
-                                      {{ $item['active'] ? 'text-white' : 'text-white/70 hover:text-white focus-visible:text-white' }}">
+                               class="flex items-center h-full px-3.5 text-[0.9375rem] font-semibold transition-colors duration-200
+                                      {{ $item['active'] ? 'text-ink' : 'text-body hover:text-ink focus-visible:text-ink' }}">
                                 {{ $item['label'] }}
                             </a>
                         </li>
@@ -57,28 +58,28 @@
                 </ul>
             </nav>
 
-            <div class="flex items-center gap-3 ml-auto">
+            <div class="flex items-center gap-2 ml-auto">
 
                 <button type="button"
                         @click="theme = isDark ? 'light' : 'dark'"
                         :aria-label="isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'"
-                        class="w-11 h-11 rounded-md grid place-items-center text-white/75 hover:text-white hover:bg-white/10 transition-colors cursor-pointer">
+                        class="w-11 h-11 rounded-md grid place-items-center text-muted hover:text-ink hover:bg-sunken transition-colors cursor-pointer">
                     <span x-show="!isDark">@svg('heroicon-o-sun', 'w-5 h-5')</span>
                     <span x-show="isDark" x-cloak>@svg('heroicon-o-moon', 'w-5 h-5')</span>
                 </button>
 
                 <a href="{{ route('login') }}"
-                   class="hidden sm:inline-flex items-center h-11 px-3 rounded-md text-[0.9375rem] font-semibold text-white/80 hover:text-white transition-colors">
+                   class="hidden sm:inline-flex items-center h-11 px-3 rounded-md text-[0.9375rem] font-semibold text-body hover:text-ink transition-colors">
                     Masuk
                 </a>
 
-                <a href="{{ $registerUrl }}" class="ticket hidden sm:inline-flex">Ajukan layanan</a>
+                <a href="{{ $registerUrl }}" class="btn btn-cap hidden sm:inline-flex">Daftar sebagai asesi</a>
 
                 <button type="button" @click="open = !open"
                         :aria-expanded="open ? 'true' : 'false'"
                         aria-controls="nav-mobile"
-                        class="lg:hidden inline-flex items-center gap-2 h-11 pl-3 pr-4 rounded-md border border-white/20
-                               text-[0.9375rem] font-semibold text-white cursor-pointer">
+                        class="lg:hidden inline-flex items-center gap-2 h-11 pl-3 pr-4 rounded-md border border-line
+                               text-[0.9375rem] font-semibold text-ink cursor-pointer">
                     <span x-show="!open">@svg('heroicon-o-bars-3', 'w-5 h-5')</span>
                     <span x-show="open" x-cloak>@svg('heroicon-o-x-mark', 'w-5 h-5')</span>
                     Menu
@@ -88,19 +89,18 @@
     </div>
 
     {{-- Mobile panel: large type, one thumb away --}}
-    <div id="nav-mobile" x-show="open" x-cloak x-collapse class="lg:hidden border-t border-white/10 bg-nila">
+    <div id="nav-mobile" x-show="open" x-cloak x-collapse class="lg:hidden border-t border-line bg-surface">
         <nav aria-label="Navigasi utama (seluler)" class="wrap py-4">
             <ul>
                 @foreach($navItems as $item)
-                    <li class="border-b border-white/10 last:border-0">
+                    <li class="border-b border-line last:border-0">
                         <a href="{{ $item['href'] }}" @click="open = false"
                            @if($item['active']) aria-current="page" @endif
-                           class="flex items-center justify-between min-h-14 font-display text-2xl font-bold tracking-tight
-                                  {{ $item['active'] ? 'text-kunyit' : 'text-white' }}"
-                           style="font-variation-settings: 'wdth' 90;">
+                           class="flex min-h-14 items-center justify-between text-2xl font-extrabold tracking-tight
+                                  {{ $item['active'] ? 'text-accent-text' : 'text-ink' }}">
                             {{ $item['label'] }}
                             @if($item['active'])
-                                <span class="w-2 h-2 rounded-full bg-kunyit" aria-hidden="true"></span>
+                                <span class="h-2 w-2 rounded-full bg-cap" aria-hidden="true"></span>
                             @endif
                         </a>
                     </li>
@@ -108,8 +108,8 @@
             </ul>
 
             <div class="mt-5 grid grid-cols-2 gap-3">
-                <a href="{{ route('login') }}" class="btn btn-lg border border-white/25 text-white hover:bg-white/10">Masuk</a>
-                <a href="{{ $registerUrl }}" class="ticket ticket-lg">Ajukan layanan</a>
+                <a href="{{ route('login') }}" class="btn btn-lg btn-line">Masuk</a>
+                <a href="{{ $registerUrl }}" class="btn btn-lg btn-cap">Daftar</a>
             </div>
         </nav>
     </div>

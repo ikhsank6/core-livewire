@@ -113,18 +113,16 @@
                     @if($aboutUs?->logo)
                         <img src="{{ Storage::url($aboutUs->logo) }}" alt="Logo" class="h-9 w-9 rounded-lg object-contain shrink-0">
                     @else
-                        {{-- Same doorway mark as the public website; the leaf swings open on hover --}}
+                        {{-- Same certification seal as the public website --}}
                         <svg class="w-9 h-9 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                            <path d="M5 33V16C5 8.82 10.82 3 18 3s13 5.82 13 13v17" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
-                            <path d="M2.5 33h31" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
-                            <path d="M18 8c4.4 0 8 3.6 8 8v17H10V16c0-4.4 3.6-8 8-8Z" fill="#FFB81C"
-                                  style="transform-origin: 10px 33px; transition: transform 380ms cubic-bezier(.3,1.2,.4,1);"
-                                  class="group-hover:[transform:scaleX(0.52)] group-focus-visible:[transform:scaleX(0.52)]"/>
+                            <circle cx="18" cy="18" r="16" stroke="#FF8A70" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                            <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
+                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     @endif
                     <div class="min-w-0 hidden sm:block">
                         <p class="font-bold text-white text-sm truncate leading-tight">{{ $aboutUs?->company_name ?? 'Admin' }}</p>
-                        <p class="text-[10px] font-medium uppercase tracking-wider text-blue-200/80 truncate leading-tight">Portal Layanan Publik Terpadu</p>
+                        <p class="text-[10px] font-medium uppercase tracking-wider text-blue-200/80 truncate leading-tight">Lembaga Sertifikasi Profesi</p>
                     </div>
                 </a>
 

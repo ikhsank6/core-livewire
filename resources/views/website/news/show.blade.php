@@ -42,8 +42,7 @@
                 </div>
 
                 @if($news->excerpt)
-                    <p class="mt-6 max-w-[56ch] font-display text-[1.5rem] font-medium leading-snug text-ink"
-                       style="font-variation-settings: 'wdth' 94;">{{ $news->excerpt }}</p>
+                    <p class="mt-6 max-w-[56ch] text-[1.375rem] font-semibold leading-snug tracking-tight text-ink">{{ $news->excerpt }}</p>
                 @endif
 
                 <div class="prose mt-8">{!! $news->content !!}</div>

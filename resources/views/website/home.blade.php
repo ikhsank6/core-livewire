@@ -1,12 +1,14 @@
 @extends('layouts.website')
 
-@section('title', ($aboutUs->company_name ?? config('app.name')) . ' | Portal Layanan Publik Terpadu')
+@section('title', ($aboutUs->company_name ?? config('app.name')) . ' | Lembaga Sertifikasi Profesi')
 
 @section('content')
 
 @include('website.partials.hero')
-@include('website.partials.services')
-@include('website.partials.journey')
+@include('website.partials.skema')
+@include('website.partials.alur')
+@include('website.partials.jadwal')
+@include('website.partials.sorotan')
 
 {{-- ================================================================
      BERITA: one lead story with two shorter ones beside it
@@ -20,7 +22,7 @@
     <section class="py-20 md:py-28">
         <div class="wrap">
             <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-                <h2 class="title">Kabar terbaru dari loket.</h2>
+                <h2 class="title">Kabar terbaru dari LSP.</h2>
                 <a href="{{ route('news.index') }}" class="btn btn-line">Semua berita</a>
             </div>
 
@@ -61,8 +63,7 @@
 
             <div>
                 @if($statement)
-                    <p class="font-display text-[clamp(1.5rem,2.8vw,2.375rem)] font-semibold leading-[1.25] tracking-tight text-ink max-w-[30ch]"
-                       style="font-variation-settings: 'wdth' 92;">
+                    <p class="text-[clamp(1.5rem,2.8vw,2.375rem)] font-extrabold leading-[1.25] tracking-[-0.03em] text-ink max-w-[30ch]">
                         {{ $statement }}
                     </p>
                 @endif

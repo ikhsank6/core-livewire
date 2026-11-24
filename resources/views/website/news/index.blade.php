@@ -7,7 +7,7 @@
 @include('website.partials.page-header', [
     'title'      => 'Berita dan pengumuman.',
     'breadcrumb' => 'Berita',
-    'subtitle'   => 'Kabar terbaru seputar layanan, jadwal, dan pengumuman resmi dari instansi terkait.',
+    'subtitle'   => 'Kabar terbaru seputar skema, jadwal uji, dan pengumuman dari lembaga sertifikasi.',
 ])
 
 <section class="py-14 md:py-20">

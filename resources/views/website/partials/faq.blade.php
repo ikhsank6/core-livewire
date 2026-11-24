@@ -1,26 +1,28 @@
 @php
-    // Static content: there is no FAQ model. Every question comes from the
-    // actual application flow (account, processing, missing documents).
+    // Static content: there is no FAQ model. Every question is one a candidate really asks before
+    // an assessment. Answers stay general: scheme specific rules are shown when applying.
     $faqs = [
-        ['q' => 'Apakah harus punya akun untuk mengajukan layanan?',
-         'a' => 'Ya. Akun diperlukan agar setiap pengajuan terhubung dengan identitas pemohon dan statusnya bisa dilacak. Pendaftaran cukup sekali, memakai nomor induk kependudukan dan alamat surel aktif.'],
-        ['q' => 'Berapa lama berkas saya diproses?',
-         'a' => 'Itu bergantung pada jenis layanan. Perkiraan waktu setiap layanan ditampilkan sebelum Anda mengirim pengajuan, dan posisi berkas bisa dilihat kapan saja dari akun.'],
-        ['q' => 'Bagaimana jika dokumen saya kurang?',
-         'a' => 'Anda mendapat pemberitahuan lewat surel dan pesan singkat, lengkap dengan dokumen yang perlu dilengkapi. Perbaikan diunggah langsung ke pengajuan yang sama, tanpa mengulang dari awal.'],
-        ['q' => 'Apakah dokumen elektronik sah tanpa legalisasi?',
-         'a' => 'Setiap dokumen terbitan portal memuat kode verifikasi yang bisa diperiksa siapa pun lewat halaman verifikasi, jadi salinan fisik tidak perlu dilegalisasi lagi.'],
-        ['q' => 'Saya tidak bisa datang pada jam kerja. Ada pilihan lain?',
-         'a' => 'Pengajuan lewat portal bisa dilakukan kapan saja. Untuk layanan yang memerlukan kehadiran, jadwal dan lokasinya tercantum di halaman profil.'],
+        ['q' => 'Apa bedanya sertifikat kompetensi dengan ijazah?',
+         'a' => 'Ijazah menunjukkan Anda menyelesaikan pendidikan. Sertifikat kompetensi menunjukkan Anda telah diuji dan mampu mengerjakan pekerjaan tertentu menurut standar kompetensinya.'],
+        ['q' => 'Apakah saya harus ikut pelatihan sebelum uji?',
+         'a' => 'Tidak selalu. Yang dinilai adalah kemampuan Anda, bukan lamanya Anda berlatih. Syarat yang berlaku untuk setiap skema ditampilkan saat Anda mengajukan permohonan.'],
+        ['q' => 'Dokumen apa yang perlu saya siapkan?',
+         'a' => 'Umumnya identitas dan bukti pendukung kompetensi, seperti ijazah, sertifikat pelatihan, atau bukti pengalaman kerja. Daftar lengkapnya mengikuti skema yang Anda pilih.'],
+        ['q' => 'Siapa yang menilai saya?',
+         'a' => 'Asesor kompetensi. Asesor menilai Anda terhadap unit kompetensi pada skema, bukan terhadap peserta lain.'],
+        ['q' => 'Apa yang terjadi jika hasil saya Belum Kompeten?',
+         'a' => 'Asesor menyampaikan unit mana yang belum terpenuhi. Dengan begitu Anda tahu bagian mana yang perlu dipelajari lagi.'],
+        ['q' => 'Di mana ujinya dilaksanakan?',
+         'a' => 'Di tempat uji kompetensi (TUK). Lokasi untuk setiap jadwal tertera di bagian Jadwal.'],
     ];
 @endphp
 
-<section id="faq" class="scroll-mt-16 border-t border-line py-20 md:py-28">
-    <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,23rem)_minmax(0,1fr)] lg:gap-20">
+<section id="faq" class="scroll-mt-20 border-t border-line py-20 md:py-28">
+    <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-20">
 
         <div>
-            <h2 class="title">Pertanyaan yang sering diajukan di loket.</h2>
-            <p class="lead mt-5 max-w-[34ch]">Belum menemukan jawabannya? Hubungi kami lewat kanal resmi.</p>
+            <h2 class="title">Pertanyaan yang paling sering diajukan calon asesi.</h2>
+            <p class="lead mt-5 max-w-[34ch]">Belum menemukan jawabannya? Hubungi LSP lewat kanal resmi.</p>
             <a href="{{ route('about') }}#kontak" class="btn btn-line btn-lg mt-8">Lihat kontak</a>
         </div>
 
@@ -32,16 +34,16 @@
                                 @click="open = !open"
                                 :aria-expanded="open ? 'true' : 'false'"
                                 aria-controls="faq-panel-{{ $index }}"
-                                class="group flex w-full items-center justify-between gap-6 py-6 text-left cursor-pointer">
-                            <span class="subtitle text-[1.1875rem] transition-colors group-hover:text-link">{{ $faq['q'] }}</span>
+                                class="group flex w-full cursor-pointer items-center justify-between gap-6 py-6 text-left">
+                            <span class="subtitle text-[1.125rem] transition-colors group-hover:text-link">{{ $faq['q'] }}</span>
                             <span class="shrink-0 text-muted transition-transform duration-300" :class="open ? 'rotate-45 text-ink' : ''" aria-hidden="true">
-                                @svg('heroicon-m-plus', 'w-6 h-6')
+                                @svg('heroicon-m-plus', 'h-6 w-6')
                             </span>
                         </button>
                     </h3>
 
                     <div id="faq-panel-{{ $index }}" x-show="open" x-collapse x-cloak>
-                        <p class="pb-7 max-w-[62ch] leading-relaxed">{{ $faq['a'] }}</p>
+                        <p class="max-w-[62ch] pb-7 leading-relaxed">{{ $faq['a'] }}</p>
                     </div>
                 </div>
             @endforeach

@@ -9,35 +9,37 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ================================================================
-   SATU PINTU: public portal design system
-   Identity: a door and a service counter. One accent (kunyit, the
-   light coming through the door) on a deep indigo ground (nila).
+   LEMBAGA SERTIFIKASI PROFESI: public portal design system
+   Identity: the assessment file. Forms, checkboxes, a stamped
+   decision (Kompeten / Belum Kompeten) and the guilloche security
+   print found on certificates. One accent (cap, the red of a rubber
+   stamp) on a deep pine ground (rimba). One typeface: Plus Jakarta Sans.
    Separate from the admin panel (app.css). Do not mix the two.
    ================================================================ */
 
 /* Semantic tokens: these flip with the theme, so components rarely
    need dark: variants. Brand constants live in @theme below. */
 :root {
-    --page:        #F5F6F3;
+    --page:        #F4F6F2;
     --surface:     #FFFFFF;
-    --sunken:      #ECEEE9;
-    --ink:         #0E1424;
-    --body:        #3F485C;
-    --muted:       #5B6478;
-    --line:        #DADED8;
-    --accent-text: #8A5C00;
-    --link:        #1A3E9A;
+    --sunken:      #E9EDE7;
+    --ink:         #0F1C1A;
+    --body:        #3C4B47;
+    --muted:       #566763;
+    --line:        #D8DDD6;
+    --accent-text: #B2301D;
+    --link:        #0F5C52;
 }
 .dark {
-    --page:        #0A1126;
-    --surface:     #111B38;
-    --sunken:      #0E1730;
-    --ink:         #F2F5FF;
-    --body:        #C3CBE0;
-    --muted:       #94A0BE;
-    --line:        #223056;
-    --accent-text: #FFB81C;
-    --link:        #8DB4FF;
+    --page:        #0A1D1A;
+    --surface:     #11302B;
+    --sunken:      #0D2723;
+    --ink:         #EEF5F2;
+    --body:        #BFD0CA;
+    --muted:       #8FA8A1;
+    --line:        #1F4039;
+    --accent-text: #FF8A70;
+    --link:        #6FD3C3;
 }
 
 @theme inline {
@@ -53,15 +55,15 @@
 }
 
 @theme {
-    /* Display: Bricolage Grotesque (width axis gives the headings their
-       compressed, signage-like voice). Body: Plus Jakarta Sans, drawn in
-       Jakarta and very legible at small sizes. */
-    --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    /* One family for everything, so hierarchy comes from weight, size and tracking. */
+    --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     --font-sans:    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
-    --color-nila:   #0B1B4D;
-    --color-kobalt: #1A3E9A;
-    --color-kunyit: #FFB81C;
+    --color-rimba:      #0D2B27;  /* deep pine: hero, footer, dark bands */
+    --color-rimba-2:    #14403A;  /* lifted pine: panels on a dark band */
+    --color-cap:        #E4472D;  /* stamp red: the single accent */
+    --color-cap-deep:   #B2301D;  /* stamp red for text on light paper */
+    --color-cap-soft:   #FF8A70;  /* stamp red for text and focus on dark */
 }
 
 /* ================================================================
@@ -69,10 +71,10 @@
    ================================================================ */
 [x-cloak] { display: none !important; }
 
-html { color-scheme: light; background-color: var(--page); scroll-behavior: smooth; scroll-padding-top: 5rem; }
+html { color-scheme: light; background-color: var(--page); scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
 html.dark { color-scheme: dark; }
 
-/* `clip` keeps position:sticky working (hidden would break the navbar). */
+/* `clip` keeps position:sticky working (hidden would break the header). */
 html, body { overflow-x: clip; }
 
 body {
@@ -94,29 +96,26 @@ body {
     .display {
         font-family: var(--font-display);
         text-wrap: balance;
-        font-weight: 750;
-        font-variation-settings: "wdth" 90;
-        font-size: clamp(2.6rem, 5.6vw, 4.75rem);
-        letter-spacing: -0.022em;
-        line-height: 1.03;
+        font-weight: 800;
+        font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+        letter-spacing: -0.04em;
+        line-height: 1.02;
     }
     .title {
         font-family: var(--font-display);
         text-wrap: balance;
-        font-weight: 700;
-        font-variation-settings: "wdth" 92;
-        font-size: clamp(2rem, 3.6vw, 3.1rem);
-        letter-spacing: -0.02em;
+        font-weight: 800;
+        font-size: clamp(1.9rem, 3.4vw, 3rem);
+        letter-spacing: -0.035em;
         line-height: 1.08;
     }
     .subtitle {
         font-family: var(--font-display);
         text-wrap: balance;
-        font-weight: 650;
-        font-variation-settings: "wdth" 94;
-        font-size: 1.375rem;
-        letter-spacing: -0.01em;
-        line-height: 1.22;
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
     }
     .lead {
         font-size: 1.125rem;
@@ -130,127 +129,108 @@ body {
 @layer components {
     .wrap { @apply mx-auto w-full max-w-312 px-5 md:px-8; }
 
-    /* Buttons: small radius, not pills */
+    /* Buttons: small radius. The primary one presses down like a stamp. */
     .btn {
         @apply inline-flex items-center justify-center gap-2 h-11 px-5 rounded-md text-[0.9375rem]
-               font-semibold whitespace-nowrap transition-colors duration-150 cursor-pointer;
+               font-bold whitespace-nowrap transition-colors duration-150 cursor-pointer;
     }
     .btn-lg { @apply h-12 px-6 text-base; }
-    .btn-solid { @apply bg-ink text-page hover:bg-kobalt hover:text-white; }
+    .btn-cap {
+        background: var(--color-cap);
+        color: #1B0B07;
+        box-shadow: 0 3px 0 var(--color-cap-deep);
+        transition: transform 90ms ease-out, box-shadow 90ms ease-out, filter 150ms ease;
+    }
+    .btn-cap:hover { filter: brightness(1.06); }
+    .btn-cap:active { transform: translateY(3px); box-shadow: 0 0 0 var(--color-cap-deep); }
+    .btn-solid { @apply bg-ink text-page hover:opacity-90; }
     .btn-line  { @apply border border-line text-ink hover:bg-sunken; }
-    .btn-kunyit { @apply bg-kunyit text-nila hover:brightness-95; }
+    .btn-ghost-light { @apply border border-white/30 text-white hover:bg-white/10; }
 
-    .panel { @apply rounded-2xl border border-line bg-surface; }
-}
-
-@layer components {
-    /* Ticket (karcis): the signature call-to-action shape. Notches are cut
-       with a mask, so the keyboard focus ring is drawn inside the shape. */
-    .ticket {
-        --notch: 7px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        height: 2.75rem;
-        padding: 0 1.6rem;
-        border-radius: 4px;
-        background: var(--color-kunyit);
-        color: var(--color-nila);
-        font-weight: 700;
-        font-size: 0.9375rem;
-        white-space: nowrap;
-        cursor: pointer;
-        -webkit-mask:
-            radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
-            radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
-        mask:
-            radial-gradient(circle var(--notch) at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
-            radial-gradient(circle var(--notch) at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
-        transition: filter 150ms ease, transform 150ms ease;
-    }
-    .ticket:hover { filter: brightness(0.94); }
-    .ticket:active { transform: translateY(1px); }
-    .ticket:focus-visible {
-        outline: none;
-        box-shadow: inset 0 0 0 2px var(--color-nila), inset 0 0 0 4px #fff;
-    }
-    .ticket-lg { height: 3.25rem; padding: 0 2rem; font-size: 1rem; }
+    .panel { @apply rounded-xl border border-line bg-surface; }
 }
 
 /* ================================================================
-   KAWUNG: batik motif used as the hero ground. Overlapping circles.
-   Two layers: a faint base, and a bright copy revealed by a mask that
-   follows the pointer (the light of the door).
+   ROSETTE: guilloche security print used as the background effect.
+   The SVG is a mask, so any colour (currentColor) can be poured into it.
+   It turns a few degrees with the pointer (--rot), set from the view.
    ================================================================ */
-.kawung,
-.kawung-lit {
-    background-size: 72px 72px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1' stroke-opacity='.13'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
-}
-.kawung-lit {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1.2' stroke-opacity='.75'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
-    -webkit-mask-image: radial-gradient(circle 22rem at var(--mx, 72%) var(--my, 46%), #000 0%, transparent 72%);
-    mask-image: radial-gradient(circle 22rem at var(--mx, 72%) var(--my, 46%), #000 0%, transparent 72%);
-}
-/* Quiet variant for light inner-page headers */
-.kawung-ink {
-    background-size: 72px 72px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%231A3E9A' stroke-width='1' stroke-opacity='.10'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
-    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 70%);
-    mask-image: linear-gradient(to left, #000 0%, transparent 70%);
-}
-.dark .kawung-ink {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFB81C' stroke-width='1' stroke-opacity='.10'%3E%3Ccircle cx='0' cy='0' r='36'/%3E%3Ccircle cx='72' cy='0' r='36'/%3E%3Ccircle cx='0' cy='72' r='36'/%3E%3Ccircle cx='72' cy='72' r='36'/%3E%3Ccircle cx='36' cy='36' r='36'/%3E%3C/g%3E%3C/svg%3E");
-}
-
-/* ================================================================
-   THE DOOR: arch frame for the hero slider
-   ================================================================ */
-.arch {
-    border-radius: 9999px 9999px 0 0;
-    animation: door-open 1100ms cubic-bezier(0.22, 0.8, 0.2, 1) both;
-}
-@keyframes door-open {
-    from { clip-path: inset(100% 0 0 0); }
-    to   { clip-path: inset(0 0 0 0); }
-}
-.door-spill {
-    background: radial-gradient(60% 55% at 50% 100%, rgba(255, 184, 28, 0.28), transparent 70%);
-}
-
-/* ================================================================
-   NAV LAMP: hangs from the top edge of the bar and lights the
-   hovered or current item, like the sign above a service window.
-   ================================================================ */
-.lamp {
+.rosette {
     position: absolute;
-    top: 0;
+    aspect-ratio: 1;
+    background-color: currentColor;
+    -webkit-mask: url("/images/guilloche.svg") center / contain no-repeat;
+    mask: url("/images/guilloche.svg") center / contain no-repeat;
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+}
+
+/* ================================================================
+   TORN EDGE: a strip of perforation holes along the bottom of the
+   header, like a form torn from a pad.
+   ================================================================ */
+.torn {
+    --hole: 3.5px;
+    --pitch: 14px;
+    -webkit-mask:
+        radial-gradient(circle var(--hole) at 50% 100%, #0000 96%, #000) bottom / var(--pitch) 9px repeat-x,
+        linear-gradient(#000, #000) top / 100% calc(100% - 9px) no-repeat;
+    mask:
+        radial-gradient(circle var(--hole) at 50% 100%, #0000 96%, #000) bottom / var(--pitch) 9px repeat-x,
+        linear-gradient(#000, #000) top / 100% calc(100% - 9px) no-repeat;
+}
+
+/* ================================================================
+   STAMP: the Kompeten decision. It lands once, with a little bounce.
+   ================================================================ */
+.stamp {
+    border: 3px solid var(--color-cap);
+    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 6px var(--color-cap);
+    color: var(--color-cap);
+    border-radius: 6px;
+    transform: rotate(-9deg);
+    animation: stamp-hit 720ms cubic-bezier(0.2, 0.9, 0.3, 1) 900ms both;
+}
+@keyframes stamp-hit {
+    0%   { opacity: 0; transform: scale(2.1) rotate(-20deg); }
+    55%  { opacity: 1; transform: scale(0.93) rotate(-8deg); }
+    75%  { transform: scale(1.04) rotate(-10deg); }
+    100% { opacity: 1; transform: scale(1) rotate(-9deg); }
+}
+
+/* The logo seal: its check mark redraws when the logo is hovered or focused */
+.seal-check { stroke-dasharray: 26; stroke-dashoffset: 0; }
+.group:hover .seal-check,
+.group:focus-visible .seal-check { animation: seal-draw 520ms ease-out; }
+@keyframes seal-draw { from { stroke-dashoffset: 26; } to { stroke-dashoffset: 0; } }
+
+/* ================================================================
+   NAV STAMP: a stamp-shaped frame that slides to the item you point at
+   and rests on the current page.
+   ================================================================ */
+.nav-stamp {
+    position: absolute;
+    top: 50%;
     left: 0;
-    height: 100%;
+    height: 2.25rem;
+    margin-top: -1.125rem;
+    border: 2px solid var(--color-cap);
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 2px transparent, 0 0 0 1px rgba(228, 71, 45, 0.18);
     pointer-events: none;
     transition: transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1), width 320ms ease, opacity 200ms ease;
 }
-.lamp::before {
+.nav-stamp::after {
     content: "";
     position: absolute;
-    top: 0;
-    left: 14%;
-    right: 14%;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: var(--color-kunyit);
-}
-.lamp::after {
-    content: "";
-    position: absolute;
-    inset: 3px 0 0 0;
-    background: linear-gradient(to bottom, rgba(255, 184, 28, 0.30), rgba(255, 184, 28, 0) 92%);
-    clip-path: polygon(14% 0, 86% 0, 100% 100%, 0 100%);
+    inset: 3px;
+    border: 1px solid rgba(228, 71, 45, 0.45);
+    border-radius: 3px;
 }
 
 /* ================================================================
-   FOCUS: always visible. On dark bands the ring turns kunyit.
+   FOCUS: always visible. On dark bands the ring turns soft red.
    ================================================================ */
 a:focus-visible,
 button:focus-visible,
@@ -266,7 +246,7 @@ summary:focus-visible {
 .on-dark a:focus-visible,
 .on-dark button:focus-visible,
 .on-dark [tabindex]:focus-visible {
-    outline-color: var(--color-kunyit);
+    outline-color: var(--color-cap-soft);
 }
 
 .skip-link {
@@ -274,8 +254,8 @@ summary:focus-visible {
     left: 1rem;
     top: -100px;
     z-index: 200;
-    background: var(--color-kunyit);
-    color: var(--color-nila);
+    background: var(--color-cap);
+    color: #1B0B07;
     padding: 0.75rem 1.25rem;
     border-radius: 6px;
     font-size: 0.875rem;
@@ -291,16 +271,17 @@ summary:focus-visible {
 .prose p { margin-bottom: 1.15rem; line-height: 1.8; color: var(--body); }
 .prose h2 {
     font-family: var(--font-display);
-    font-size: 1.65rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
     margin: 2.25rem 0 0.875rem;
     color: var(--ink);
 }
 .prose h3 {
     font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 650;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     margin: 1.5rem 0 0.75rem;
     color: var(--ink);
 }
@@ -311,15 +292,16 @@ summary:focus-visible {
 .prose a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .prose img { border-radius: 0.75rem; margin: 1.5rem 0; }
 .prose blockquote {
-    border-left: 3px solid var(--color-kunyit);
+    border-left: 3px solid var(--color-cap);
     padding: 0.25rem 0 0.25rem 1.25rem;
     margin: 1.75rem 0;
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    line-height: 1.35;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.4;
     color: var(--ink);
 }
-.prose strong { color: var(--ink); font-weight: 650; }
+.prose strong { color: var(--ink); font-weight: 700; }
 
 /* ================================================================
    REDUCED MOTION: everything that moves comes to rest.
@@ -334,5 +316,6 @@ summary:focus-visible {
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
     }
-    .arch { animation: none; clip-path: none; }
+    .stamp { animation: none; opacity: 1; transform: rotate(-9deg); }
+    .rosette { transform: none !important; }
 }

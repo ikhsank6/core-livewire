@@ -38,9 +38,9 @@
 @section('content')
 
 @include('website.partials.page-header', [
-    'title'      => 'Satu alur, bukan satu gedung.',
+    'title'      => 'Lembaga yang menguji kompetensi, bukan lamanya Anda berlatih.',
     'breadcrumb' => 'Profil',
-    'subtitle'   => 'Siapa yang mengelola portal ini, apa yang dikerjakan, dan ke mana menghubunginya.',
+    'subtitle'   => 'Siapa yang mengelola uji kompetensi ini, apa yang dikerjakan, dan ke mana menghubunginya.',
 ])
 
 {{-- ================================================================
@@ -65,17 +65,17 @@
                          alt="{{ $aboutUs->company_name }}"
                          class="max-w-full max-h-32 object-contain">
                 @else
-                    <span class="grid h-20 w-20 place-items-center rounded-t-full bg-nila" aria-hidden="true">
-                        <svg class="h-10 w-10" viewBox="0 0 36 36" fill="none">
-                            <path d="M5 33V16C5 8.82 10.82 3 18 3s13 5.82 13 13v17" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
-                            <path d="M2.5 33h31" stroke="#FFB81C" stroke-width="2.4" stroke-linecap="round"/>
-                            <path d="M18 8c4.4 0 8 3.6 8 8v17H10V16c0-4.4 3.6-8 8-8Z" fill="#FFB81C"/>
+                    <span class="grid h-20 w-20 place-items-center rounded-full bg-rimba" aria-hidden="true">
+                        <svg class="h-12 w-12" viewBox="0 0 36 36" fill="none">
+                            <circle cx="18" cy="18" r="16" stroke="#E4472D" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                            <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
+                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </span>
                 @endif
 
                 <p class="subtitle mt-6">{{ $aboutUs->company_name ?? config('app.name') }}</p>
-                <p class="mt-1.5 text-[0.9375rem] text-muted">Pelayanan Terpadu Satu Pintu</p>
+                <p class="mt-1.5 text-[0.9375rem] text-muted">Lembaga Sertifikasi Profesi</p>
             </div>
         </aside>
     </div>
@@ -89,7 +89,7 @@
 
         <div class="max-w-2xl">
             <h2 class="title">Kanal resmi.</h2>
-            <p class="lead mt-5">Hubungi kami pada hari kerja. Pengajuan lewat portal tetap diterima kapan saja.</p>
+            <p class="lead mt-5">Hubungi kami pada hari kerja. Permohonan sertifikasi lewat portal tetap diterima kapan saja.</p>
         </div>
 
         <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
@@ -103,7 +103,7 @@
                                 @if($channel['href'])
                                     <a href="{{ $channel['href'] }}"
                                        @if(Str::startsWith($channel['href'], 'http')) target="_blank" rel="noopener noreferrer" @endif
-                                       class="text-ink underline decoration-line underline-offset-4 hover:decoration-kunyit transition-colors">
+                                       class="inline-flex min-h-11 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-cap transition-colors">
                                         {{ $channel['value'] }}
                                     </a>
                                 @else

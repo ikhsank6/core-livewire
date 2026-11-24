@@ -15,11 +15,11 @@
     @include('partials.meta-og')
     @include('partials.favicon')
 
-    {{-- Bricolage Grotesque (display, width axis) + Plus Jakarta Sans (body) --}}
+    {{-- Plus Jakarta Sans is the only typeface of the portal --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 
     @vite(['resources/css/website.css', 'resources/js/website.js'])
 

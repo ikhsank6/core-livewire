@@ -17,7 +17,7 @@
                     <img src="{{ $image }}" alt="" loading="lazy"
                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 @else
-                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                    <div class="rosette inset-0 m-auto w-4/5 text-ink/[0.08]" aria-hidden="true"></div>
                 @endif
             </div>
             <div class="min-w-0 self-center">
@@ -38,7 +38,7 @@
                     <img src="{{ $image }}" alt="{{ $item->title }}" loading="lazy"
                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]">
                 @else
-                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                    <div class="rosette inset-0 m-auto w-4/5 text-ink/[0.08]" aria-hidden="true"></div>
                 @endif
             </div>
             <p class="mt-6 text-sm text-muted">
@@ -58,7 +58,7 @@
                     <img src="{{ $image }}" alt="{{ $item->title }}" loading="lazy"
                          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                 @else
-                    <div class="kawung-ink absolute inset-0" aria-hidden="true"></div>
+                    <div class="rosette inset-0 m-auto w-4/5 text-ink/[0.08]" aria-hidden="true"></div>
                 @endif
             </div>
             <p class="mt-5 text-sm text-muted">
