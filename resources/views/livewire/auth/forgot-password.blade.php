@@ -1,8 +1,8 @@
 <div>
     {{-- Header --}}
     <div class="mb-6">
-        <h1 class="text-[2rem] font-bold leading-tight text-[#10201D] dark:text-white" style="text-wrap: balance;">Lupa Kata Sandi?</h1>
-        <p class="mt-1 text-sm text-[#4F615D] dark:text-[#9DB3AD] leading-relaxed">
+        <h1 class="text-[2rem] font-bold leading-tight text-[#1b1c22] dark:text-white" style="text-wrap: balance;">Lupa Kata Sandi?</h1>
+        <p class="mt-1 text-sm text-[#4F615D] dark:text-gray-400 leading-relaxed">
             Masukkan alamat email Anda dan kami akan mengirimkan tautan untuk mengatur ulang kata sandi.
         </p>
     </div>
@@ -29,8 +29,8 @@
             <input id="email" wire:model="email" type="email" autocomplete="email"
                 placeholder="nama@contoh.com"
                 @class([
-                    'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-white dark:bg-[#0A1F1C] text-[#10201D] dark:text-white placeholder-[#5F716D] dark:placeholder-[#7D948E] focus:outline-none focus:ring-2 transition-colors',
-                    'border-[#C5CFC9] dark:border-[#2A4A44] focus:ring-[#14403A] focus:border-[#14403A]' => !$errors->has('email'),
+                    'block w-full rounded-lg border px-3.5 py-2.5 text-sm bg-white dark:bg-[#1e1e2d] text-[#1b1c22] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors',
+                    'border-[#C5CFC9] dark:border-[#2d3f7a] focus:ring-[#1a3e9a] focus:border-[#1a3e9a]' => !$errors->has('email'),
                     'border-red-400 dark:border-red-500 focus:ring-red-400' => $errors->has('email'),
                 ])>
             @error('email')
@@ -45,7 +45,7 @@
 
         {{-- Submit --}}
         <button type="submit"
-            class="w-full flex items-center justify-center gap-2 rounded-md bg-[#E4472D] shadow-[0_3px_0_#B2301D] hover:brightness-105 active:translate-y-[3px] active:shadow-none px-5 h-12 text-base font-bold text-[#1B0B07] transition-colors focus:outline-none focus:ring-2 focus:ring-[#14403A] focus:ring-offset-2 dark:focus:ring-offset-[#0F2F2B] disabled:opacity-60 disabled:cursor-not-allowed"
+            class="w-full flex items-center justify-center gap-2 rounded-md bg-[#1b84ff] shadow-[0_3px_0_#0070f0] hover:brightness-105 active:translate-y-[3px] active:shadow-none px-5 h-12 text-base font-bold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#14403A] focus:ring-offset-2 dark:focus:ring-offset-[#0F2F2B] disabled:opacity-60 disabled:cursor-not-allowed"
             wire:loading.attr="disabled">
             <svg wire:loading class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -61,7 +61,7 @@
         {{-- Back to login --}}
         <div class="text-center pt-1">
             <a href="{{ route('auth.login') }}" wire:navigate
-                class="inline-flex min-h-11 items-center gap-1.5 text-sm text-[#4F615D] dark:text-[#9DB3AD] hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                class="inline-flex min-h-11 items-center gap-1.5 text-sm text-[#4F615D] dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                 </svg>

@@ -1,14 +1,14 @@
 @php
     // Field styling. The error state matches the register form: only the border and focus
     // ring turn red (the background stays as it is), plus a small red message with an icon.
-    $input = 'block h-12 w-full rounded-lg border px-3.5 text-[0.9375rem] text-[#10201D] placeholder-[#5F716D] transition-colors dark:text-white dark:placeholder-[#7D948E] focus:outline-none focus:ring-2';
-    $ok = 'bg-white dark:bg-[#0A1F1C] border-[#C5CFC9] dark:border-[#2A4A44] focus:ring-[#14403A] focus:border-[#14403A]';
-    $bad = 'bg-white dark:bg-[#0A1F1C] border-red-400 dark:border-red-500 focus:ring-red-400 focus:border-red-400';
-    $link = 'inline-block -my-3 py-3 font-semibold text-[#14403A] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#8FD3C2]';
+    $input = 'block h-12 w-full rounded-lg border px-3.5 text-[0.9375rem] text-[#1b1c22] placeholder-gray-400 transition-colors dark:text-white dark:placeholder-gray-500 focus:outline-none focus:ring-2';
+    $ok = 'bg-white dark:bg-[#1e1e2d] border-[#C5CFC9] dark:border-[#2d3f7a] focus:ring-[#1a3e9a] focus:border-[#1a3e9a]';
+    $bad = 'bg-white dark:bg-[#1e1e2d] border-red-400 dark:border-red-500 focus:ring-red-400 focus:border-red-400';
+    $link = 'inline-block -my-3 py-3 font-semibold text-[#1a3e9a] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#60a5fa]';
 @endphp
 
 <div>
-    <h1 class="text-[2rem] font-bold leading-[1.05] text-[#10201D] dark:text-white" style="text-wrap: balance;">
+    <h1 class="text-[2rem] font-bold leading-[1.05] text-[#1b1c22] dark:text-white" style="text-wrap: balance;">
         Masuk ke akun Anda
     </h1>
     <p class="mt-3 text-[0.9375rem]">
@@ -20,13 +20,13 @@
 
         {{-- Email --}}
         <div>
-            <label for="email" class="mb-2 block text-sm font-semibold text-[#10201D] dark:text-[#F1F6F4]">Alamat email</label>
+            <label for="email" class="mb-2 block text-sm font-semibold text-[#1b1c22] dark:text-[#e2e8f0]">Alamat email</label>
             <div class="relative">
                 <input id="email" wire:model="email" type="email" autocomplete="email" inputmode="email"
                     placeholder="nama@contoh.com"
                     @error('email') aria-invalid="true" aria-describedby="email-error" @enderror
                     class="peer {{ $input }} pl-12 {{ $errors->has('email') ? $bad : $ok }}">
-                <span class="pointer-events-none absolute inset-y-0 left-0 grid w-12 place-items-center text-[#4F615D] transition-colors peer-focus:text-[#14403A] dark:text-[#9DB3AD] dark:peer-focus:text-[#8FD3C2]" aria-hidden="true">
+                <span class="pointer-events-none absolute inset-y-0 left-0 grid w-12 place-items-center text-[#4F615D] transition-colors peer-focus:text-[#1a3e9a] dark:text-gray-400 dark:peer-focus:text-[#60a5fa]" aria-hidden="true">
                     @svg('heroicon-o-envelope', 'h-5 w-5')
                 </span>
             </div>
@@ -41,7 +41,7 @@
         {{-- Password --}}
         <div x-data="{ show: false }">
             <div class="mb-2 flex items-center justify-between gap-4">
-                <label for="password" class="text-sm font-semibold text-[#10201D] dark:text-[#F1F6F4]">Kata sandi</label>
+                <label for="password" class="text-sm font-semibold text-[#1b1c22] dark:text-[#e2e8f0]">Kata sandi</label>
                 <a href="{{ route('auth.password.request') }}" wire:navigate class="{{ $link }} text-sm">Lupa kata sandi?</a>
             </div>
             <div class="relative">
@@ -49,13 +49,13 @@
                     autocomplete="current-password" placeholder="Masukkan kata sandi"
                     @error('password') aria-invalid="true" aria-describedby="password-error" @enderror
                     class="peer {{ $input }} pl-12 pr-12 {{ $errors->has('password') ? $bad : $ok }}">
-                <span class="pointer-events-none absolute inset-y-0 left-0 grid w-12 place-items-center text-[#4F615D] transition-colors peer-focus:text-[#14403A] dark:text-[#9DB3AD] dark:peer-focus:text-[#8FD3C2]" aria-hidden="true">
+                <span class="pointer-events-none absolute inset-y-0 left-0 grid w-12 place-items-center text-[#4F615D] transition-colors peer-focus:text-[#1a3e9a] dark:text-gray-400 dark:peer-focus:text-[#60a5fa]" aria-hidden="true">
                     @svg('heroicon-o-lock-closed', 'h-5 w-5')
                 </span>
                 <button type="button" @click="show = !show"
                     :aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
                     :aria-pressed="show ? 'true' : 'false'"
-                    class="absolute inset-y-0 right-0 grid w-12 cursor-pointer place-items-center text-[#4F615D] transition-colors hover:text-[#10201D] dark:text-[#9DB3AD] dark:hover:text-white">
+                    class="absolute inset-y-0 right-0 grid w-12 cursor-pointer place-items-center text-[#4F615D] transition-colors hover:text-[#1b1c22] dark:text-gray-400 dark:hover:text-white">
                     <svg x-show="!show" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -76,13 +76,13 @@
         {{-- Remember me --}}
         <label for="remember" class="flex min-h-11 cursor-pointer select-none items-center gap-3 text-[0.9375rem]">
             <input id="remember" wire:model="remember" type="checkbox"
-                class="h-5 w-5 cursor-pointer rounded border-[#C5CFC9] bg-white accent-[#14403A] dark:border-[#2A4A44] dark:bg-[#0A1F1C] dark:accent-[#8FD3C2]">
+                class="h-5 w-5 cursor-pointer rounded border-[#C5CFC9] bg-white accent-[#1a3e9a] dark:border-[#2d3f7a] dark:bg-[#1e1e2d] dark:accent-[#60a5fa]">
             Ingat saya di perangkat ini
         </label>
 
         {{-- Submit: the stamp red is the one accent, used here at the key moment --}}
         <button type="submit" wire:loading.attr="disabled"
-            class="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#E4472D] shadow-[0_3px_0_#B2301D] active:translate-y-[3px] active:shadow-none px-5 text-base font-bold text-[#1B0B07] transition-[filter] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60">
+            class="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#1b84ff] shadow-[0_3px_0_#0070f0] active:translate-y-[3px] active:shadow-none px-5 text-base font-bold text-white transition-[filter] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60">
             <svg wire:loading class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>

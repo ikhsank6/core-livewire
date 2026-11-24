@@ -23,7 +23,7 @@
         @elseif($alreadyVerified)
             {{-- Already Verified --}}
             <div
-                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#FBE3DD] dark:bg-[#E4472D]/15 mb-4">
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#FBE3DD] dark:bg-[#1b84ff]/15 mb-4">
                 <svg class="w-8 h-8 text-[#B2301D] dark:text-[#FF8A70]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>

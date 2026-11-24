@@ -9,7 +9,7 @@
 
     @include('partials.favicon')
 
-    {{-- One family only, same as the public site: Plus Jakarta Sans --}}
+    {{-- Font: Inter, same as the admin panel --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; }
+        body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; }
         h1, h2, h3, h4, .auth-display {
             font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
             font-weight: 800;
@@ -58,18 +58,18 @@
         /* Visible keyboard focus everywhere inside the auth screen */
         .auth-shell a:focus-visible,
         .auth-shell button:focus-visible,
-        .auth-shell input:focus-visible { outline: 2px solid #14403A; outline-offset: 2px; }
+        .auth-shell input:focus-visible { outline: 2px solid #1b84ff; outline-offset: 2px; }
         .dark .auth-shell a:focus-visible,
         .dark .auth-shell button:focus-visible,
-        .dark .auth-shell input:focus-visible { outline-color: #8FD3C2; }
-        .auth-dark a:focus-visible, .auth-dark button:focus-visible { outline-color: #FF8A70 !important; }
+        .dark .auth-shell input:focus-visible { outline-color: #60a5fa; }
+        .auth-dark a:focus-visible, .auth-dark button:focus-visible { outline-color: #93c5fd !important; }
     </style>
 </head>
 
-<body class="auth-shell min-h-full antialiased bg-[#0D2B27] text-[#38504A] dark:text-[#C9D8D4]">
+<body class="auth-shell min-h-full antialiased bg-[#173684] text-[#c7d4f0] dark:text-[#c7d4f0]">
 
-    {{-- One full-screen ground (pine, with rosettes); the form is a card resting on it. --}}
-    <div class="relative isolate flex min-h-screen flex-col overflow-hidden bg-[#0D2B27]"
+    {{-- Full-screen ground (admin navy, with rosettes); the form is a card resting on it. --}}
+    <div class="relative isolate flex min-h-screen flex-col overflow-hidden" style="background: linear-gradient(to bottom, #2349ad, #1a3e9a, #173684);"
          x-data="{
             rot: 0,
             reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -185,11 +185,11 @@
 
         {{-- The card --}}
         <main class="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:justify-end lg:pr-14 xl:pr-24">
-            <div class="w-full max-w-[28rem] rounded-2xl border border-[#D3DBD6] bg-white p-7 shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] dark:border-[#245049] dark:bg-[#0F2F2B] sm:p-9">
+            <div class="w-full max-w-[28rem] rounded-2xl border border-[#dce3f7] bg-white p-7 shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] dark:border-[#2d3f7a] dark:bg-[#1e1e2d] sm:p-9">
                 {{ $slot }}
 
-                <div class="mt-7 border-t border-[#D3DBD6] pt-3 dark:border-[#245049]">
-                    <a href="/" class="inline-flex min-h-11 items-center text-sm font-semibold text-[#14403A] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#8FD3C2]">
+                <div class="mt-7 border-t border-[#dce3f7] pt-3 dark:border-[#2d3f7a]">
+                    <a href="/" class="inline-flex min-h-11 items-center text-sm font-semibold text-[#1a3e9a] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#60a5fa]">
                         Kembali ke beranda
                     </a>
                 </div>

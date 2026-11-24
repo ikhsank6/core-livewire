@@ -20,26 +20,26 @@
 /* Semantic tokens: these flip with the theme, so components rarely
    need dark: variants. Brand constants live in @theme below. */
 :root {
-    --page:        #F4F6F2;
+    --page:        #f0f4fc;
     --surface:     #FFFFFF;
-    --sunken:      #E9EDE7;
-    --ink:         #0F1C1A;
-    --body:        #3C4B47;
-    --muted:       #566763;
-    --line:        #D8DDD6;
-    --accent-text: #B2301D;
-    --link:        #0F5C52;
+    --sunken:      #e4eaf8;
+    --ink:         #0f172a;
+    --body:        #334155;
+    --muted:       #64748b;
+    --line:        #cbd5e8;
+    --accent-text: #1a3e9a;
+    --link:        #1a3e9a;
 }
 .dark {
-    --page:        #0A1D1A;
-    --surface:     #11302B;
-    --sunken:      #0D2723;
-    --ink:         #EEF5F2;
-    --body:        #BFD0CA;
-    --muted:       #8FA8A1;
-    --line:        #1F4039;
-    --accent-text: #FF8A70;
-    --link:        #6FD3C3;
+    --page:        #1b1c22;
+    --surface:     #1e1e2d;
+    --sunken:      #15162a;
+    --ink:         #e2e8f0;
+    --body:        #94a3b8;
+    --muted:       #64748b;
+    --line:        #2d3f7a;
+    --accent-text: #60a5fa;
+    --link:        #60a5fa;
 }
 
 @theme inline {
@@ -56,14 +56,14 @@
 
 @theme {
     /* One family for everything, so hierarchy comes from weight, size and tracking. */
-    --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-    --font-sans:    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
 
-    --color-rimba:      #0D2B27;  /* deep pine: hero, footer, dark bands */
-    --color-rimba-2:    #14403A;  /* lifted pine: panels on a dark band */
-    --color-cap:        #E4472D;  /* stamp red: the single accent */
-    --color-cap-deep:   #B2301D;  /* stamp red for text on light paper */
-    --color-cap-soft:   #FF8A70;  /* stamp red for text and focus on dark */
+    --color-rimba:      #173684;  /* admin navy: hero, footer, dark bands */
+    --color-rimba-2:    #2349ad;  /* admin navy lifted: panels on a dark band */
+    --color-cap:        #1b84ff;  /* admin primary blue: the single accent */
+    --color-cap-deep:   #0070f0;  /* admin blue for hover/shadow */
+    --color-cap-soft:   #60a5fa;  /* admin blue for text and focus on dark */
 }
 
 /* ================================================================
@@ -137,7 +137,7 @@ body {
     .btn-lg { @apply h-12 px-6 text-base; }
     .btn-cap {
         background: var(--color-cap);
-        color: #1B0B07;
+        color: #ffffff;
         box-shadow: 0 3px 0 var(--color-cap-deep);
         transition: transform 90ms ease-out, box-shadow 90ms ease-out, filter 150ms ease;
     }
@@ -217,7 +217,7 @@ body {
     margin-top: -1.125rem;
     border: 2px solid var(--color-cap);
     border-radius: 5px;
-    box-shadow: inset 0 0 0 2px transparent, 0 0 0 1px rgba(228, 71, 45, 0.18);
+    box-shadow: inset 0 0 0 2px transparent, 0 0 0 1px rgba(27, 132, 255, 0.18);
     pointer-events: none;
     transition: transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1), width 320ms ease, opacity 200ms ease;
 }
@@ -225,7 +225,7 @@ body {
     content: "";
     position: absolute;
     inset: 3px;
-    border: 1px solid rgba(228, 71, 45, 0.45);
+    border: 1px solid rgba(27, 132, 255, 0.45);
     border-radius: 3px;
 }
 
@@ -255,7 +255,7 @@ summary:focus-visible {
     top: -100px;
     z-index: 200;
     background: var(--color-cap);
-    color: #1B0B07;
+    color: #ffffff;
     padding: 0.75rem 1.25rem;
     border-radius: 6px;
     font-size: 0.875rem;

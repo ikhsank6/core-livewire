@@ -78,8 +78,8 @@
                     <div class="flex items-start justify-between gap-4">
                         <div class="flex items-center gap-2.5">
                             <svg class="h-8 w-8 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                                <circle cx="18" cy="18" r="16" stroke="#E4472D" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
-                                <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
+                                <circle cx="18" cy="18" r="16" stroke="#1b84ff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                                <circle cx="18" cy="18" r="12.5" fill="#1b84ff"/>
                                 <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             <span class="text-[0.9375rem] font-extrabold tracking-tight">Sertifikat Kompetensi</span>
