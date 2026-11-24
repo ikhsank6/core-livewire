@@ -12,12 +12,17 @@
 --}}
 
 {{-- ===== Desktop bar ===== --}}
-<div class="hidden lg:block fixed top-16 inset-x-0 z-30 h-12 bg-white dark:bg-[#1e1e2d] rounded-b-2xl border-b border-gray-200 dark:border-white/6 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_10px_22px_-8px_rgba(15,23,42,0.28)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_10px_22px_-8px_rgba(0,0,0,0.7)]"
+<div class="hidden lg:block fixed top-16 inset-x-0 z-30 h-12 bg-linear-to-b from-white to-gray-50 dark:from-[#242438] dark:to-[#1e1e2d] rounded-b-2xl border-b-2 border-gray-200 dark:border-black/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_10px_22px_-8px_rgba(15,23,42,0.28)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_10px_22px_-8px_rgba(0,0,0,0.7)]"
     x-data="{
         items: @js($navItems),
         visibleCount: {{ count($navItems) }},
         openIndex: null,
         moreOpen: false,
+        keycap(on) {
+            return on
+                ? 'text-blue-700 dark:text-white bg-gray-100 dark:bg-black/25 border-transparent shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]'
+                : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white hover:bg-linear-to-b hover:from-white hover:to-gray-100 dark:hover:from-[#2b2b42] dark:hover:to-[#25253b] hover:border-gray-200 dark:hover:border-white/10 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(15,23,42,0.1)] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_1px_2px_rgba(0,0,0,0.35)]';
+        },
         get visible() { return this.items.slice(0, this.visibleCount) },
         get overflow() { return this.items.slice(this.visibleCount) },
         measure() {
@@ -49,7 +54,7 @@
         {{-- Hidden row used only to measure natural item widths --}}
         <div x-ref="measure" class="absolute left-0 top-0 flex gap-1 invisible pointer-events-none whitespace-nowrap" aria-hidden="true">
             <template x-for="item in items" :key="'m-' + item.name">
-                <span class="inline-flex items-center gap-1.5 h-12 px-3 text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 h-12 border px-3 text-sm font-medium">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
                     <svg x-show="item.children.length" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -64,22 +69,20 @@
 
                 {{-- Leaf item --}}
                 <a x-show="!item.children.length" :href="item.url" @click="go($event, item.url)"
-                    class="relative inline-flex items-center gap-1.5 h-12 px-3 text-sm font-medium whitespace-nowrap transition-colors"
-                    :class="item.active ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'">
+                    class="relative inline-flex items-center gap-1.5 my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                    :class="keycap(item.active)">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
-                    <span x-show="item.active" class="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-blue-600"></span>
                 </a>
 
                 {{-- Group item --}}
                 <button x-show="item.children.length" type="button" @click="openIndex = idx; moreOpen = false"
-                    class="relative inline-flex items-center gap-1.5 h-12 px-3 text-sm font-medium whitespace-nowrap transition-colors cursor-pointer"
-                    :class="item.active || openIndex === idx ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
+                    class="relative inline-flex items-center gap-1.5 cursor-pointer my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                    :class="keycap(item.active || openIndex === idx)"
                     :aria-expanded="openIndex === idx">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
                     <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openIndex === idx ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    <span x-show="item.active" class="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-blue-600"></span>
                 </button>
 
                 <div x-show="item.children.length && openIndex === idx" style="display: none"
@@ -89,7 +92,7 @@
                     x-transition:leave="transition ease-in duration-100"
                     x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0"
-                    class="absolute left-0 top-full min-w-[220px] p-1.5 bg-white dark:bg-[#1e1e2d] rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.35)] border border-gray-200 dark:border-white/10">
+                    class="absolute left-0 top-full min-w-[220px] p-1.5 bg-white dark:bg-[#1e1e2d] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_16px_36px_-10px_rgba(15,23,42,0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_16px_36px_-10px_rgba(0,0,0,0.75)] border border-gray-200 dark:border-white/10">
                     <template x-for="child in item.children" :key="child.name">
                         <a :href="child.url" @click="go($event, child.url)"
                             class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
@@ -108,8 +111,8 @@
         <div x-show="overflow.length" style="display: none" class="relative flex"
             @mouseenter="moreOpen = true; openIndex = null" @mouseleave="moreOpen = false">
             <button type="button" @click="moreOpen = true; openIndex = null"
-                class="inline-flex items-center gap-1.5 h-12 px-3 text-sm font-medium whitespace-nowrap cursor-pointer transition-colors"
-                :class="moreOpen ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
+                class="inline-flex items-center gap-1.5 cursor-pointer my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                :class="keycap(moreOpen)"
                 :aria-expanded="moreOpen">
                 More
                 <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="moreOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -121,7 +124,7 @@
                 x-transition:leave="transition ease-in duration-100"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="absolute right-0 top-full min-w-[240px] max-h-[70vh] overflow-y-auto p-1.5 bg-white dark:bg-[#1e1e2d] rounded-xl shadow-[0_16px_36px_-10px_rgba(15,23,42,0.35)] border border-gray-200 dark:border-white/10">
+                class="absolute right-0 top-full min-w-[240px] max-h-[70vh] overflow-y-auto p-1.5 bg-white dark:bg-[#1e1e2d] rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_16px_36px_-10px_rgba(15,23,42,0.35)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_16px_36px_-10px_rgba(0,0,0,0.75)] border border-gray-200 dark:border-white/10">
                 <template x-for="item in overflow" :key="'o-' + item.name">
                     <div>
                         <a x-show="!item.children.length" :href="item.url" @click="go($event, item.url)"

@@ -83,6 +83,24 @@ Header dan bar menu ditumpuk dengan bayangan supaya terlihat berlapis.
 | Bar menu, dark | `dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_10px_22px_-8px_rgba(0,0,0,0.7)]` |
 | Dropdown | `shadow-[0_16px_36px_-10px_rgba(15,23,42,0.35)]`, `rounded-xl` |
 
+### Header biru (3D halus)
+
+Header `bg-linear-to-b` dari `#2349ad` lewat `#1a3e9a` ke `#173684` (warna dasar `#1a3e9a` tetap di tengah), bibir bawah `border-b-2 #102a6e`, highlight atas `inset 0 1px 0 white/22`, dan bayangan jatuh `0_6px_18px_-4px`. Kolom pencarian dibuat masuk ke dalam (`inset_0_2px_5px` gelap, latar `#0f2a78/35`), dan hint `Ctrl+K` menjadi keycap kecil (gradien putih tipis, bayangan bawah). Teks putih di atas bagian paling terang (`#2349ad`) tetap lolos kontras.
+
+### Item menu bergaya tombol tertekan (inset)
+
+Item yang sedang aktif tampak masuk ke dalam bar, seperti tombol yang ditekan: bayangan ada di keempat sisi (atas, bawah, kiri, kanan), tanpa garis biru di bawah. Dikendalikan helper `keycap(on)` di `x-data` pada `partials/admin-topnav`.
+
+| Keadaan | Efek |
+|---------|------|
+| Aktif atau dropdown terbuka | Latar `gray-100` (gelap: `black/25`), teks `blue-700` (gelap: putih), bayangan inset `0 0 7px` dan `0 2px 4px` (gelap lebih pekat) |
+| Hover | Gradien tipis, bayangan luar tipis (terlihat timbul sedikit) |
+| Ditekan (`active:`) | Langsung memakai bayangan inset yang sama dengan item aktif |
+| Bar | Gradien `white` ke `gray-50`, bibir bawah `border-b-2`, highlight atas, bayangan jatuh lembut |
+| Dropdown | Highlight atas dan bayangan jatuh |
+
+Pil setinggi `h-9` dengan `my-1.5` di dalam bar `h-12`. Garis bawah biru lama (`h-0.5`) sudah dihapus. Kontras teks aktif dicek manual: `blue-700` di atas `gray-100` di atas 4,5:1.
+
 Header `z-40` harus lebih tinggi dari bar menu `z-30` supaya dropdown pencarian dan profil tampil di atas bar menu.
 
 ## Catatan
