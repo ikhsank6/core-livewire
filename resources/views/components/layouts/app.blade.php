@@ -162,7 +162,7 @@
                             @keydown.arrow-up.prevent="active = Math.max(active - 1, 0)"
                             @keydown.enter.prevent="go(results[active])"
                             @keydown.escape="open = false; q = ''; $refs.search.blur()"
-                            class="w-full pl-9 pr-16 py-2 text-sm rounded-lg bg-[#0f2a78]/35 border border-white/15 border-b-white/25 shadow-[inset_0_2px_5px_rgba(5,15,60,0.5),inset_0_0_0_1px_rgba(5,15,60,0.15)] text-white placeholder-blue-200/60 focus:outline-none focus:border-white/50 focus:ring-1 focus:ring-white/40 transition-colors">
+                            class="w-full pl-9 pr-16 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 focus:bg-white/15 border border-white/20 text-white placeholder-blue-100/60 focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-colors">
                         {{-- Clear button (shown while typing) --}}
                         <button x-show="q !== ''"
                             x-on:click="q = ''; $refs.search.focus()"
@@ -174,7 +174,7 @@
                         </button>
                         {{-- Shortcut hint (hidden while typing) --}}
                         <kbd x-show="q === ''"
-                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/25 border-b-black/30 bg-linear-to-b from-white/20 to-white/5 shadow-[0_1px_0_rgba(5,15,60,0.55),inset_0_1px_0_rgba(255,255,255,0.25)] text-[10px] font-medium text-blue-100/90">
+                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/20 bg-white/10 text-[10px] font-medium text-blue-100/80">
                             Ctrl+K
                         </kbd>
 

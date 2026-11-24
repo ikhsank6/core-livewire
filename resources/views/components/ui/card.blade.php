@@ -37,13 +37,13 @@
     @endif
 
     <!-- Card Body -->
-    <div class="p-6">
+    <div class="p-4 sm:p-6">
         {{ $slot }}
     </div>
 
     @if(isset($footer))
         <!-- Card Footer -->
-        <div class="px-6 py-4 bg-zinc-50/50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-800">
+        <div class="px-4 py-3 sm:px-6 sm:py-4 bg-zinc-50/50 dark:bg-zinc-800/50 border-t border-zinc-200 dark:border-zinc-800">
             {{ $footer }}
         </div>
     @endif
