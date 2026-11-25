@@ -196,23 +196,24 @@ Detail warna, huruf, dan komponen lengkap ada di **`design.md`** (sumber kebenar
 
 ### Design System
 
-Tema **lembaga sertifikasi profesi (LSP)**, identitas **"berkas asesmen"**: dasar hijau rimba, kertas, dan satu aksen merah cap (stempel KOMPETEN). **Sepenuhnya terpisah** dari admin (`app.css`). Dikerjakan dengan aturan **antislop** (mode "selama"). Halaman auth memakai identitas yang sama.
+Tema **lembaga sertifikasi profesi (LSP)**, identitas **"berkas asesmen"**: dasar navy, kertas, dan satu aksen emas. Warna diambil dari logo LSP (biru `#2D68A7`, biru langit `#4BA5DA`, emas `#E7BA4B`). **Sepenuhnya terpisah** dari admin (`app.css`). Dikerjakan dengan aturan **antislop** (mode "selama"). Halaman auth memakai identitas yang sama.
 
 | Token | Value | Catatan |
 |-------|-------|---------|
-| `rimba` | `#0D2B27` | Dasar hero, footer, pita gelap, latar auth |
-| `rimba-2` | `#14403A` | Panel di atas pita gelap |
-| `cap` | `#E4472D` | Satu-satunya aksen (tombol utama, stempel, segel). Teks di atasnya `#1B0B07` |
-| `cap-deep` / `cap-soft` | `#B2301D` / `#FF8A70` | Cap sebagai teks di atas terang / di atas gelap (juga ring fokus gelap) |
+| `brand` | `#2D68A7` | Biru logo: tautan di atas terang, tinta stempel, bingkai navbar |
+| `sky` | `#4BA5DA` | Biru langit logo: tautan dan fokus di atas gelap |
+| `navy` / `navy-2` | `#162948` / `#273955` | Turunan biru logo yang digelapkan: hero, footer, pita gelap, latar auth / panel di atasnya |
+| `gold` | `#E7BA4B` | Satu-satunya aksen (tombol utama `.btn-accent`, segel). Teks di atasnya `#14213A`. JANGAN dipakai sebagai teks di atas terang |
+| `gold-deep` / `gold-soft` | `#B8901F` / `#F0CB6B` | Tepi bawah tombol / teks dan fokus di atas gelap |
 | `page` / `surface` / `ink` / `body` / `muted` / `line` | berganti per tema | Token semantik di `:root` dan `.dark`, dipetakan via `@theme inline` |
-| `--font-display` / `--font-sans` | Plus Jakarta Sans | **Satu keluarga saja** (400 sampai 800). Jangan menambah keluarga lain |
+| `--font-display` / `--font-sans` | Inter | **Satu keluarga saja** (400 sampai 800), sama dengan admin |
 
 Semua pasangan teks sudah dicek lolos WCAG AA. Jika mengganti warna, cek ulang kontras.
 
 ### Elemen khas
 
 - **Latar guilloche** (`.rosette`): rosette garis halus dari `public/images/guilloche.svg`, dipakai sebagai **mask** (warna lewat `currentColor`), berputar mengikuti kursor lewat `--rot`.
-- **Navbar** (`partials/nav`): bar kertas dengan tepi bawah bergerigi (`.torn`, mask), bingkai stempel (`.nav-stamp`) meluncur ke menu yang dihover atau difokus. Logo = segel kompetensi, centang tergambar ulang saat hover. Tombol utama `.btn-cap` (bayangan bawah menekan saat diklik).
+- **Navbar** (`partials/nav`): bar gelap navy setinggi 52px (sama di kedua tema). Penanda tombol `.nav-stamp` meluncur ke menu yang dihover atau difokus: timbul (tepi bawah emas) saat hover, cekung (`.is-pressed`, garis emas di dalam) di halaman aktif; margin 3px atas-bawah, sudut 5px. Sakelar tema berupa dua tombol bulat dalam track cekung (`.theme-track`). Logo = segel kompetensi, centang tergambar ulang saat hover. Tombol utama `.btn-accent` (bayangan bawah menekan saat diklik).
 - **Hero**: sertifikat spesimen berisi pengisi (diberi label "Contoh") dan stempel KOMPETEN yang mendarat sekali (`.stamp`).
 - **Skema / Alur / Jadwal** (`partials/skema`, `alur`, `jadwal`): data statis berlabel "Contoh". Alur memuat langkah bernomor lalu pita Kompeten (K) / Belum Kompeten (BK).
 - **Sorotan** (`partials/sorotan`): slider CMS Carousel; tidak dirender bila tidak ada slide aktif.
@@ -252,7 +253,7 @@ input: [
 
 | Partial | Props | Keterangan |
 |---------|-------|-----------|
-| `partials/nav` | — | Navbar kertas bergerigi + panel mobile |
+| `partials/nav` | — | Navbar gelap navy + panel mobile |
 | `partials/hero` | `$carousels`, `$aboutUs` | Judul, tombol daftar, sertifikat spesimen, tautan cepat |
 | `partials/skema` | — | Daftar skema + filter bidang (data contoh) |
 | `partials/alur` | — | Langkah sertifikasi + pita K / BK |
@@ -287,7 +288,7 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 
 ### Halaman Auth (`components/layouts/auth.blade.php`)
 
-Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (rimba + rosette guilloche) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG asesor dengan papan jalan berisi centang yang menunjuk ke form, di samping sertifikat berbingkai (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#0D2B27]`, `bg-[#E4472D]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus jadi cap-soft). Detail: `design.md`.
+Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (gradien navy + rosette guilloche) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG asesor dengan papan jalan berisi centang yang menunjuk ke form, di samping sertifikat berbingkai (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#162948]`, `bg-[#E7BA4B]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus di area gelap). Detail: `design.md`.
 
 ---
 
@@ -303,8 +304,8 @@ Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar 
 
 ### Auth Pages
 
-- Layout: satu latar penuh rimba dengan rosette guilloche, form dalam kotak di atasnya (bukan split-screen)
-- Font: Plus Jakarta Sans saja via Google Fonts, sama dengan portal publik
+- Layout: satu latar penuh navy dengan rosette guilloche, form dalam kotak di atasnya (bukan split-screen)
+- Font: Inter saja via Google Fonts, sama dengan admin dan portal publik
 - Theme toggle: icon sun/moon **di dalam** toggle button (bukan di luar)
 - Dark mode: didukung penuh dengan smooth transition
 
@@ -505,7 +506,7 @@ Vite menghasilkan `type="module"` script yang dieksekusi SETELAH `DOMContentLoad
 Bar menu admin (`partials/admin-topnav`) memakai dropdown `absolute` di bawah item. Jangan beri `overflow-hidden`/`overflow-x-auto` pada baris itu atau pada leluhurnya, dropdown akan terpotong. Baris ukur tersembunyi untuk "More" memakai `invisible` + `absolute`, bukan `display:none`, agar lebar item bisa diukur.
 
 ### 12. Warna Website ≠ Admin
-Website publik dan auth: rimba `#0D2B27` + aksen cap `#E4472D` (lihat `design.md`).
+Website publik dan auth: navy `#162948` + aksen emas `#E7BA4B`, biru brand `#2D68A7` (semuanya dari logo LSP, lihat `design.md`). Header admin memakai gradien biru logo yang sama.
 Admin: header `#1a3e9a`, primary Metronic `#1b84ff` via `app.css`.
 Keduanya tidak boleh dicampur.
 
@@ -525,7 +526,7 @@ Setelah `composer update` filament/*, JS statis di `public/js/filament/*` TIDAK 
 `config/log-viewer.php` meng-include path lokal `/opt/homebrew/var/log/php-fpm.log` (Homebrew). Kalau file itu tumbuh besar (ratusan MB), halaman `settings/logs` fatal error memory exhausted saat scan. Ini masalah environment lokal developer, bukan bug Laravel/opcodesio/log-viewer — rotate/hapus file tsb kalau kejadian.
 
 ### 18. CSS Dasar Wajib di `@layer` (website.css)
-Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.btn { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.btn-cap`, skala huruf) di `@layer components`.
+Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.btn { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.btn-accent`, skala huruf) di `@layer components`.
 
 ### 19. Aturan Atribut Alpine (Blade)
 - Jangan pakai tanda kutip ganda di dalam atribut `x-data`/`x-init`/`@click`, termasuk di komentar `//`. Itu menutup atribut lebih awal dan sisa kodenya bocor sebagai teks halaman.
