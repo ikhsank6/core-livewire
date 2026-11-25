@@ -12,34 +12,35 @@
    LEMBAGA SERTIFIKASI PROFESI: public portal design system
    Identity: the assessment file. Forms, checkboxes, a stamped
    decision (Kompeten / Belum Kompeten) and the guilloche security
-   print found on certificates. One accent (cap, the red of a rubber
-   stamp) on a deep pine ground (rimba). One typeface: Plus Jakarta Sans.
+   print found on certificates. Colours come from the LSP logo:
+   a brand blue, a sky blue, and one gold accent on a deep navy
+   ground. Type: Inter, the same family as the admin panel.
    Separate from the admin panel (app.css). Do not mix the two.
    ================================================================ */
 
 /* Semantic tokens: these flip with the theme, so components rarely
    need dark: variants. Brand constants live in @theme below. */
 :root {
-    --page:        #f0f4fc;
+    --page:        #F3F7FB;
     --surface:     #FFFFFF;
-    --sunken:      #e4eaf8;
-    --ink:         #0f172a;
-    --body:        #334155;
-    --muted:       #64748b;
-    --line:        #cbd5e8;
-    --accent-text: #1a3e9a;
-    --link:        #1a3e9a;
+    --sunken:      #E6EEF6;
+    --ink:         #0F2036;
+    --body:        #33475E;
+    --muted:       #55697F;
+    --line:        #D3DFEA;
+    --accent-text: #2D68A7;
+    --link:        #2D68A7;
 }
 .dark {
     --page:        #1b1c22;
     --surface:     #1e1e2d;
     --sunken:      #15162a;
     --ink:         #e2e8f0;
-    --body:        #94a3b8;
-    --muted:       #64748b;
-    --line:        #2d3f7a;
-    --accent-text: #60a5fa;
-    --link:        #60a5fa;
+    --body:        #9DB1C6;
+    --muted:       #7F96AE;
+    --line:        #2B4263;
+    --accent-text: #4BA5DA;
+    --link:        #4BA5DA;
 }
 
 @theme inline {
@@ -59,11 +60,14 @@
     --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
     --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
 
-    --color-rimba:      #173684;  /* admin navy: hero, footer, dark bands */
-    --color-rimba-2:    #2349ad;  /* admin navy lifted: panels on a dark band */
-    --color-cap:        #1b84ff;  /* admin primary blue: the single accent */
-    --color-cap-deep:   #0070f0;  /* admin blue for hover/shadow */
-    --color-cap-soft:   #60a5fa;  /* admin blue for text and focus on dark */
+    /* Sampled from the LSP logo (pixel means): blue #2D68A7, sky #4BA5DA, gold #E7BA4B. */
+    --color-brand:      #2D68A7;  /* logo blue: links, stamp ink, brand surfaces */
+    --color-sky:        #4BA5DA;  /* logo sky blue: links and focus on dark */
+    --color-navy:       #162948;  /* deep navy of the navigation bar: hero, footer, dark bands */
+    --color-navy-2:     #273955;  /* navy lifted: top of the bar, panels on a dark band */
+    --color-gold:       #E7BA4B;  /* logo gold: the single accent (primary action, seal) */
+    --color-gold-deep:  #B8901F;  /* gold for the pressed edge of a button */
+    --color-gold-soft:  #F0CB6B;  /* gold for text and focus on dark */
 }
 
 /* ================================================================
@@ -71,7 +75,7 @@
    ================================================================ */
 [x-cloak] { display: none !important; }
 
-html { color-scheme: light; background-color: var(--page); scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+html { color-scheme: light; background-color: var(--page); scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
 html.dark { color-scheme: dark; }
 
 /* `clip` keeps position:sticky working (hidden would break the header). */
@@ -135,14 +139,14 @@ body {
                font-bold whitespace-nowrap transition-colors duration-150 cursor-pointer;
     }
     .btn-lg { @apply h-12 px-6 text-base; }
-    .btn-cap {
-        background: var(--color-cap);
-        color: #ffffff;
-        box-shadow: 0 3px 0 var(--color-cap-deep);
+    .btn-accent {
+        background: var(--color-gold);
+        color: #14213A;
+        box-shadow: 0 3px 0 var(--color-gold-deep);
         transition: transform 90ms ease-out, box-shadow 90ms ease-out, filter 150ms ease;
     }
-    .btn-cap:hover { filter: brightness(1.06); }
-    .btn-cap:active { transform: translateY(3px); box-shadow: 0 0 0 var(--color-cap-deep); }
+    .btn-accent:hover { filter: brightness(1.06); }
+    .btn-accent:active { transform: translateY(3px); box-shadow: 0 0 0 var(--color-gold-deep); }
     .btn-solid { @apply bg-ink text-page hover:opacity-90; }
     .btn-line  { @apply border border-line text-ink hover:bg-sunken; }
     .btn-ghost-light { @apply border border-white/30 text-white hover:bg-white/10; }
@@ -167,27 +171,12 @@ body {
 }
 
 /* ================================================================
-   TORN EDGE: a strip of perforation holes along the bottom of the
-   header, like a form torn from a pad.
-   ================================================================ */
-.torn {
-    --hole: 3.5px;
-    --pitch: 14px;
-    -webkit-mask:
-        radial-gradient(circle var(--hole) at 50% 100%, #0000 96%, #000) bottom / var(--pitch) 9px repeat-x,
-        linear-gradient(#000, #000) top / 100% calc(100% - 9px) no-repeat;
-    mask:
-        radial-gradient(circle var(--hole) at 50% 100%, #0000 96%, #000) bottom / var(--pitch) 9px repeat-x,
-        linear-gradient(#000, #000) top / 100% calc(100% - 9px) no-repeat;
-}
-
-/* ================================================================
    STAMP: the Kompeten decision. It lands once, with a little bounce.
    ================================================================ */
 .stamp {
-    border: 3px solid var(--color-cap);
-    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 6px var(--color-cap);
-    color: var(--color-cap);
+    border: 3px solid var(--color-brand);
+    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 6px var(--color-brand);
+    color: var(--color-brand);
     border-radius: 6px;
     transform: rotate(-9deg);
     animation: stamp-hit 720ms cubic-bezier(0.2, 0.9, 0.3, 1) 900ms both;
@@ -206,27 +195,66 @@ body {
 @keyframes seal-draw { from { stroke-dashoffset: 26; } to { stroke-dashoffset: 0; } }
 
 /* ================================================================
-   NAV STAMP: a stamp-shaped frame that slides to the item you point at
-   and rests on the current page.
+   NAV KEY: the marker on the dark navigation bar. It slides to the item
+   you point at. While it travels it is raised (lit gradient, gold lip,
+   drop shadow). At rest on the current page it is pressed in (inset
+   shadow on every side) with a short gold underline.
+   The bar is navy in both themes, so this does not need dark: variants.
    ================================================================ */
 .nav-stamp {
     position: absolute;
-    top: 50%;
+    top: 3px;
     left: 0;
-    height: 2.25rem;
-    margin-top: -1.125rem;
-    border: 2px solid var(--color-cap);
-    border-radius: 5px;
-    box-shadow: inset 0 0 0 2px transparent, 0 0 0 1px rgba(27, 132, 255, 0.18);
+    height: calc(100% - 6px);
+    border-radius: 0.3125rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 3px solid var(--color-gold);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 1px 2px rgba(4, 14, 28, 0.5),
+        0 8px 14px -6px rgba(4, 14, 28, 0.7);
     pointer-events: none;
-    transition: transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1), width 320ms ease, opacity 200ms ease;
+    transition:
+        transform 420ms cubic-bezier(0.3, 1.25, 0.4, 1),
+        width 320ms ease,
+        opacity 200ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease;
+}
+.nav-stamp.is-pressed {
+    border-color: rgba(255, 255, 255, 0.07);
+    border-bottom-width: 1px;
+    background: #13223B;
+    box-shadow:
+        inset 0 0 8px rgba(5, 12, 24, 0.6),
+        inset 0 2px 4px rgba(5, 12, 24, 0.45);
 }
 .nav-stamp::after {
     content: "";
     position: absolute;
-    inset: 3px;
-    border: 1px solid rgba(27, 132, 255, 0.45);
-    border-radius: 3px;
+    left: 0.625rem;
+    right: 0.625rem;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-gold);
+    opacity: 0;
+    transition: opacity 180ms ease;
+}
+.nav-stamp.is-pressed::after { opacity: 1; }
+
+/* The theme switch: two round buttons in a recessed track, the active one lit gold. */
+.theme-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    padding: 3px;
+    border-radius: 9999px;
+    background: #3E4D68;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 2px 4px rgba(5, 12, 24, 0.35), 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 /* ================================================================
@@ -246,7 +274,7 @@ summary:focus-visible {
 .on-dark a:focus-visible,
 .on-dark button:focus-visible,
 .on-dark [tabindex]:focus-visible {
-    outline-color: var(--color-cap-soft);
+    outline-color: var(--color-gold-soft);
 }
 
 .skip-link {
@@ -254,8 +282,8 @@ summary:focus-visible {
     left: 1rem;
     top: -100px;
     z-index: 200;
-    background: var(--color-cap);
-    color: #ffffff;
+    background: var(--color-gold);
+    color: #14213A;
     padding: 0.75rem 1.25rem;
     border-radius: 6px;
     font-size: 0.875rem;
@@ -292,7 +320,7 @@ summary:focus-visible {
 .prose a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
 .prose img { border-radius: 0.75rem; margin: 1.5rem 0; }
 .prose blockquote {
-    border-left: 3px solid var(--color-cap);
+    border-left: 3px solid var(--color-gold);
     padding: 0.25rem 0 0.25rem 1.25rem;
     margin: 1.75rem 0;
     font-size: 1.25rem;

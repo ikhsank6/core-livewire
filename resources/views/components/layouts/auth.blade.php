@@ -58,18 +58,18 @@
         /* Visible keyboard focus everywhere inside the auth screen */
         .auth-shell a:focus-visible,
         .auth-shell button:focus-visible,
-        .auth-shell input:focus-visible { outline: 2px solid #1b84ff; outline-offset: 2px; }
+        .auth-shell input:focus-visible { outline: 2px solid #2D68A7; outline-offset: 2px; }
         .dark .auth-shell a:focus-visible,
         .dark .auth-shell button:focus-visible,
-        .dark .auth-shell input:focus-visible { outline-color: #60a5fa; }
-        .auth-dark a:focus-visible, .auth-dark button:focus-visible { outline-color: #93c5fd !important; }
+        .dark .auth-shell input:focus-visible { outline-color: #4BA5DA; }
+        .auth-dark a:focus-visible, .auth-dark button:focus-visible { outline-color: #7FC1EA !important; }
     </style>
 </head>
 
-<body class="auth-shell min-h-full antialiased bg-[#173684] text-[#c7d4f0] dark:text-[#c7d4f0]">
+<body class="auth-shell min-h-full antialiased bg-[#162948] text-[#C2D5EA] dark:text-[#C2D5EA]">
 
     {{-- Full-screen ground (admin navy, with rosettes); the form is a card resting on it. --}}
-    <div class="relative isolate flex min-h-screen flex-col overflow-hidden" style="background: linear-gradient(to bottom, #2349ad, #1a3e9a, #173684);"
+    <div class="relative isolate flex min-h-screen flex-col overflow-hidden" style="background: linear-gradient(to bottom, #273955, #1E3250, #162948);"
          x-data="{
             rot: 0,
             reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -90,42 +90,42 @@
              viewBox="0 0 720 760" preserveAspectRatio="xMidYMax meet" fill="none" aria-hidden="true">
 
             {{-- Framed certificate on the wall: frame, inner frame, a seal outline. Draws itself once. --}}
-            <g class="auth-draw" stroke="#F6F1E7" stroke-width="3" stroke-opacity=".75">
+            <g class="auth-draw" stroke="#F7F9FC" stroke-width="3" stroke-opacity=".75">
                 <path pathLength="1" d="M60 150H340V430H60Z"/>
                 <path pathLength="1" d="M78 168H322V412H78Z" stroke-opacity=".6"/>
                 <path pathLength="1" d="M110 230H290M110 262H250M110 294H270" stroke-linecap="round" stroke-opacity=".5"/>
             </g>
-            <circle cx="262" cy="372" r="30" stroke="#E4472D" stroke-width="3" stroke-dasharray="1 7" stroke-linecap="round"/>
-            <circle cx="262" cy="372" r="22" fill="#E4472D"/>
-            <path d="M252 372l7 7 13-15" stroke="#1B0B07" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="262" cy="372" r="30" stroke="#E7BA4B" stroke-width="3" stroke-dasharray="1 7" stroke-linecap="round"/>
+            <circle cx="262" cy="372" r="22" fill="#E7BA4B"/>
+            <path d="M252 372l7 7 13-15" stroke="#14213A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 
             {{-- Ground shadow --}}
             <ellipse cx="500" cy="704" rx="150" ry="11" fill="#000" fill-opacity=".28"/>
 
             <g transform="translate(80 0)">
                 {{-- Legs and shoes --}}
-                <rect x="398" y="520" width="28" height="172" rx="12" fill="#1F5C53"/>
-                <rect x="430" y="520" width="28" height="172" rx="12" fill="#194C45"/>
-                <ellipse cx="410" cy="696" rx="27" ry="10" fill="#0A1614"/>
-                <ellipse cx="448" cy="696" rx="29" ry="10" fill="#0A1614"/>
+                <rect x="398" y="520" width="28" height="172" rx="12" fill="#2D68A7"/>
+                <rect x="430" y="520" width="28" height="172" rx="12" fill="#255A92"/>
+                <ellipse cx="410" cy="696" rx="27" ry="10" fill="#0A1626"/>
+                <ellipse cx="448" cy="696" rx="29" ry="10" fill="#0A1626"/>
 
                 {{-- Torso: paper shirt with a lanyard --}}
-                <rect x="376" y="268" width="92" height="276" rx="30" fill="#F6F1E7"/>
-                <path d="M376 520h92v24H376z" fill="#1F5C53"/>
-                <path d="M410 276l12 70 12-70" stroke="#E4472D" stroke-width="4" stroke-linejoin="round"/>
-                <rect x="414" y="346" width="16" height="22" rx="3" fill="#E4472D"/>
+                <rect x="376" y="268" width="92" height="276" rx="30" fill="#F7F9FC"/>
+                <path d="M376 520h92v24H376z" fill="#2D68A7"/>
+                <path d="M410 276l12 70 12-70" stroke="#E7BA4B" stroke-width="4" stroke-linejoin="round"/>
+                <rect x="414" y="346" width="16" height="22" rx="3" fill="#E7BA4B"/>
 
                 {{-- Arm holding the clipboard --}}
-                <path d="M390 306 L380 374" stroke="#F6F1E7" stroke-width="26" stroke-linecap="round"/>
+                <path d="M390 306 L380 374" stroke="#F7F9FC" stroke-width="26" stroke-linecap="round"/>
                 <path d="M380 374 L402 410" stroke="#D9A074" stroke-width="20" stroke-linecap="round"/>
                 <g transform="rotate(-7 430 440)">
                     <rect x="396" y="392" width="68" height="94" rx="6" fill="#8A5A35"/>
-                    <rect x="402" y="402" width="56" height="78" rx="3" fill="#F6F1E7"/>
+                    <rect x="402" y="402" width="56" height="78" rx="3" fill="#F7F9FC"/>
                     <rect x="416" y="388" width="28" height="12" rx="3" fill="#B7BDB9"/>
-                    <path d="M409 418l4 4 7-8M409 438l4 4 7-8M409 458l4 4 7-8" stroke="#E4472D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <rect x="426" y="416" width="26" height="4" rx="2" fill="#10201D" fill-opacity=".45"/>
-                    <rect x="426" y="436" width="26" height="4" rx="2" fill="#10201D" fill-opacity=".45"/>
-                    <rect x="426" y="456" width="18" height="4" rx="2" fill="#10201D" fill-opacity=".45"/>
+                    <path d="M409 418l4 4 7-8M409 438l4 4 7-8M409 458l4 4 7-8" stroke="#2D68A7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect x="426" y="416" width="26" height="4" rx="2" fill="#0F2036" fill-opacity=".45"/>
+                    <rect x="426" y="436" width="26" height="4" rx="2" fill="#0F2036" fill-opacity=".45"/>
+                    <rect x="426" y="456" width="18" height="4" rx="2" fill="#0F2036" fill-opacity=".45"/>
                 </g>
                 <circle cx="406" cy="414" r="11" fill="#D9A074"/>
 
@@ -137,7 +137,7 @@
                 <path d="M438 224q7 6 14 0" stroke="#8A4E2E" stroke-width="2.4" stroke-linecap="round"/>
 
                 {{-- Pointing arm, reaching toward the card --}}
-                <path d="M456 304 L516 322" stroke="#F6F1E7" stroke-width="26" stroke-linecap="round"/>
+                <path d="M456 304 L516 322" stroke="#F7F9FC" stroke-width="26" stroke-linecap="round"/>
                 <path d="M516 322 L580 296" stroke="#D9A074" stroke-width="20" stroke-linecap="round"/>
                 <circle cx="590" cy="292" r="12" fill="#D9A074"/>
                 <path d="M596 288 L630 278" stroke="#D9A074" stroke-width="8" stroke-linecap="round"/>
@@ -151,32 +151,37 @@
                     <img src="{{ Storage::url($aboutUs->logo) }}" alt="" class="h-10 w-auto">
                 @else
                     <svg class="h-10 w-10 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                        <circle cx="18" cy="18" r="16" stroke="#E4472D" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
-                        <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
-                        <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="18" cy="18" r="16" stroke="#E7BA4B" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                        <circle cx="18" cy="18" r="12.5" fill="#E7BA4B"/>
+                        <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#14213A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 @endif
                 <span class="auth-display text-xl">{{ $aboutUs?->company_name ?? config('app.name') }}</span>
             </a>
 
+            {{-- Theme switch: two round buttons in a recessed track, the active one lit gold --}}
             <div x-data="{
                 get isDark() { return $store.theme ? $store.theme.isDark : (localStorage.getItem('theme') === 'dark') },
-                toggle() {
-                    if ($store.theme) { $store.theme.toggle(); }
-                    else {
-                        const t = this.isDark ? 'light' : 'dark';
-                        localStorage.setItem('theme', t);
-                        document.documentElement.classList.toggle('dark', t === 'dark');
-                    }
+                set(mode) {
+                    if ($store.theme) { $store.theme.value = mode; return; }
+                    localStorage.setItem('theme', mode);
+                    document.documentElement.classList.toggle('dark', mode === 'dark');
                 }
-            }">
-                <button type="button" @click="toggle()"
-                    :aria-label="isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'"
-                    class="grid h-11 w-11 cursor-pointer place-items-center rounded-md text-white/80 transition-colors hover:bg-white/10 hover:text-white">
-                    <svg x-show="isDark" x-cloak class="h-5 w-5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+            }" role="group" aria-label="Tema tampilan"
+               class="inline-flex items-center gap-px rounded-full border border-white/12 bg-[#3E4D68] p-[3px] shadow-[inset_0_2px_4px_rgba(5,12,24,0.35),0_1px_0_rgba(255,255,255,0.06)]">
+                <button type="button" @click="set('light')"
+                    :aria-pressed="!isDark ? 'true' : 'false'" aria-label="Mode terang"
+                    :class="!isDark ? 'bg-[#E7BA4B] text-[#162948] shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
+                    class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
-                    <svg x-show="!isDark" class="h-5 w-5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                </button>
+                <button type="button" @click="set('dark')"
+                    :aria-pressed="isDark ? 'true' : 'false'" aria-label="Mode gelap"
+                    :class="isDark ? 'bg-[#E7BA4B] text-[#162948] shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
+                    class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
                     </svg>
                 </button>
@@ -185,11 +190,11 @@
 
         {{-- The card --}}
         <main class="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 lg:justify-end lg:pr-14 xl:pr-24">
-            <div class="w-full max-w-[28rem] rounded-2xl border border-[#dce3f7] bg-white p-7 shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] dark:border-[#2d3f7a] dark:bg-[#1e1e2d] sm:p-9">
+            <div class="w-full max-w-[28rem] rounded-2xl border border-[#D6E4F2] bg-white p-7 shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] dark:border-[#2B4263] dark:bg-[#1e1e2d] sm:p-9">
                 {{ $slot }}
 
-                <div class="mt-7 border-t border-[#dce3f7] pt-3 dark:border-[#2d3f7a]">
-                    <a href="/" class="inline-flex min-h-11 items-center text-sm font-semibold text-[#1a3e9a] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#60a5fa]">
+                <div class="mt-7 border-t border-[#D6E4F2] pt-3 dark:border-[#2B4263]">
+                    <a href="/" class="inline-flex min-h-11 items-center text-sm font-semibold text-[#2D68A7] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#4BA5DA]">
                         Kembali ke beranda
                     </a>
                 </div>

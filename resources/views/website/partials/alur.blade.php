@@ -30,7 +30,7 @@
                 <li class="relative lg:pt-8">
                     {{-- Perforated rail between the steps (wide screens) --}}
                     <span class="absolute left-0 right-[-1.5rem] top-0 hidden border-t-2 border-dashed border-line lg:block {{ $loop->last ? 'right-0' : '' }}" aria-hidden="true"></span>
-                    <span class="absolute left-0 top-[-5px] hidden h-3 w-3 rounded-full border-2 border-cap bg-page lg:block" aria-hidden="true"></span>
+                    <span class="absolute left-0 top-[-5px] hidden h-3 w-3 rounded-full border-2 border-gold bg-page lg:block" aria-hidden="true"></span>
 
                     <p class="text-5xl font-extrabold leading-none tracking-tighter text-ink/15 tabular-nums" aria-hidden="true">{{ $loop->iteration }}</p>
 
@@ -50,7 +50,7 @@
 </section>
 
 {{-- The decision: only two outcomes --}}
-<section class="on-dark bg-rimba py-20 text-white md:py-24">
+<section class="on-dark bg-navy py-20 text-white md:py-24">
     <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-20">
 
         <div>
@@ -61,8 +61,8 @@
         </div>
 
         <div class="grid gap-5 sm:grid-cols-2">
-            <article class="rounded-xl border border-white/15 bg-rimba-2 p-7">
-                <span class="grid h-12 w-12 place-items-center rounded-lg bg-white text-rimba" aria-hidden="true">
+            <article class="rounded-xl border border-white/15 bg-navy-2 p-7">
+                <span class="grid h-12 w-12 place-items-center rounded-lg bg-white text-navy" aria-hidden="true">
                     <svg class="h-7 w-7" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10.5l3.5 3.5 7.5-8.5"/></svg>
                 </span>
                 <h3 class="subtitle mt-5 text-white">Kompeten (K)</h3>
@@ -71,7 +71,7 @@
                 </p>
             </article>
 
-            <article class="rounded-xl border border-white/15 bg-rimba-2 p-7">
+            <article class="rounded-xl border border-white/15 bg-navy-2 p-7">
                 <span class="grid h-12 w-12 place-items-center rounded-lg border-2 border-white/60 text-white" aria-hidden="true">
                     <span class="text-base font-extrabold tracking-tight">BK</span>
                 </span>

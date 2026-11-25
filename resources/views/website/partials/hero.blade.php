@@ -1,23 +1,41 @@
 @php
     $registerUrl = Route::has('auth.register') ? route('auth.register') : route('login');
 
-    $office = collect([
-        ['label' => 'Kantor LSP', 'value' => $aboutUs?->address],
-        ['label' => 'Telepon',    'value' => $aboutUs?->phone],
-    ])->filter(fn ($f) => filled($f['value']));
-
     // Quick links, the pattern the national certification body uses for its main tasks.
     $quick = [
-        ['title' => 'Skema sertifikasi',   'text' => 'Pilih okupasi yang ingin diuji.',          'href' => '#skema'],
-        ['title' => 'Alur dan persyaratan', 'text' => 'Dari akun sampai sertifikat terbit.',      'href' => '#alur'],
-        ['title' => 'Jadwal uji',           'text' => 'Lihat kapan dan di mana ujinya.',          'href' => '#jadwal'],
+        ['title' => 'Skema sertifikasi',    'text' => 'Pilih okupasi yang ingin diuji.',     'href' => '#skema',  'icon' => 'heroicon-o-document-check'],
+        ['title' => 'Alur dan persyaratan', 'text' => 'Dari akun sampai sertifikat terbit.', 'href' => '#alur',   'icon' => 'heroicon-o-queue-list'],
+        ['title' => 'Jadwal uji',           'text' => 'Lihat kapan dan di mana ujinya.',     'href' => '#jadwal', 'icon' => 'heroicon-o-calendar-days'],
     ];
 
+    // Field tags (pulled from the skema section so they stay in sync)
+    $fieldTags = ['Teknologi informasi', 'Administrasi', 'Keuangan', 'Desain kreatif', 'Pemasaran'];
+
     // The specimen: placeholders only, never a real person or a real certificate number.
-    $units = ['Unit kompetensi pertama', 'Unit kompetensi kedua', 'Unit kompetensi ketiga'];
+    $units = [
+        'Unit kompetensi 1',
+        'Unit kompetensi 2',
+        'Unit kompetensi 3',
+    ];
 @endphp
 
-<section class="on-dark relative isolate overflow-hidden bg-rimba text-white"
+{{-- The certificate animation (ticks drawing in, seal landing) plays on the first load of a browser
+     session only. After that the finished state is shown straight away. The flag is read before the
+     hero paints, so a repeat visit never flashes the animation. --}}
+<script nonce="{{ csp_nonce() }}">
+    (function () {
+        try {
+            if (sessionStorage.getItem('lspHeroPlayed') === '1') {
+                document.documentElement.classList.add('hero-played');
+            } else {
+                document.documentElement.classList.remove('hero-played');
+                sessionStorage.setItem('lspHeroPlayed', '1');
+            }
+        } catch (e) { /* storage blocked: the animation simply plays each time */ }
+    })();
+</script>
+
+<section class="hero on-dark relative isolate flex flex-col overflow-hidden bg-navy text-white lg:min-h-[calc(100svh-3.3125rem)]"
          x-data="{
             rot: 0,
             reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -29,104 +47,224 @@
          }"
          @pointermove="tilt($event)">
 
-    {{-- Background effect: guilloche rosettes, the security print of a certificate.
-         They turn a few degrees with the pointer. --}}
-    <div class="rosette -right-48 -top-40 -z-10 w-[52rem] max-w-none text-white/[0.085]" :style="`--rot: ${rot}deg`" aria-hidden="true"></div>
-    <div class="rosette -left-72 -bottom-80 -z-10 w-[40rem] max-w-none text-white/[0.05]" :style="`--rot: ${-rot}deg`" aria-hidden="true"></div>
+    {{-- Background rosettes --}}
+    <div class="rosette -right-48 -top-40 -z-10 w-[52rem] max-w-none text-white/[0.07]" :style="`--rot: ${rot}deg`" aria-hidden="true"></div>
+    <div class="rosette -left-72 -bottom-80 -z-10 w-[40rem] max-w-none text-white/[0.045]" :style="`--rot: ${-rot}deg`" aria-hidden="true"></div>
 
-    <div class="wrap grid items-center gap-14 py-14 md:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
+    <div class="wrap hero-grid grid w-full flex-1 content-center items-center gap-8 py-8 md:py-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
 
-        {{-- Copy --}}
+        {{-- ── LEFT COLUMN: headline + search + tags ── --}}
         <div>
-            <h1 class="display text-white max-w-[17ch]">
-                Yang kami uji adalah apa yang bisa Anda kerjakan.
+            <h1 class="display text-white max-w-[20ch]" style="font-size: clamp(1.9rem, min(3.6vw, 6.4vh), 3.1rem);">
+                Buktikan kompetensi Anda dengan sertifikat profesi
             </h1>
 
-            <p class="lead mt-7 max-w-[50ch] text-white/75">
-                Asesmen kompetensi kerja berbasis unit kompetensi. Daftar, pilih skema, ikuti uji bersama asesor,
-                lalu terima keputusannya: Kompeten atau Belum Kompeten.
+            <p class="mt-4 text-base leading-relaxed text-white/70 max-w-[42ch]">
+                Lihat skema sertifikasi yang tersedia dan pilih yang sesuai bidang kerja Anda.
             </p>
 
-            <div class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-                <a href="{{ $registerUrl }}" class="btn btn-cap btn-lg">Daftar sebagai asesi</a>
-                <a href="#skema"
-                   class="inline-flex min-h-11 items-center text-[0.9375rem] font-bold text-white underline decoration-white/40 underline-offset-[6px] transition-colors hover:decoration-cap-soft">
-                    Lihat skema sertifikasi
-                </a>
+            {{-- Search bar --}}
+            <form action="#skema" method="get" class="mt-6 flex items-center gap-2 max-w-lg">
+                <label for="hero-search" class="sr-only">Cari skema atau bidang kerja</label>
+                <div class="relative flex-1">
+                    <span class="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-white/40" aria-hidden="true">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </span>
+                    <input id="hero-search" type="search" name="q" placeholder="Nama skema atau bidang kerja"
+                           class="w-full h-11 pl-10 pr-4 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold/60 transition-colors">
+                </div>
+                <button type="submit"
+                        class="btn btn-accent h-11 px-5 text-sm shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    Cari
+                </button>
+            </form>
+
+            {{-- Field tags --}}
+            <div class="hero-tags mt-3 flex flex-wrap gap-2">
+                @foreach($fieldTags as $tag)
+                    <a href="#skema"
+                       class="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-white/10 border border-white/15 text-xs font-semibold text-white/80 hover:bg-white/20 hover:text-white transition-colors">
+                        <svg class="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+                        </svg>
+                        {{ $tag }}
+                    </a>
+                @endforeach
             </div>
 
-            @if($office->isNotEmpty())
-                <dl class="mt-12 grid max-w-xl gap-x-10 gap-y-5 border-t border-white/15 pt-6 sm:grid-cols-2">
-                    @foreach($office as $fact)
-                        <div>
-                            <dt class="text-sm text-white/60">{{ $fact['label'] }}</dt>
-                            <dd class="mt-1 text-[0.9375rem] font-semibold text-white wrap-break-word">{{ $fact['value'] }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
-            @endif
         </div>
 
-        {{-- Specimen certificate --}}
-        <figure class="relative mx-auto w-full max-w-md lg:max-w-[28rem]" aria-label="Contoh tampilan sertifikat kompetensi">
-            <div class="absolute inset-0 translate-x-3 translate-y-4 rotate-[3deg] rounded-xl bg-white/12" aria-hidden="true"></div>
+        {{-- ── RIGHT COLUMN: certificate illustration with animation ── --}}
+        <figure class="relative mx-auto w-full max-w-sm lg:max-w-[24rem]"
+                aria-label="Ilustrasi sertifikat kompetensi">
 
-            <div class="relative -rotate-1 overflow-hidden rounded-xl bg-white text-[#0F1C1A] shadow-[0_34px_80px_-30px_rgba(0,0,0,0.65)]">
-                <div class="rosette -bottom-24 -right-20 w-72 text-rimba/[0.09]" aria-hidden="true"></div>
+            {{-- Shadow stack card --}}
+            <div class="absolute inset-0 translate-x-5 translate-y-5 rotate-[4deg] rounded-2xl bg-white/10" aria-hidden="true"></div>
+            <div class="absolute inset-0 translate-x-2.5 translate-y-2.5 rotate-[2deg] rounded-2xl bg-white/15" aria-hidden="true"></div>
 
-                <div class="relative m-3 border border-rimba/25 p-6 sm:p-7">
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="flex items-center gap-2.5">
-                            <svg class="h-8 w-8 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                                <circle cx="18" cy="18" r="16" stroke="#1b84ff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
-                                <circle cx="18" cy="18" r="12.5" fill="#1b84ff"/>
-                                <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="text-[0.9375rem] font-extrabold tracking-tight">Sertifikat Kompetensi</span>
-                        </div>
-                        <span class="rounded border border-cap-deep/50 px-2 py-0.5 text-xs font-bold text-cap-deep">Contoh</span>
+            {{-- Main certificate card --}}
+            <div class="relative rounded-2xl bg-white shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden">
+
+                {{-- Guilloche watermark --}}
+                <div class="rosette absolute -bottom-16 -right-16 w-56 text-navy/[0.07]" aria-hidden="true"></div>
+
+                {{-- Certificate inner content --}}
+                <div class="relative p-5 sm:p-6 text-[#14213A]">
+
+                    {{-- Header ornament --}}
+                    <div class="flex justify-center mb-2" aria-hidden="true">
+                        {{-- Small decorative diamond chain --}}
+                        <svg width="80" height="10" viewBox="0 0 80 10" fill="none" class="text-gold opacity-80">
+                            <path d="M0 5h10M70 5h10" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="20" cy="5" r="3" fill="currentColor" opacity="0.5"/>
+                            <circle cx="30" cy="5" r="2" fill="currentColor" opacity="0.7"/>
+                            <circle cx="40" cy="5" r="3.5" fill="currentColor"/>
+                            <circle cx="50" cy="5" r="2" fill="currentColor" opacity="0.7"/>
+                            <circle cx="60" cy="5" r="3" fill="currentColor" opacity="0.5"/>
+                        </svg>
                     </div>
 
-                    <p class="mt-7 text-xs font-semibold text-[#566763]">Diberikan kepada</p>
-                    <p class="mt-1 border-b border-rimba/30 pb-2 text-xl font-extrabold tracking-tight text-[#566763]/80">Nama pemegang sertifikat</p>
+                    {{-- Outer border line --}}
+                    <div class="absolute inset-3 rounded-xl pointer-events-none" style="border: 1.5px solid #E7BA4B33;" aria-hidden="true"></div>
 
-                    <p class="mt-5 text-xs font-semibold text-[#566763]">Skema sertifikasi</p>
-                    <p class="mt-1 text-[0.9375rem] font-bold text-[#566763]/90">Nama skema sertifikasi</p>
+                    {{-- Title --}}
+                    <div class="text-center mt-1 mb-3">
+                        <h2 class="text-[1.1rem] font-extrabold tracking-tight text-navy leading-tight">Sertifikat Kompetensi</h2>
+                    </div>
 
-                    <ul class="mt-5 space-y-2" aria-label="Unit kompetensi yang dinyatakan terpenuhi (contoh)">
+                    {{-- Recipient --}}
+                    <p class="text-center text-xs text-gray-400 font-medium mb-1">Diberikan kepada</p>
+                    <p class="text-center text-lg font-bold italic text-navy/80 mb-1" style="font-family: Georgia, serif;">Nama peserta</p>
+                    <div class="mx-auto w-24 h-px bg-gold/40 my-2"></div>
+
+                    {{-- Scheme --}}
+                    <p class="text-center text-xs text-gray-400 font-medium mb-1">atas skema</p>
+                    <p class="text-center text-sm font-extrabold text-navy tracking-tight mb-3">Nama skema sertifikasi</p>
+
+                    {{-- Units --}}
+                    <ul class="space-y-2 mb-3" aria-label="Unit kompetensi (contoh)">
                         @foreach($units as $unit)
-                            <li class="flex items-center gap-3 text-[0.8125rem] font-medium">
-                                <span class="grid h-5 w-5 shrink-0 place-items-center rounded-[4px] border-2 border-rimba bg-rimba" aria-hidden="true">
-                                    <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10.5l3.5 3.5 7.5-8.5"/></svg>
+                            <li class="flex items-center justify-between gap-3 text-xs">
+                                <span class="flex items-center gap-2 text-navy/80">
+                                    {{-- Animated checkmark circle --}}
+                                    <span class="cert-check flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full border-2 border-navy/40 bg-navy/5" aria-hidden="true">
+                                        <svg class="h-2.5 w-2.5 text-navy" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M2 6l3 3 5-5"/>
+                                        </svg>
+                                    </span>
+                                    {{ $unit }}
                                 </span>
-                                <span class="flex-1 text-[#3C4B47]">{{ $unit }}</span>
-                                <span class="font-extrabold text-rimba" aria-label="Kompeten">K</span>
+                                <span class="font-semibold text-navy/60">Kompeten</span>
                             </li>
                         @endforeach
                     </ul>
 
-                    <div class="mt-16 flex items-end justify-between gap-4 text-xs text-[#566763]">
-                        <span class="tabular-nums">No. 000-0000</span>
-                        <span class="w-28 border-t border-rimba/30 pt-1 text-center">Ketua LSP</span>
+                    {{-- Kompeten seal (animated stamp) --}}
+                    <div class="flex justify-end mb-1">
+                        <div class="cert-seal relative flex items-center justify-center w-16 h-16" aria-hidden="true">
+                            {{-- Outer ring --}}
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 80 80" fill="none">
+                                <circle cx="40" cy="40" r="36" stroke="#E7BA4B" stroke-width="2.5" stroke-dasharray="6 3"/>
+                                <circle cx="40" cy="40" r="30" stroke="#E7BA4B" stroke-width="1" stroke-opacity="0.5"/>
+                            </svg>
+                            {{-- Inner fill --}}
+                            <div class="absolute inset-2.5 rounded-full flex flex-col items-center justify-center"
+                                 style="background: radial-gradient(circle, #F0CB6B, #E7BA4B);">
+                                <svg class="w-6 h-6 text-navy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 6L9 17l-5-5"/>
+                                </svg>
+                                <span class="text-[6px] font-extrabold text-navy tracking-wider -mt-0.5">KOMPETEN</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="stamp absolute bottom-12 right-5 bg-white/0 px-4 py-1.5 text-xl font-extrabold tracking-tight" aria-hidden="true">KOMPETEN</div>
+                    {{-- Footer note --}}
+                    <p class="text-center text-[9px] text-gray-400 mt-1">Ilustrasi sertifikat. Bukan dokumen resmi.</p>
                 </div>
             </div>
         </figure>
     </div>
 
-    {{-- Quick links --}}
-    <div class="relative border-t border-white/15">
-        <ul class="wrap grid gap-px sm:grid-cols-3">
+    {{-- Quick links: three tiles that jump to the sections below. The arrow points down because
+         that is where each one goes. --}}
+    <div class="relative border-t border-white/10 bg-black/[0.14]">
+        <ul class="wrap grid gap-3 py-3 sm:grid-cols-3">
             @foreach($quick as $link)
                 <li>
-                    <a href="{{ $link['href'] }}" class="group block px-1 py-5 sm:px-6 sm:first:pl-0 transition-colors hover:bg-white/[0.04]">
-                        <span class="block text-base font-extrabold tracking-tight text-white group-hover:text-cap-soft transition-colors">{{ $link['title'] }}</span>
-                        <span class="mt-0.5 block text-sm text-white/65">{{ $link['text'] }}</span>
+                    <a href="{{ $link['href'] }}"
+                       class="group flex items-center gap-3 rounded-lg border border-white/10 border-b-white/[0.06] bg-white/[0.045] px-3.5 py-2.5
+                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-[transform,background-color,border-color,box-shadow] duration-200
+                              hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.09]
+                              hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_10px_18px_-10px_rgba(4,14,28,0.8)]
+                              active:translate-y-0 active:shadow-[inset_0_2px_4px_rgba(4,14,28,0.45)]">
+                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-gold/15 text-gold-soft ring-1 ring-inset ring-gold/30 transition-colors group-hover:bg-gold group-hover:text-navy group-hover:ring-gold">
+                            @svg($link['icon'], 'h-5 w-5')
+                        </span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-[0.9375rem] font-extrabold leading-tight tracking-tight text-white">{{ $link['title'] }}</span>
+                            <span class="mt-0.5 block text-[0.8125rem] leading-snug text-white/65">{{ $link['text'] }}</span>
+                        </span>
+                        <span class="shrink-0 text-white/40 transition-[transform,color] duration-200 group-hover:translate-y-0.5 group-hover:text-gold-soft" aria-hidden="true">
+                            @svg('heroicon-o-arrow-down', 'h-4 w-4')
+                        </span>
                     </a>
                 </li>
             @endforeach
         </ul>
     </div>
 </section>
+
+<style>
+/* Stamp seal entrance animation */
+.cert-seal {
+    animation: seal-stamp 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 1s both;
+    transform-origin: center;
+}
+@keyframes seal-stamp {
+    0%   { opacity: 0; transform: scale(2.2) rotate(-25deg); }
+    60%  { opacity: 1; transform: scale(0.9) rotate(5deg); }
+    80%  { transform: scale(1.05) rotate(-3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Checkmark draw-in animation for each unit */
+.cert-check svg {
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    animation: check-draw 0.4s ease-out forwards;
+}
+.cert-check:nth-child(1) svg { animation-delay: 1.5s; }
+
+li:nth-child(1) .cert-check svg { animation-delay: 1.5s; }
+li:nth-child(2) .cert-check svg { animation-delay: 1.8s; }
+li:nth-child(3) .cert-check svg { animation-delay: 2.1s; }
+
+@keyframes check-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Already played this session: show the finished certificate without replaying the animation. */
+.hero-played .cert-seal { animation: none; opacity: 1; transform: none; }
+.hero-played .cert-check svg { animation: none; stroke-dashoffset: 0; }
+
+/* Short screens: keep the whole first screen visible, nothing cut at the bottom edge. */
+@media (min-width: 1024px) and (max-height: 760px) {
+    .hero .hero-tags { display: none; }
+    .hero .hero-grid { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+}
+@media (min-width: 1024px) and (max-height: 620px) {
+    .hero figure { max-width: 21rem; }
+    .hero figure p.text-\[9px\] { display: none; }
+}
+
+/* Reduce motion override */
+@media (prefers-reduced-motion: reduce) {
+    .cert-seal { animation: none !important; }
+    .cert-check svg { animation: none !important; stroke-dashoffset: 0; }
+}
+</style>

@@ -94,18 +94,18 @@ class WebsiteContentSeeder extends Seeder
         foreach (range(1, 9) as $n) {
             $r = 60 + $n * 52;
             $dash = 4 + (($n + $variant) % 4) * 6;
-            $rings .= "<circle cx=\"1100\" cy=\"260\" r=\"{$r}\" fill=\"none\" stroke=\"#F6F1E7\" stroke-opacity=\"0.10\" stroke-width=\"1.4\" stroke-dasharray=\"{$dash} 9\"/>";
+            $rings .= "<circle cx=\"1100\" cy=\"260\" r=\"{$r}\" fill=\"none\" stroke=\"#F7F9FC\" stroke-opacity=\"0.10\" stroke-width=\"1.4\" stroke-dasharray=\"{$dash} 9\"/>";
         }
         $rot = 12 + $variant * 9;
 
         return <<<SVG
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="presentation">
-          <rect width="1600" height="900" fill="#0D2B27"/>
+          <rect width="1600" height="900" fill="#162948"/>
           {$rings}
-          <g transform="translate(1180 640) rotate(-{$rot})" fill="none" stroke="#E4472D" stroke-width="5">
+          <g transform="translate(1180 640) rotate(-{$rot})" fill="none" stroke="#E7BA4B" stroke-width="5">
             <rect x="-170" y="-52" width="340" height="104" rx="10"/>
             <rect x="-158" y="-40" width="316" height="80" rx="6" stroke-width="2"/>
-            <text x="0" y="14" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="44" font-weight="800" letter-spacing="6" fill="#E4472D" stroke="none">CONTOH</text>
+            <text x="0" y="14" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="44" font-weight="800" letter-spacing="6" fill="#E7BA4B" stroke="none">CONTOH</text>
           </g>
         </svg>
         SVG;
@@ -157,10 +157,10 @@ class WebsiteContentSeeder extends Seeder
 
     private function categoryIllustrationSvg(string $slug, string $iconTemplate): string
     {
-        $ground = '#0D2B27';
-        $lift = '#14403A';
-        $cap = '#E4472D';
-        $paper = '#F6F1E7';
+        $ground = '#162948';
+        $lift = '#273955';
+        $cap = '#E7BA4B';
+        $paper = '#F7F9FC';
 
         $icon = str_replace(['{paper}', '{cap}', '{ground}'], [$paper, $cap, $ground], $iconTemplate);
 

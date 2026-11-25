@@ -11,7 +11,7 @@
                    class="flex items-center justify-between gap-3 min-h-12 px-1 text-[0.9375rem] transition-colors
                           {{ ! request('category') ? 'font-bold text-ink' : 'text-body hover:text-ink' }}">
                     <span>Semua</span>
-                    @if(! request('category'))<span class="w-1.5 h-1.5 rounded-full bg-cap" aria-hidden="true"></span>@endif
+                    @if(! request('category'))<span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>@endif
                 </a>
             </li>
 
@@ -25,7 +25,7 @@
                         <span class="truncate">{{ $category->name }}</span>
                         <span class="flex items-center gap-2 shrink-0 tabular-nums text-sm text-muted">
                             {{ $category->news_count }}
-                            @if($isActive)<span class="w-1.5 h-1.5 rounded-full bg-cap" aria-hidden="true"></span>@endif
+                            @if($isActive)<span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>@endif
                         </span>
                     </a>
                 </li>
@@ -57,11 +57,11 @@
     @endif
 
     {{-- Kontak --}}
-    <div class="on-dark rounded-2xl bg-rimba p-6 text-white">
+    <div class="on-dark rounded-2xl bg-navy p-6 text-white">
         <h2 class="subtitle text-white">Ada pertanyaan?</h2>
         <p class="mt-2 text-[0.9375rem] leading-relaxed text-white/75">
             Kanal kontak dan jadwal layanan ada di halaman profil.
         </p>
-        <a href="{{ route('about') }}#kontak" class="btn btn-cap mt-5 w-full">Lihat kontak</a>
+        <a href="{{ route('about') }}#kontak" class="btn btn-accent mt-5 w-full">Lihat kontak</a>
     </div>
 </aside>

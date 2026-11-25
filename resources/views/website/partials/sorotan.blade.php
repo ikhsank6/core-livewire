@@ -41,7 +41,7 @@
             </div>
 
             <div class="mt-10">
-                <div class="relative aspect-video overflow-hidden rounded-xl bg-rimba md:aspect-[21/9]">
+                <div class="relative aspect-video overflow-hidden rounded-xl bg-navy md:aspect-[21/9]">
                     @foreach($slides as $k => $s)
                         <div class="absolute inset-0 transition-opacity duration-500"
                              :class="i === {{ $k }} ? 'opacity-100' : 'opacity-0'"
@@ -84,7 +84,7 @@
                                     aria-label="Sorotan {{ $k + 1 }}: {{ $s['title'] }}"
                                     class="grid h-11 min-w-11 cursor-pointer place-items-center px-1">
                                 <span class="block h-1 rounded-full transition-all duration-300"
-                                      :class="i === {{ $k }} ? 'w-9 bg-cap' : 'w-5 bg-line'"></span>
+                                      :class="i === {{ $k }} ? 'w-9 bg-gold' : 'w-5 bg-line'"></span>
                             </button>
                         @endforeach
                     </div>

@@ -41,50 +41,6 @@
     </section>
 @endif
 
-{{-- ================================================================
-     PROFIL: the organisation's own words, set large
-     ================================================================ --}}
-@php
-    $statement = filled($aboutUs?->description)
-        ? Str::words(trim(preg_replace('/\s+/', ' ', strip_tags($aboutUs->description))), 46)
-        : null;
-
-    $facts = collect([
-        ['label' => 'Alamat',   'value' => $aboutUs?->address],
-        ['label' => 'Telepon',  'value' => $aboutUs?->phone],
-        ['label' => 'Surel',    'value' => $aboutUs?->email],
-        ['label' => 'WhatsApp', 'value' => $aboutUs?->whatsapp],
-    ])->filter(fn ($f) => filled($f['value']));
-@endphp
-
-@if($statement || $facts->isNotEmpty())
-    <section class="border-t border-line py-20 md:py-28">
-        <div class="wrap grid gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-20">
-
-            <div>
-                @if($statement)
-                    <p class="text-[clamp(1.5rem,2.8vw,2.375rem)] font-extrabold leading-[1.25] tracking-[-0.03em] text-ink max-w-[30ch]">
-                        {{ $statement }}
-                    </p>
-                @endif
-
-                <a href="{{ route('about') }}" class="btn btn-solid btn-lg mt-10">Baca profil lengkap</a>
-            </div>
-
-            @if($facts->isNotEmpty())
-                <dl class="self-start border-t border-line">
-                    @foreach($facts as $fact)
-                        <div class="border-b border-line py-5">
-                            <dt class="text-sm text-muted">{{ $fact['label'] }}</dt>
-                            <dd class="mt-1 text-[0.9375rem] font-medium text-ink wrap-break-word">{{ $fact['value'] }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
-            @endif
-        </div>
-    </section>
-@endif
-
 @include('website.partials.faq')
 @include('website.partials.cta')
 

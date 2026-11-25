@@ -65,11 +65,11 @@
                          alt="{{ $aboutUs->company_name }}"
                          class="max-w-full max-h-32 object-contain">
                 @else
-                    <span class="grid h-20 w-20 place-items-center rounded-full bg-rimba" aria-hidden="true">
+                    <span class="grid h-20 w-20 place-items-center rounded-full bg-navy" aria-hidden="true">
                         <svg class="h-12 w-12" viewBox="0 0 36 36" fill="none">
-                            <circle cx="18" cy="18" r="16" stroke="#E4472D" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
-                            <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
-                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="18" cy="18" r="16" stroke="#E7BA4B" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                            <circle cx="18" cy="18" r="12.5" fill="#E7BA4B"/>
+                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#14213A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </span>
                 @endif
@@ -103,7 +103,7 @@
                                 @if($channel['href'])
                                     <a href="{{ $channel['href'] }}"
                                        @if(Str::startsWith($channel['href'], 'http')) target="_blank" rel="noopener noreferrer" @endif
-                                       class="inline-flex min-h-11 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-cap transition-colors">
+                                       class="inline-flex min-h-11 items-center text-ink underline decoration-line underline-offset-4 hover:decoration-gold transition-colors">
                                         {{ $channel['value'] }}
                                     </a>
                                 @else
