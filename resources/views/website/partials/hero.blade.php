@@ -19,22 +19,6 @@
     ];
 @endphp
 
-{{-- The certificate animation (ticks drawing in, seal landing) plays on the first load of a browser
-     session only. After that the finished state is shown straight away. The flag is read before the
-     hero paints, so a repeat visit never flashes the animation. --}}
-<script nonce="{{ csp_nonce() }}">
-    (function () {
-        try {
-            if (sessionStorage.getItem('lspHeroPlayed') === '1') {
-                document.documentElement.classList.add('hero-played');
-            } else {
-                document.documentElement.classList.remove('hero-played');
-                sessionStorage.setItem('lspHeroPlayed', '1');
-            }
-        } catch (e) { /* storage blocked: the animation simply plays each time */ }
-    })();
-</script>
-
 <section class="hero on-dark relative isolate flex flex-col overflow-hidden bg-navy text-white lg:min-h-[calc(100svh-3.3125rem)]"
          x-data="{
             rot: 0,
@@ -190,27 +174,24 @@
         </figure>
     </div>
 
-    {{-- Quick links: three tiles that jump to the sections below. The arrow points down because
-         that is where each one goes. --}}
-    <div class="relative border-t border-white/10 bg-black/[0.14]">
-        <ul class="wrap grid gap-3 py-3 sm:grid-cols-3">
+    {{-- Quick links: three tiles that jump to the sections below --}}
+    <div class="relative pb-6 sm:pb-8">
+        <ul class="wrap grid gap-3.5 sm:grid-cols-3">
             @foreach($quick as $link)
                 <li>
                     <a href="{{ $link['href'] }}"
-                       class="group flex items-center gap-3 rounded-lg border border-white/10 border-b-white/[0.06] bg-white/[0.045] px-3.5 py-2.5
-                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-[transform,background-color,border-color,box-shadow] duration-200
-                              hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.09]
-                              hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.14),0_10px_18px_-10px_rgba(4,14,28,0.8)]
-                              active:translate-y-0 active:shadow-[inset_0_2px_4px_rgba(4,14,28,0.45)]">
-                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-gold/15 text-gold-soft ring-1 ring-inset ring-gold/30 transition-colors group-hover:bg-gold group-hover:text-navy group-hover:ring-gold">
+                       class="group flex items-center gap-3.5 rounded-xl border border-white/15 bg-white/[0.06] p-3.5 backdrop-blur-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-white/10 hover:shadow-lg hover:shadow-black/20">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold border border-gold/30 transition-colors duration-200 group-hover:bg-gold group-hover:text-navy group-hover:border-gold">
                             @svg($link['icon'], 'h-5 w-5')
                         </span>
                         <span class="min-w-0 flex-1">
-                            <span class="block text-[0.9375rem] font-extrabold leading-tight tracking-tight text-white">{{ $link['title'] }}</span>
-                            <span class="mt-0.5 block text-[0.8125rem] leading-snug text-white/65">{{ $link['text'] }}</span>
+                            <span class="block text-sm font-bold text-white tracking-tight group-hover:text-gold-soft transition-colors">{{ $link['title'] }}</span>
+                            <span class="mt-0.5 block text-xs text-white/70 line-clamp-1 leading-snug">{{ $link['text'] }}</span>
                         </span>
-                        <span class="shrink-0 text-white/40 transition-[transform,color] duration-200 group-hover:translate-y-0.5 group-hover:text-gold-soft" aria-hidden="true">
-                            @svg('heroicon-o-arrow-down', 'h-4 w-4')
+                        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-white/35 transition-all duration-200 group-hover:bg-white/10 group-hover:text-gold-soft group-hover:translate-y-0.5" aria-hidden="true">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                            </svg>
                         </span>
                     </a>
                 </li>
@@ -220,37 +201,47 @@
 </section>
 
 <style>
-/* Stamp seal entrance animation */
+/* The assessment decision, on a loop. One 7s cycle: the three unit ticks are drawn one after
+   another, the KOMPETEN seal lands, the result is held, then it fades and the cycle starts again.
+   Only the ticks and the seal move; the certificate itself stays still. */
 .cert-seal {
-    animation: seal-stamp 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) 1s both;
     transform-origin: center;
+    animation: seal-loop 7s ease-out infinite;
 }
-@keyframes seal-stamp {
-    0%   { opacity: 0; transform: scale(2.2) rotate(-25deg); }
-    60%  { opacity: 1; transform: scale(0.9) rotate(5deg); }
-    80%  { transform: scale(1.05) rotate(-3deg); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+@keyframes seal-loop {
+    0%, 27%  { opacity: 0; transform: scale(2.2) rotate(-25deg); }
+    35%      { opacity: 1; transform: scale(0.9) rotate(5deg); }
+    40%      { transform: scale(1.05) rotate(-3deg); }
+    45%, 89% { opacity: 1; transform: scale(1) rotate(0deg); }
+    96%,100% { opacity: 0; transform: scale(0.92) rotate(0deg); }
 }
 
-/* Checkmark draw-in animation for each unit */
 .cert-check svg {
     stroke-dasharray: 20;
     stroke-dashoffset: 20;
-    animation: check-draw 0.4s ease-out forwards;
+    animation-duration: 7s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
-.cert-check:nth-child(1) svg { animation-delay: 1.5s; }
+li:nth-child(1) .cert-check svg { animation-name: check-loop-1; }
+li:nth-child(2) .cert-check svg { animation-name: check-loop-2; }
+li:nth-child(3) .cert-check svg { animation-name: check-loop-3; }
 
-li:nth-child(1) .cert-check svg { animation-delay: 1.5s; }
-li:nth-child(2) .cert-check svg { animation-delay: 1.8s; }
-li:nth-child(3) .cert-check svg { animation-delay: 2.1s; }
-
-@keyframes check-draw {
-    to { stroke-dashoffset: 0; }
+@keyframes check-loop-1 {
+    0%, 4%   { stroke-dashoffset: 20; }
+    11%, 89% { stroke-dashoffset: 0; }
+    96%,100% { stroke-dashoffset: 20; }
 }
-
-/* Already played this session: show the finished certificate without replaying the animation. */
-.hero-played .cert-seal { animation: none; opacity: 1; transform: none; }
-.hero-played .cert-check svg { animation: none; stroke-dashoffset: 0; }
+@keyframes check-loop-2 {
+    0%, 11%  { stroke-dashoffset: 20; }
+    18%, 89% { stroke-dashoffset: 0; }
+    96%,100% { stroke-dashoffset: 20; }
+}
+@keyframes check-loop-3 {
+    0%, 18%  { stroke-dashoffset: 20; }
+    25%, 89% { stroke-dashoffset: 0; }
+    96%,100% { stroke-dashoffset: 20; }
+}
 
 /* Short screens: keep the whole first screen visible, nothing cut at the bottom edge. */
 @media (min-width: 1024px) and (max-height: 760px) {
