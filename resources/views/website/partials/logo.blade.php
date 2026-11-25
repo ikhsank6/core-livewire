@@ -5,7 +5,7 @@
     The check redraws when the parent carries the `group` class and is hovered or focused.
     This is a placeholder mark until the institution uploads its own logo.
 --}}
-<span class="flex items-center gap-2.5">
+<span class="flex min-w-0 items-center gap-2.5">
     @if($aboutUs?->logo)
         <img src="{{ Storage::url($aboutUs->logo) }}"
              alt="{{ $aboutUs->company_name ?? config('app.name') }}"

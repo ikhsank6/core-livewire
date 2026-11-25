@@ -1,4 +1,4 @@
-{{-- Props: $dark (bool, optional): true when sitting on the rimba ground --}}
+{{-- Props: $dark (bool, optional): true when sitting on the navy ground --}}
 @php
     $dark = $dark ?? false;
 

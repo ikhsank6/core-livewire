@@ -20,10 +20,10 @@
                shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_20px_-8px_rgba(4,14,28,0.55)]">
 
     <div class="wrap">
-        <div class="flex items-center h-[3.25rem] gap-6">
+        <div class="flex items-center h-[3.25rem] gap-3 sm:gap-6">
 
-            <a href="{{ route('landing') }}" class="group inline-flex min-h-11 shrink-0 items-center rounded-md" aria-label="{{ $aboutUs->company_name ?? config('app.name') }}, ke beranda">
-                @include('website.partials.logo', ['textClass' => 'font-extrabold text-lg tracking-tight text-white'])
+            <a href="{{ route('landing') }}" class="group inline-flex min-h-11 min-w-0 shrink items-center rounded-md" aria-label="{{ $aboutUs->company_name ?? config('app.name') }}, ke beranda">
+                @include('website.partials.logo', ['textClass' => 'truncate font-extrabold text-[0.9375rem] sm:text-lg tracking-tight text-white'])
             </a>
 
             <nav aria-label="Navigasi utama"
@@ -62,22 +62,18 @@
 
             <div class="flex items-center gap-2 ml-auto">
 
-                <div class="theme-track" role="group" aria-label="Tema tampilan">
-                    <button type="button" @click="theme = 'light'"
-                            :aria-pressed="!isDark ? 'true' : 'false'"
-                            aria-label="Mode terang"
-                            :class="!isDark ? 'bg-gold text-navy shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
-                            class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0">
+                {{-- One switch button. The gold knob sits behind the icon of the active theme and slides across on click. --}}
+                <button type="button" @click="theme = isDark ? 'light' : 'dark'"
+                        role="switch" :aria-checked="isDark ? 'true' : 'false'" aria-label="Mode gelap"
+                        class="theme-track before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']">
+                    <span class="theme-knob" :class="isDark ? 'is-dark' : ''" aria-hidden="true"></span>
+                    <span class="relative z-10 grid h-7 w-7 place-items-center transition-colors duration-200" :class="!isDark ? 'text-navy' : 'text-[#D5DAE3]'" aria-hidden="true">
                         @svg('heroicon-o-sun', 'w-3.5 h-3.5')
-                    </button>
-                    <button type="button" @click="theme = 'dark'"
-                            :aria-pressed="isDark ? 'true' : 'false'"
-                            aria-label="Mode gelap"
-                            :class="isDark ? 'bg-gold text-navy shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
-                            class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0">
+                    </span>
+                    <span class="relative z-10 grid h-7 w-7 place-items-center transition-colors duration-200" :class="isDark ? 'text-navy' : 'text-[#D5DAE3]'" aria-hidden="true">
                         @svg('heroicon-o-moon', 'w-3.5 h-3.5')
-                    </button>
-                </div>
+                    </span>
+                </button>
 
                 <a href="{{ route('login') }}"
                    class="hidden sm:inline-flex min-h-11 items-center rounded-md px-3 text-[0.9375rem] font-semibold text-white/90 underline decoration-transparent underline-offset-[6px] transition-colors hover:text-white hover:decoration-gold">
@@ -86,12 +82,12 @@
 
                 <button type="button" @click="open = !open"
                         :aria-expanded="open ? 'true' : 'false'"
-                        aria-controls="nav-mobile"
-                        class="lg:hidden inline-flex items-center gap-2 h-11 pl-3 pr-4 rounded-md border border-white/25
+                        aria-controls="nav-mobile" aria-label="Menu"
+                        class="lg:hidden inline-flex shrink-0 items-center gap-2 h-11 px-3 sm:pl-3 sm:pr-4 rounded-md border border-white/25
                                text-[0.9375rem] font-semibold text-white cursor-pointer">
                     <span x-show="!open">@svg('heroicon-o-bars-3', 'w-5 h-5')</span>
                     <span x-show="open" x-cloak>@svg('heroicon-o-x-mark', 'w-5 h-5')</span>
-                    Menu
+                    <span class="hidden sm:inline">Menu</span>
                 </button>
             </div>
         </div>

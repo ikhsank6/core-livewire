@@ -159,31 +159,32 @@
                 <span class="auth-display text-xl">{{ $aboutUs?->company_name ?? config('app.name') }}</span>
             </a>
 
-            {{-- Theme switch: two round buttons in a recessed track, the active one lit gold --}}
+            {{-- Theme switch: one button. The gold knob sits behind the active icon and slides on click. --}}
             <div x-data="{
                 get isDark() { return $store.theme ? $store.theme.isDark : (localStorage.getItem('theme') === 'dark') },
-                set(mode) {
+                toggle() {
+                    const mode = this.isDark ? 'light' : 'dark';
                     if ($store.theme) { $store.theme.value = mode; return; }
                     localStorage.setItem('theme', mode);
                     document.documentElement.classList.toggle('dark', mode === 'dark');
                 }
-            }" role="group" aria-label="Tema tampilan"
-               class="inline-flex items-center gap-px rounded-full border border-white/12 bg-[#3E4D68] p-[3px] shadow-[inset_0_2px_4px_rgba(5,12,24,0.35),0_1px_0_rgba(255,255,255,0.06)]">
-                <button type="button" @click="set('light')"
-                    :aria-pressed="!isDark ? 'true' : 'false'" aria-label="Mode terang"
-                    :class="!isDark ? 'bg-[#E7BA4B] text-[#162948] shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
-                    class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']">
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                </button>
-                <button type="button" @click="set('dark')"
-                    :aria-pressed="isDark ? 'true' : 'false'" aria-label="Mode gelap"
-                    :class="isDark ? 'bg-[#E7BA4B] text-[#162948] shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)]' : 'text-[#D5DAE3] hover:text-white'"
-                    class="relative grid h-7 w-7 cursor-pointer place-items-center rounded-full transition-colors before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']">
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                    </svg>
+            }">
+                <button type="button" @click="toggle()"
+                    role="switch" :aria-checked="isDark ? 'true' : 'false'" aria-label="Mode gelap"
+                    class="relative inline-flex cursor-pointer items-center gap-px rounded-full border border-white/12 bg-[#3E4D68] p-[3px] shadow-[inset_0_2px_4px_rgba(5,12,24,0.35),0_1px_0_rgba(255,255,255,0.06)] before:absolute before:-inset-y-2 before:inset-x-0 before:content-[''] focus-visible:rounded-full">
+                    <span aria-hidden="true"
+                        :class="isDark ? 'translate-x-[29px]' : 'translate-x-0'"
+                        class="absolute left-[3px] top-[3px] h-7 w-7 rounded-full bg-[#E7BA4B] shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-[cubic-bezier(0.3,1.25,0.4,1)]"></span>
+                    <span aria-hidden="true" :class="!isDark ? 'text-[#162948]' : 'text-[#D5DAE3]'" class="relative z-10 grid h-7 w-7 place-items-center transition-colors duration-200">
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </span>
+                    <span aria-hidden="true" :class="isDark ? 'text-[#162948]' : 'text-[#D5DAE3]'" class="relative z-10 grid h-7 w-7 place-items-center transition-colors duration-200">
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="stroke: currentColor !important;" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </span>
                 </button>
             </div>
         </header>

@@ -56,7 +56,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                     </span>
-                    <input id="hero-search" type="search" name="q" placeholder="Nama skema atau bidang kerja"
+                    <input id="hero-search" type="search" name="q" placeholder="Cari skema atau bidang"
                            class="w-full h-11 pl-10 pr-4 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold/60 transition-colors">
                 </div>
                 <button type="submit"
