@@ -96,7 +96,7 @@
         {{-- =====================
              HEADER / NAVBAR
              ===================== --}}
-        <nav class="fixed top-0 right-0 left-0 z-40 bg-linear-to-b from-[#2349ad] via-[#1a3e9a] to-[#173684] border-b-2 border-[#102a6e] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-1px_0_rgba(255,255,255,0.08),0_6px_18px_-4px_rgba(10,25,70,0.6)] transition-all duration-300">
+        <nav class="fixed top-0 right-0 left-0 z-40 bg-linear-to-b from-[#3A78BA] via-[#2D68A7] to-[#23558B] border-b-2 border-[#183C62] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-1px_0_rgba(255,255,255,0.08),0_6px_18px_-4px_rgba(12,38,72,0.6)] transition-all duration-300">
             <div class="px-4 h-16 flex items-center gap-x-3">
 
                 {{-- Mobile hamburger — opens the vertical menu drawer --}}
@@ -115,14 +115,14 @@
                     @else
                         {{-- Same certification seal as the public website --}}
                         <svg class="w-9 h-9 shrink-0" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                            <circle cx="18" cy="18" r="16" stroke="#FF8A70" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
-                            <circle cx="18" cy="18" r="12.5" fill="#E4472D"/>
-                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#1B0B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="18" cy="18" r="16" stroke="#F0CB6B" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.1 3.6"/>
+                            <circle cx="18" cy="18" r="12.5" fill="#E7BA4B"/>
+                            <path d="M11.8 18.4l4.4 4.4 8.2-9.2" stroke="#14213A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     @endif
                     <div class="min-w-0 hidden sm:block">
                         <p class="font-bold text-white text-sm truncate leading-tight">{{ $aboutUs?->company_name ?? 'Admin' }}</p>
-                        <p class="text-[10px] font-medium uppercase tracking-wider text-blue-200/80 truncate leading-tight">Lembaga Sertifikasi Profesi</p>
+                        <p class="text-[10px] font-medium uppercase tracking-wider text-white/85 truncate leading-tight">Lembaga Sertifikasi Profesi</p>
                     </div>
                 </a>
 
@@ -174,7 +174,7 @@
                         </button>
                         {{-- Shortcut hint (hidden while typing) --}}
                         <kbd x-show="q === ''"
-                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/20 bg-white/10 text-[10px] font-medium text-blue-100/80">
+                            class="absolute inset-y-0 right-2 my-auto flex items-center h-5 px-1.5 rounded border border-white/20 bg-white/10 text-[10px] font-medium text-white/85">
                             Ctrl+K
                         </kbd>
 
@@ -206,7 +206,7 @@
                         const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                         const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
                         date = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-                    " class="hidden lg:flex items-center text-sm font-medium text-blue-100/90 dark:text-gray-400 mr-2">
+                    " class="hidden lg:flex items-center text-sm font-medium text-white/90 dark:text-gray-400 mr-2">
                         <span x-text="date"></span>
                     </div>
 
@@ -239,7 +239,7 @@
                             @endif
                             <div class="hidden sm:flex flex-col text-left leading-tight">
                                 <span class="text-sm font-semibold text-white max-w-[120px] truncate">{{ auth()->user()->name }}</span>
-                                <span class="text-xs text-blue-100/80 dark:text-gray-400 max-w-[120px] truncate">{{ auth()->user()->role?->name ?? 'No Role' }}</span>
+                                <span class="text-xs text-white/85 dark:text-gray-400 max-w-[120px] truncate">{{ auth()->user()->role?->name ?? 'No Role' }}</span>
                             </div>
                             <svg class="w-4 h-4 text-blue-200 dark:text-gray-400 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>

@@ -20,7 +20,7 @@
         moreOpen: false,
         keycap(on) {
             return on
-                ? 'text-blue-700 dark:text-white bg-gray-100 dark:bg-black/25 border-transparent shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]'
+                ? 'text-gray-900 dark:text-white bg-gray-900/[0.045] dark:bg-black/25 border-gray-900/[0.07] dark:border-white/5 shadow-[inset_0_0_6px_rgba(15,23,42,0.2),inset_0_2px_3px_rgba(15,23,42,0.1)] dark:shadow-[inset_0_0_7px_rgba(0,0,0,0.6),inset_0_2px_4px_rgba(0,0,0,0.4)]'
                 : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white hover:bg-linear-to-b hover:from-white hover:to-gray-100 dark:hover:from-[#2b2b42] dark:hover:to-[#25253b] hover:border-gray-200 dark:hover:border-white/10 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_1px_2px_rgba(15,23,42,0.1)] dark:hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_1px_2px_rgba(0,0,0,0.35)]';
         },
         get visible() { return this.items.slice(0, this.visibleCount) },
@@ -54,7 +54,7 @@
         {{-- Hidden row used only to measure natural item widths --}}
         <div x-ref="measure" class="absolute left-0 top-0 flex gap-1 invisible pointer-events-none whitespace-nowrap" aria-hidden="true">
             <template x-for="item in items" :key="'m-' + item.name">
-                <span class="inline-flex items-center gap-1.5 h-12 border px-3 text-sm font-medium">
+                <span class="inline-flex items-center gap-1.5 h-12 border px-3.5 text-sm font-medium">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
                     <svg x-show="item.children.length" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -69,20 +69,22 @@
 
                 {{-- Leaf item --}}
                 <a x-show="!item.children.length" :href="item.url" @click="go($event, item.url)"
-                    class="relative inline-flex items-center gap-1.5 my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                    class="relative inline-flex items-center gap-1.5 mt-[3px] h-[43px] rounded-t-lg rounded-b-none border border-b-0 px-3.5 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-900/[0.06] dark:active:bg-black/25 active:border-gray-900/[0.06] active:shadow-[inset_0_0_6px_rgba(15,23,42,0.22),inset_0_2px_3px_rgba(15,23,42,0.1)] dark:active:shadow-[inset_0_0_7px_rgba(0,0,0,0.6),inset_0_2px_4px_rgba(0,0,0,0.4)]"
                     :class="keycap(item.active)">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
+                    <span x-show="item.active" class="absolute inset-x-3.5 bottom-0 h-0.5 rounded-t-full bg-[#2D68A7] dark:bg-[#4BA5DA]"></span>
                 </a>
 
                 {{-- Group item --}}
                 <button x-show="item.children.length" type="button" @click="openIndex = idx; moreOpen = false"
-                    class="relative inline-flex items-center gap-1.5 cursor-pointer my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                    class="relative inline-flex items-center gap-1.5 cursor-pointer mt-[3px] h-[43px] rounded-t-lg rounded-b-none border border-b-0 px-3.5 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
                     :class="keycap(item.active || openIndex === idx)"
                     :aria-expanded="openIndex === idx">
                     <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
                     <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openIndex === idx ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    <span x-show="item.active" class="absolute inset-x-3.5 bottom-0 h-0.5 rounded-t-full bg-[#2D68A7] dark:bg-[#4BA5DA]"></span>
                 </button>
 
                 <div x-show="item.children.length && openIndex === idx" style="display: none"
@@ -97,7 +99,7 @@
                         <a :href="child.url" @click="go($event, child.url)"
                             class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
                             :class="child.active
-                                ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
+                                ? 'bg-[#2D68A7]/10 dark:bg-[#4BA5DA]/15 text-[#245A94] dark:text-[#7FC1EA] font-semibold'
                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white'">
                             <span class="inline-flex shrink-0 opacity-80" x-html="child.icon"></span>
 <span x-text="child.name"></span>
@@ -111,7 +113,7 @@
         <div x-show="overflow.length" style="display: none" class="relative flex"
             @mouseenter="moreOpen = true; openIndex = null" @mouseleave="moreOpen = false">
             <button type="button" @click="moreOpen = true; openIndex = null"
-                class="inline-flex items-center gap-1.5 cursor-pointer my-1.5 h-9 rounded-lg border px-3 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
+                class="inline-flex items-center gap-1.5 cursor-pointer mt-[3px] h-[43px] rounded-t-lg rounded-b-none border border-b-0 px-3.5 text-sm font-medium whitespace-nowrap transition-[box-shadow,background-color,color,border-color] duration-150 active:bg-gray-100 dark:active:bg-black/25 active:border-transparent active:shadow-[inset_0_0_7px_rgba(15,23,42,0.22),inset_0_2px_4px_rgba(15,23,42,0.14)] dark:active:shadow-[inset_0_0_8px_rgba(0,0,0,0.65),inset_0_2px_4px_rgba(0,0,0,0.45)]"
                 :class="keycap(moreOpen)"
                 :aria-expanded="moreOpen">
                 More
@@ -130,7 +132,7 @@
                         <a x-show="!item.children.length" :href="item.url" @click="go($event, item.url)"
                             class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
                             :class="item.active
-                                ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
+                                ? 'bg-[#2D68A7]/10 dark:bg-[#4BA5DA]/15 text-[#245A94] dark:text-[#7FC1EA] font-semibold'
                                 : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white'">
                             <span class="inline-flex shrink-0" x-html="item.icon"></span>
 <span x-text="item.name"></span>
@@ -141,7 +143,7 @@
                                 <a :href="child.url" @click="go($event, child.url)"
                                     class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
                                     :class="child.active
-                                        ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold'
+                                        ? 'bg-[#2D68A7]/10 dark:bg-[#4BA5DA]/15 text-[#245A94] dark:text-[#7FC1EA] font-semibold'
                                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-900 dark:hover:text-white'">
                                     <span class="inline-flex shrink-0 opacity-80" x-html="child.icon"></span>
 <span x-text="child.name"></span>
@@ -208,7 +210,7 @@
                             @php $isChildActive = $currentRoute === $child['route']; @endphp
                             <a href="{{ \App\Services\MenuService::safeRoute($child['route']) }}" wire:navigate
                                 @click="mobileMenuOpen = false"
-                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ $isChildActive ? 'bg-blue-50 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 font-semibold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-800 dark:hover:text-white' }}">
+                                class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors {{ $isChildActive ? 'bg-[#2D68A7]/10 dark:bg-[#4BA5DA]/15 text-[#245A94] dark:text-[#7FC1EA] font-semibold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/6 hover:text-gray-800 dark:hover:text-white' }}">
                                 {{ $child['name'] }}
                             </a>
                         @endforeach
