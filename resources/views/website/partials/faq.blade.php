@@ -17,33 +17,45 @@
     ];
 @endphp
 
-<section id="faq" class="scroll-mt-20 border-t border-line py-20 md:py-28">
+<section id="faq" class="scroll-mt-20 py-20 md:py-28">
     <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-20">
 
         <div>
             <h2 class="title">Pertanyaan yang paling sering diajukan calon asesi.</h2>
             <p class="lead mt-5 max-w-[34ch]">Belum menemukan jawabannya? Hubungi LSP lewat kanal resmi.</p>
-            <a href="{{ route('about') }}#kontak" class="btn btn-line btn-lg mt-8">Lihat kontak</a>
+            {{-- Same gold button as "Masuk" in the navbar; 44px tall here so it is an easy tap target --}}
+            <a href="{{ route('about') }}#kontak" class="btn btn-login mt-8 h-11 px-5">
+                @svg('heroicon-o-phone', 'h-4 w-4')
+                Lihat kontak
+            </a>
         </div>
 
-        <div class="border-t border-line">
+        {{-- Each question is its own solid card, so it stands apart from the background motif --}}
+        <div class="space-y-3">
             @foreach($faqs as $index => $faq)
-                <div x-data="{ open: false }" class="border-b border-line">
+                <div x-data="{ open: false }"
+                     class="rounded-xl border bg-surface shadow-xs transition-[border-color,box-shadow] duration-200"
+                     :class="open ? 'border-brand/50 shadow-md' : 'border-line hover:border-brand/40'">
                     <h3>
                         <button type="button"
                                 @click="open = !open"
                                 :aria-expanded="open ? 'true' : 'false'"
                                 aria-controls="faq-panel-{{ $index }}"
-                                class="group flex w-full cursor-pointer items-center justify-between gap-6 py-6 text-left">
-                            <span class="subtitle text-[1.125rem] transition-colors group-hover:text-link">{{ $faq['q'] }}</span>
-                            <span class="shrink-0 text-muted transition-transform duration-300" :class="open ? 'rotate-45 text-ink' : ''" aria-hidden="true">
-                                @svg('heroicon-m-plus', 'h-6 w-6')
+                                class="group flex w-full cursor-pointer items-center gap-4 px-4 py-4 text-left md:px-5">
+                            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors duration-200"
+                                  :class="open ? 'bg-brand text-white' : 'bg-sunken text-brand'" aria-hidden="true">
+                                @svg('heroicon-o-question-mark-circle', 'h-6 w-6')
+                            </span>
+                            <span class="subtitle min-w-0 flex-1 text-[1.0625rem] transition-colors group-hover:text-link">{{ $faq['q'] }}</span>
+                            <span class="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line text-muted transition-[transform,color,border-color] duration-300 group-hover:border-brand/50 group-hover:text-ink"
+                                  :class="open ? 'rotate-45 border-brand/50 text-ink' : ''" aria-hidden="true">
+                                @svg('heroicon-m-plus', 'h-5 w-5')
                             </span>
                         </button>
                     </h3>
 
                     <div id="faq-panel-{{ $index }}" x-show="open" x-collapse x-cloak>
-                        <p class="max-w-[62ch] pb-7 leading-relaxed">{{ $faq['a'] }}</p>
+                        <p class="max-w-[62ch] px-4 pb-5 leading-relaxed md:pl-[4.75rem] md:pr-5">{{ $faq['a'] }}</p>
                     </div>
                 </div>
             @endforeach

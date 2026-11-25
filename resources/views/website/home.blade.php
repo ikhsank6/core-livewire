@@ -41,7 +41,11 @@
     </section>
 @endif
 
-@include('website.partials.faq')
-@include('website.partials.cta')
+{{-- FAQ and the closing band share one lattice background, so no divider line is needed between them --}}
+<div class="relative isolate overflow-hidden">
+    @include('website.partials.lattice', ['class' => 'pointer-events-none absolute inset-0 -z-10 h-full w-full text-brand opacity-[0.1] dark:text-sky dark:opacity-[0.09]'])
+    @include('website.partials.faq')
+    @include('website.partials.cta')
+</div>
 
 @endsection

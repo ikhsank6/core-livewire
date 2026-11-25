@@ -10,7 +10,7 @@
 @endphp
 
 @if($slides->isNotEmpty())
-    <section class="border-t border-line py-20 md:py-28" aria-label="Sorotan"
+    <section class="py-20 md:py-28" aria-label="Sorotan"
              x-data="{
                 i: 0,
                 n: {{ $slides->count() }},

@@ -6,7 +6,10 @@
     $fieldByScheme = \App\Support\SampleContent::schemes()->pluck('field', 'name');
 @endphp
 
-<section id="jadwal" class="scroll-mt-20 py-16 md:py-24">
+<section id="jadwal" class="relative isolate overflow-hidden scroll-mt-20 py-16 md:py-24">
+    {{-- Lattice motif fills the whole section; its edge is the divider, so no border line is needed --}}
+    @include('website.partials.lattice', ['class' => 'pointer-events-none absolute inset-0 -z-10 h-full w-full text-brand opacity-[0.1] dark:text-sky dark:opacity-[0.09]'])
+
     <div class="wrap">
 
         <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">

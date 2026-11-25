@@ -28,19 +28,6 @@
             letter-spacing: -0.035em;
         }
 
-        /* Guilloche rosette: the security print of a certificate, used as a mask so it takes any colour.
-           It turns a few degrees with the pointer. */
-        .auth-rosette {
-            position: absolute;
-            aspect-ratio: 1;
-            background-color: currentColor;
-            -webkit-mask: url("/images/guilloche.svg") center / contain no-repeat;
-            mask: url("/images/guilloche.svg") center / contain no-repeat;
-            transform: rotate(var(--rot, 0deg));
-            transition: transform 1100ms cubic-bezier(.2, .8, .2, 1);
-            pointer-events: none;
-        }
-
         /* The framed certificate and the clipboard draw themselves once */
         .auth-draw path, .auth-draw rect.auth-stroke { stroke-dasharray: 1; stroke-dashoffset: 1; animation: auth-draw 1.5s cubic-bezier(.22,.8,.2,1) forwards; }
         .auth-draw path:nth-child(2) { animation-delay: .15s; }
@@ -51,7 +38,6 @@
         @media (min-width: 1280px) and (min-height: 720px) { .auth-statement { display: block; } }
 
         @media (prefers-reduced-motion: reduce) {
-            .auth-rosette { transition: none; }
             .auth-draw path, .auth-draw rect.auth-stroke { animation: none; stroke-dashoffset: 0; }
         }
 
@@ -68,21 +54,14 @@
 
 <body class="auth-shell min-h-full antialiased bg-[#162948] text-[#C2D5EA] dark:text-[#C2D5EA]">
 
-    {{-- Full-screen ground (admin navy, with rosettes); the form is a card resting on it. --}}
-    <div class="relative isolate flex min-h-screen flex-col overflow-hidden" style="background: linear-gradient(to bottom, #273955, #1E3250, #162948);"
-         x-data="{
-            rot: 0,
-            reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-            tilt(e) {
-                if (this.reduce) return;
-                const r = this.$el.getBoundingClientRect();
-                this.rot = ((e.clientX - r.left) / r.width - 0.5) * 16;
-            }
-         }"
-         @pointermove="tilt($event)">
+    {{-- Full-screen ground (admin navy, with a static circuit motif on the right); the form is a card resting on it. --}}
+    <div class="relative isolate flex min-h-screen flex-col overflow-hidden" style="background: linear-gradient(to bottom, #273955, #1E3250, #162948);">
 
-        <div class="auth-rosette -right-40 -top-48 -z-10 w-[56rem] max-w-none text-white/[0.085]" :style="`--rot: ${rot}deg`" aria-hidden="true"></div>
-        <div class="auth-rosette -bottom-72 -left-64 -z-10 w-[40rem] max-w-none text-white/[0.05]" :style="`--rot: ${-rot}deg`" aria-hidden="true"></div>
+        {{-- Static circuit motif on the right side, fading out toward the illustration. Decorative. --}}
+        @include('website.partials.circuit-panel', [
+            'class' => 'pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full max-w-[56rem] text-[#4BA5DA] opacity-[0.3]',
+            'style' => '-webkit-mask-image: linear-gradient(to left, #000 35%, transparent 100%); mask-image: linear-gradient(to left, #000 35%, transparent 100%);',
+        ])
 
         {{-- Illustration (original, drawn for this page): an assessor beside a framed certificate,
              holding a clipboard of ticked units and pointing at the sign-in card. Decorative. --}}
@@ -207,6 +186,7 @@
             Satu akun untuk mengikuti uji kompetensi Anda.
         </p>
     </div>
+
 
     @include('partials.toast-notifications')
 

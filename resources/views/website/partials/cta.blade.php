@@ -6,8 +6,7 @@
     <div class="wrap">
         <div class="on-dark relative isolate overflow-hidden rounded-2xl bg-navy px-7 py-14 text-white md:px-16 md:py-20">
 
-            <div class="rosette -right-24 -top-24 -z-10 w-[26rem] max-w-none text-white/[0.09]" aria-hidden="true"></div>
-            <div class="rosette -bottom-40 right-40 -z-10 hidden w-[22rem] text-white/[0.05] lg:block" aria-hidden="true"></div>
+            @include('website.partials.lattice', ['class' => 'pointer-events-none absolute inset-0 -z-10 h-full w-full text-white opacity-[0.06]'])
 
             <div class="max-w-xl">
                 <h2 class="title text-white">Siap membuktikan kompetensi Anda?</h2>

@@ -293,7 +293,7 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 
 ### Halaman Auth (`components/layouts/auth.blade.php`)
 
-Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (gradien navy + rosette guilloche) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG asesor dengan papan jalan berisi centang yang menunjuk ke form, di samping sertifikat berbingkai (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#162948]`, `bg-[#E7BA4B]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus di area gelap). Detail: `design.md`.
+Dipakai Login, Register, ForgotPassword, ResetPassword, VerifyEmail. Satu latar penuh (gradien navy + motif sirkuit statis di sisi kanan (`partials/circuit-panel`, satu warna biru langit transparan, memudar ke kiri; tanpa animasi) dengan **form dalam kotak** di sisi kanan (`lg+`), bukan split dua kolom. Di sisi kiri ada ilustrasi SVG asesor dengan papan jalan berisi centang yang menunjuk ke form, di samping sertifikat berbingkai (digambar sendiri; JANGAN diganti ilustrasi stok, R-22). Tetap memuat `app.css` (bukan `website.css`), jadi token ditulis sebagai nilai Tailwind arbitrer (`bg-[#162948]`, `bg-[#E7BA4B]`) dan `<style>` inline. Kartu form tidak boleh berada di dalam `.auth-dark` (kelas itu mengubah warna ring fokus di area gelap). Detail: `design.md`.
 
 ---
 

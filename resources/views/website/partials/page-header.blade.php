@@ -4,10 +4,11 @@
     $breadcrumb (string)  – current page label
     $subtitle   (string, optional)
 --}}
-<section class="relative isolate overflow-hidden border-b border-line">
-    <div class="rosette -right-24 -top-28 -z-10 w-[22rem] max-w-none text-ink/[0.06]" aria-hidden="true"></div>
+<section class="relative isolate overflow-hidden">
+    {{-- Full-width circuit motif; fades out toward the bottom edge so no line shows --}}
+    @include('website.partials.circuit', ['class' => 'circuit-fade absolute inset-0 -z-10 h-full w-full text-brand opacity-[0.16] dark:text-sky dark:opacity-[0.14]'])
 
-    <div class="wrap py-5 md:py-7">
+    <div class="wrap pt-5 pb-1 md:pt-7 md:pb-2">
         <nav aria-label="Remah roti">
             <ol class="flex items-center gap-3 text-sm">
                 <li><a href="{{ route('landing') }}" class="inline-flex min-h-11 items-center text-muted md:min-h-8 underline decoration-transparent underline-offset-4 transition-colors hover:text-ink hover:decoration-current">Beranda</a></li>
