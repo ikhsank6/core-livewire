@@ -17,7 +17,7 @@
 
                 <div class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
                     <a href="{{ $registerUrl }}" class="btn btn-accent btn-lg">Daftar sebagai asesi</a>
-                    <a href="#skema"
+                    <a href="{{ route('skema.index') }}"
                        class="inline-flex min-h-11 items-center text-[0.9375rem] font-bold text-white underline decoration-white/40 underline-offset-[6px] transition-colors hover:decoration-gold-soft">
                         Lihat skema sertifikasi
                     </a>

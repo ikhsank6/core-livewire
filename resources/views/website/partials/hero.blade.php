@@ -3,13 +3,13 @@
 
     // Quick links, the pattern the national certification body uses for its main tasks.
     $quick = [
-        ['title' => 'Skema sertifikasi',    'text' => 'Pilih okupasi yang ingin diuji.',     'href' => '#skema',  'icon' => 'heroicon-o-document-check'],
+        ['title' => 'Skema sertifikasi',    'text' => 'Pilih okupasi yang ingin diuji.',     'href' => route('skema.index'),  'icon' => 'heroicon-o-document-check'],
         ['title' => 'Alur dan persyaratan', 'text' => 'Dari akun sampai sertifikat terbit.', 'href' => '#alur',   'icon' => 'heroicon-o-queue-list'],
-        ['title' => 'Jadwal uji',           'text' => 'Lihat kapan dan di mana ujinya.',     'href' => '#jadwal', 'icon' => 'heroicon-o-calendar-days'],
+        ['title' => 'Jadwal uji',           'text' => 'Lihat kapan dan di mana ujinya.',     'href' => route('jadwal.index'), 'icon' => 'heroicon-o-calendar-days'],
     ];
 
     // Field tags (pulled from the skema section so they stay in sync)
-    $fieldTags = ['Teknologi informasi', 'Administrasi', 'Keuangan', 'Desain kreatif', 'Pemasaran'];
+    $fieldTags = collect(config('sample-schemes.schemes'))->pluck('field')->unique()->values()->all();
 
     // The specimen: placeholders only, never a real person or a real certificate number.
     $units = [
@@ -19,7 +19,7 @@
     ];
 @endphp
 
-<section class="hero on-dark relative isolate flex flex-col overflow-hidden bg-navy text-white lg:min-h-[calc(100svh-3.3125rem)]"
+<section class="hero on-dark relative isolate flex flex-col overflow-hidden bg-navy text-white lg:min-h-[min(calc(100svh-3.3125rem),64rem)]"
          x-data="{
             rot: 0,
             reduce: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -48,7 +48,7 @@
             </p>
 
             {{-- Search bar --}}
-            <form action="#skema" method="get" class="mt-6 flex items-center gap-2 max-w-lg">
+            <form action="{{ route('skema.index') }}" method="get" class="mt-6 flex items-center gap-2 max-w-lg">
                 <label for="hero-search" class="sr-only">Cari skema atau bidang kerja</label>
                 <div class="relative flex-1">
                     <span class="pointer-events-none absolute inset-y-0 left-3.5 flex items-center text-white/40" aria-hidden="true">
@@ -71,7 +71,7 @@
             {{-- Field tags --}}
             <div class="hero-tags mt-3 flex flex-wrap gap-2">
                 @foreach($fieldTags as $tag)
-                    <a href="#skema"
+                    <a href="{{ route('skema.index') }}?bidang={{ urlencode($tag) }}"
                        class="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-white/10 border border-white/15 text-xs font-semibold text-white/80 hover:bg-white/20 hover:text-white transition-colors">
                         <svg class="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
@@ -83,92 +83,80 @@
 
         </div>
 
-        {{-- ── RIGHT COLUMN: certificate illustration with animation ── --}}
-        <figure class="relative mx-auto w-full max-w-sm lg:max-w-[24rem]"
+        {{-- ── RIGHT COLUMN: a sample certificate on landscape paper ──
+             Shape only is borrowed from national competency certificates (landscape sheet, ornamental
+             lattice border, corner flourishes, central watermark, seal and signature). It carries no
+             real name, number, emblem or institution, and is labelled as an illustration. --}}
+        <figure class="cert-figure relative mx-auto w-full max-w-md lg:max-w-[30rem]"
                 aria-label="Ilustrasi sertifikat kompetensi">
 
-            {{-- Shadow stack card --}}
-            <div class="absolute inset-0 translate-x-5 translate-y-5 rotate-[4deg] rounded-2xl bg-white/10" aria-hidden="true"></div>
-            <div class="absolute inset-0 translate-x-2.5 translate-y-2.5 rotate-[2deg] rounded-2xl bg-white/15" aria-hidden="true"></div>
+            {{-- Sheets underneath --}}
+            <div class="absolute inset-0 translate-x-4 translate-y-4 rotate-[3deg] rounded-md bg-[#E8D3A8]/15" aria-hidden="true"></div>
+            <div class="absolute inset-0 translate-x-2 translate-y-2 rotate-[1.5deg] rounded-md bg-[#E8D3A8]/25" aria-hidden="true"></div>
 
-            {{-- Main certificate card --}}
-            <div class="relative rounded-2xl bg-white shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden">
+            {{-- The paper --}}
+            <div class="cert-paper relative overflow-hidden rounded-md shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)]">
 
-                {{-- Guilloche watermark --}}
-                <div class="rosette absolute -bottom-16 -right-16 w-56 text-navy/[0.07]" aria-hidden="true"></div>
+                {{-- Lattice border band --}}
+                <div class="cert-band absolute inset-2" aria-hidden="true"></div>
 
-                {{-- Certificate inner content --}}
-                <div class="relative p-5 sm:p-6 text-[#14213A]">
+                {{-- Inner sheet --}}
+                <div class="cert-sheet absolute inset-[13px]" aria-hidden="true">
+                    <div class="rosette absolute left-1/2 top-1/2 w-72 -translate-x-1/2 -translate-y-1/2 text-[#7A4B24]/[0.09]"></div>
+                    {{-- Corner flourishes --}}
+                    <svg class="absolute left-1 top-1 h-7 w-7 text-[#7A4B24]" viewBox="0 0 28 28" fill="none"><path d="M2 26V11a9 9 0 0 1 9-9h15M2 17V12a10 10 0 0 1 10-10h5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.6" fill="currentColor"/></svg>
+                    <svg class="absolute right-1 top-1 h-7 w-7 rotate-90 text-[#7A4B24]" viewBox="0 0 28 28" fill="none"><path d="M2 26V11a9 9 0 0 1 9-9h15M2 17V12a10 10 0 0 1 10-10h5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.6" fill="currentColor"/></svg>
+                    <svg class="absolute bottom-1 right-1 h-7 w-7 rotate-180 text-[#7A4B24]" viewBox="0 0 28 28" fill="none"><path d="M2 26V11a9 9 0 0 1 9-9h15M2 17V12a10 10 0 0 1 10-10h5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.6" fill="currentColor"/></svg>
+                    <svg class="absolute bottom-1 left-1 h-7 w-7 -rotate-90 text-[#7A4B24]" viewBox="0 0 28 28" fill="none"><path d="M2 26V11a9 9 0 0 1 9-9h15M2 17V12a10 10 0 0 1 10-10h5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.6" fill="currentColor"/></svg>
+                </div>
 
-                    {{-- Header ornament --}}
-                    <div class="flex justify-center mb-2" aria-hidden="true">
-                        {{-- Small decorative diamond chain --}}
-                        <svg width="80" height="10" viewBox="0 0 80 10" fill="none" class="text-gold opacity-80">
-                            <path d="M0 5h10M70 5h10" stroke="currentColor" stroke-width="1.5"/>
-                            <circle cx="20" cy="5" r="3" fill="currentColor" opacity="0.5"/>
-                            <circle cx="30" cy="5" r="2" fill="currentColor" opacity="0.7"/>
-                            <circle cx="40" cy="5" r="3.5" fill="currentColor"/>
-                            <circle cx="50" cy="5" r="2" fill="currentColor" opacity="0.7"/>
-                            <circle cx="60" cy="5" r="3" fill="currentColor" opacity="0.5"/>
-                        </svg>
-                    </div>
+                {{-- Content --}}
+                <div class="relative px-9 py-7 text-center text-[#3B2412]" style="font-family: Georgia, 'Times New Roman', serif;">
 
-                    {{-- Outer border line --}}
-                    <div class="absolute inset-3 rounded-xl pointer-events-none" style="border: 1.5px solid #E7BA4B33;" aria-hidden="true"></div>
+                    <p class="text-[9px] font-bold uppercase tracking-[0.22em] text-[#6B4A2E]">Lembaga Sertifikasi Profesi</p>
+                    <h2 class="mt-1 text-[1.15rem] font-bold uppercase leading-tight tracking-[0.14em] text-[#3B2412]">Sertifikat Kompetensi</h2>
+                    <p class="mt-0.5 text-[9px] tracking-wide text-[#75573A]">Nomor 000/0000 (contoh)</p>
 
-                    {{-- Title --}}
-                    <div class="text-center mt-1 mb-3">
-                        <h2 class="text-[1.1rem] font-extrabold tracking-tight text-navy leading-tight">Sertifikat Kompetensi</h2>
-                    </div>
+                    <p class="mt-3 text-[10px] italic text-[#75573A]">Diberikan kepada</p>
+                    <p class="text-[1.35rem] font-bold italic leading-tight text-[#3B2412]">Nama peserta</p>
+                    <div class="mx-auto my-1.5 h-px w-40" style="background: linear-gradient(to right, transparent, #7A4B24, transparent);"></div>
+                    <p class="text-[10px] italic text-[#75573A]">atas skema</p>
+                    <p class="text-[0.8125rem] font-bold uppercase tracking-wider text-[#3B2412]">Nama skema sertifikasi</p>
 
-                    {{-- Recipient --}}
-                    <p class="text-center text-xs text-gray-400 font-medium mb-1">Diberikan kepada</p>
-                    <p class="text-center text-lg font-bold italic text-navy/80 mb-1" style="font-family: Georgia, serif;">Nama peserta</p>
-                    <div class="mx-auto w-24 h-px bg-gold/40 my-2"></div>
-
-                    {{-- Scheme --}}
-                    <p class="text-center text-xs text-gray-400 font-medium mb-1">atas skema</p>
-                    <p class="text-center text-sm font-extrabold text-navy tracking-tight mb-3">Nama skema sertifikasi</p>
-
-                    {{-- Units --}}
-                    <ul class="space-y-2 mb-3" aria-label="Unit kompetensi (contoh)">
-                        @foreach($units as $unit)
-                            <li class="flex items-center justify-between gap-3 text-xs">
-                                <span class="flex items-center gap-2 text-navy/80">
-                                    {{-- Animated checkmark circle --}}
-                                    <span class="cert-check flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-full border-2 border-navy/40 bg-navy/5" aria-hidden="true">
-                                        <svg class="h-2.5 w-2.5 text-navy" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <div class="mt-3 grid grid-cols-[1fr_auto] items-end gap-4 text-left">
+                        <ul class="space-y-1.5" aria-label="Unit kompetensi (contoh)">
+                            @foreach($units as $unit)
+                                <li class="flex items-center gap-2 text-[11px] text-[#3B2412]">
+                                    <span class="cert-check flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#7A4B24]/60 bg-[#7A4B24]/10" aria-hidden="true">
+                                        <svg class="h-2.5 w-2.5 text-[#5A3418]" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M2 6l3 3 5-5"/>
                                         </svg>
                                     </span>
                                     {{ $unit }}
-                                </span>
-                                <span class="font-semibold text-navy/60">Kompeten</span>
-                            </li>
-                        @endforeach
-                    </ul>
+                                </li>
+                            @endforeach
+                        </ul>
 
-                    {{-- Kompeten seal (animated stamp) --}}
-                    <div class="flex justify-end mb-1">
-                        <div class="cert-seal relative flex items-center justify-center w-16 h-16" aria-hidden="true">
-                            {{-- Outer ring --}}
-                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 80 80" fill="none">
-                                <circle cx="40" cy="40" r="36" stroke="#E7BA4B" stroke-width="2.5" stroke-dasharray="6 3"/>
-                                <circle cx="40" cy="40" r="30" stroke="#E7BA4B" stroke-width="1" stroke-opacity="0.5"/>
-                            </svg>
-                            {{-- Inner fill --}}
-                            <div class="absolute inset-2.5 rounded-full flex flex-col items-center justify-center"
-                                 style="background: radial-gradient(circle, #F0CB6B, #E7BA4B);">
-                                <svg class="w-6 h-6 text-navy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 6L9 17l-5-5"/>
+                        {{-- Seal and signature --}}
+                        <div class="flex flex-col items-center">
+                            <div class="cert-seal relative flex h-16 w-16 items-center justify-center" aria-hidden="true">
+                                <svg class="absolute inset-0 h-full w-full" viewBox="0 0 80 80" fill="none">
+                                    <circle cx="40" cy="40" r="36" stroke="#8A5A2B" stroke-width="2.5" stroke-dasharray="6 3"/>
+                                    <circle cx="40" cy="40" r="30" stroke="#8A5A2B" stroke-width="1" stroke-opacity="0.55"/>
                                 </svg>
-                                <span class="text-[6px] font-extrabold text-navy tracking-wider -mt-0.5">KOMPETEN</span>
+                                <div class="absolute inset-2.5 flex flex-col items-center justify-center rounded-full"
+                                     style="background: radial-gradient(circle, #F0CB6B, #D2A13F);">
+                                    <svg class="h-5 w-5 text-[#3B2412]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 6L9 17l-5-5"/>
+                                    </svg>
+                                    <span class="-mt-0.5 text-[6px] font-extrabold tracking-wider text-[#3B2412]" style="font-family: Inter, sans-serif;">KOMPETEN</span>
+                                </div>
                             </div>
+                            <div class="mt-1 w-20 border-t border-[#7A4B24]/60 pt-0.5 text-center text-[8px] italic text-[#75573A]">Ketua LSP</div>
                         </div>
                     </div>
 
-                    {{-- Footer note --}}
-                    <p class="text-center text-[9px] text-gray-400 mt-1">Ilustrasi sertifikat. Bukan dokumen resmi.</p>
+                    <p class="cert-note mt-2.5 text-[8px] tracking-wide text-[#75573A]" style="font-family: Inter, sans-serif;">Ilustrasi sertifikat. Bukan dokumen resmi.</p>
                 </div>
             </div>
         </figure>
@@ -243,14 +231,32 @@ li:nth-child(3) .cert-check svg { animation-name: check-loop-3; }
     96%,100% { stroke-dashoffset: 20; }
 }
 
+/* Sample certificate paper: warm parchment, brown ink, a lattice border band and a darker rim. */
+.cert-paper {
+    background: radial-gradient(120% 90% at 50% 40%, #FBF3E2 0%, #F3E5C6 62%, #E6D1A4 100%);
+    border: 1px solid #6B4423;
+}
+.cert-band {
+    border: 1px solid #7A4B24;
+    background-color: #E9D5AB;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(122, 75, 36, 0.55) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(-45deg, rgba(122, 75, 36, 0.55) 0 1px, transparent 1px 5px);
+}
+.cert-sheet {
+    background: radial-gradient(120% 90% at 50% 40%, #FBF3E2 0%, #F3E5C6 70%, #EAD7AC 100%);
+    border: 1px solid #7A4B24;
+    box-shadow: inset 0 0 0 3px #F6EAD0, inset 0 0 0 4px rgba(122, 75, 36, 0.45);
+}
+
 /* Short screens: keep the whole first screen visible, nothing cut at the bottom edge. */
 @media (min-width: 1024px) and (max-height: 760px) {
     .hero .hero-tags { display: none; }
     .hero .hero-grid { padding-top: 1.25rem; padding-bottom: 1.25rem; }
 }
 @media (min-width: 1024px) and (max-height: 620px) {
-    .hero figure { max-width: 21rem; }
-    .hero figure p.text-\[9px\] { display: none; }
+    .hero .cert-figure { max-width: 25rem; }
+    .hero .cert-note { display: none; }
 }
 
 /* Reduce motion override */

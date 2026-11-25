@@ -23,7 +23,7 @@
     'bgImage'    => $news->image ? Storage::url($news->image) : null,
 ])
 
-<section class="py-14 md:py-20">
+<section class="pt-8 pb-14 md:pt-10 md:pb-20">
     <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-16">
 
         <div>

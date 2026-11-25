@@ -10,7 +10,7 @@
     'subtitle'   => 'Kabar terbaru seputar skema, jadwal uji, dan pengumuman dari lembaga sertifikasi.',
 ])
 
-<section class="py-14 md:py-20">
+<section class="pt-8 pb-14 md:pt-10 md:pb-20">
     <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] lg:gap-16">
 
         <div>
@@ -18,7 +18,12 @@
             <h2 class="sr-only">Daftar berita</h2>
 
             @if($news->count() > 0)
-                @include('website.partials.news-card', ['item' => $news->first(), 'variant' => 'lead'])
+                {{-- The wrapper keeps the lead card's h-full from resolving against the stretched grid cell.
+                     Without it the card grows to the height of the whole column and pushes the list below it
+                     out of <main>, so the footer paints over the articles. --}}
+                <div>
+                    @include('website.partials.news-card', ['item' => $news->first(), 'variant' => 'lead'])
+                </div>
 
                 @if($news->count() > 1)
                     <div class="mt-14 grid gap-x-8 gap-y-12 border-t border-line pt-12 sm:grid-cols-2">
@@ -40,6 +45,9 @@
                 <div class="mt-14">
                     {{ $news->onEachSide(1)->links('vendor.pagination.website') }}
                 </div>
+            @elseif($news->total() > 0)
+                {{-- One page only: no controls, but still say how many there are. --}}
+                <p class="mt-14 border-t border-line pt-6 text-sm text-muted">Menampilkan {{ $news->total() }} berita</p>
             @endif
         </div>
 

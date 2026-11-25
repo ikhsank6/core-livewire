@@ -21,9 +21,10 @@ class ShowNewsList
      */
     public function __invoke(Request $request): View
     {
+        // withQueryString() keeps ?category= on the page links, so paging does not drop the filter.
         $news = $this->newsRepository->getActiveWithFilter(
             $request->get('category')
-        );
+        )->withQueryString();
 
         $categories = $this->categoryRepository->getActiveWithNewsCount();
         $recentNews = $this->newsRepository->getLatest(5);

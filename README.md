@@ -66,7 +66,9 @@ All images are 1440 × 900 (the phone view is 390 × 844) and use the sample dat
 
 A public portal themed for a professional certification body (LSP), with its own design system (`website.css` / `website.js`), entirely separate from the admin panel. Anything that looks like data (schemes, schedule, FAQ, sample articles) is clearly labelled as a sample, and no statistics, testimonials, partner logos or compliance claims are shown.
 
-- **Home** — hero (headline, a search box and field tags that jump to the scheme list, certificate illustration, three quick-link tiles) → scheme list with a field filter → certification flow (five numbered steps, then the Competent / Not Yet Competent decision) → exam schedule → highlights (CMS carousel) → latest news → profile → FAQ → closing call to action
+- **Home** — hero (headline, a search box and field tags that open `/skema`, a brown sample certificate, three quick-link tiles) → a summary of six schemes with a "see all" button → certification flow (five numbered steps, then the Competent / Not Yet Competent decision) → the next five exam dates with a "see all" button → highlights (CMS carousel) → latest news → profile → FAQ → closing call to action
+- **Schemes page (`/skema`)** — the full list: search, field filter with counts, two compact columns and a "show more" step, so it stays short with 20+ schemes. Reads `?q=` and `?bidang=` from the hero
+- **Schedule page (`/jadwal`)** — the full exam schedule with search, a registration filter and pagination
 - **First screen fits the viewport** — on large screens the hero is as tall as the window minus the header, with the quick links resting on the bottom edge; on short windows the field tags are hidden and spacing tightens, so nothing is cut off on first load
 - **Certificate illustration** — the three unit ticks draw in one after another and the KOMPETEN seal lands, on a looping 7 s cycle. The certificate itself stays still, and motion stops under `prefers-reduced-motion`
 - **Dark navigation bar** — a key-shaped marker slides to the item you point at: raised while it moves, pressed in with a gold underline on the current page. One theme-switch button; the mobile menu opens as a full-width panel
@@ -285,9 +287,9 @@ Website partials live in `resources/views/website/partials/`. The reusable ones:
 @include('website.partials.social-links', ['dark' => true])
 ```
 
-Note: the hero search box currently only jumps to the scheme list (`#skema`); the typed text is not used to filter yet. The scheme list is filtered by field with the buttons beside it.
+Schemes and schedule are sample content with a visible "Contoh" label, read from one place (`App\Support\SampleContent` and `config/sample-schemes.php`) until real models exist. The home page shows a summary; the full lists live on `/skema` and `/jadwal`.
 
-Home-page sections: `hero`, `skema`, `alur`, `jadwal`, `sorotan` (carousel), `faq`, `cta`. `skema`, `alur`, `jadwal` and `faq` hold static sample content in the view; `sorotan` and the news and profile blocks come from the CMS.
+Home-page sections: `hero`, `skema` (summary), `alur`, `jadwal` (summary), `sorotan` (carousel), `faq`, `cta`. The full lists are `skema-list` (`/skema`) and `jadwal-list` (`/jadwal`). `alur` and `faq` hold static sample content in the view; `sorotan` and the news and profile blocks come from the CMS.
 
 ---
 

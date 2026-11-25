@@ -1,9 +1,9 @@
 @php
     $navItems = [
         ['label' => 'Beranda', 'href' => route('landing'),             'active' => request()->routeIs('landing')],
-        ['label' => 'Skema',   'href' => route('landing').'#skema',    'active' => false],
+        ['label' => 'Skema',   'href' => route('skema.index'),          'active' => request()->routeIs('skema.*')],
         ['label' => 'Alur',    'href' => route('landing').'#alur',     'active' => false],
-        ['label' => 'Jadwal',  'href' => route('landing').'#jadwal',   'active' => false],
+        ['label' => 'Jadwal',  'href' => route('jadwal.index'),         'active' => request()->routeIs('jadwal.*')],
         ['label' => 'Berita',  'href' => route('news.index'),          'active' => request()->routeIs('news.*')],
         ['label' => 'Profil',  'href' => route('about'),               'active' => request()->routeIs('about')],
         ['label' => 'FAQ',     'href' => route('landing').'#faq',      'active' => false],
@@ -75,8 +75,9 @@
                     </span>
                 </button>
 
-                <a href="{{ route('login') }}"
-                   class="hidden sm:inline-flex min-h-11 items-center rounded-md px-3 text-[0.9375rem] font-semibold text-white/90 underline decoration-transparent underline-offset-[6px] transition-colors hover:text-white hover:decoration-gold">
+                {{-- The one call to action in the bar: small and gold, with a thin lip that presses in on click. --}}
+                <a href="{{ route('login') }}" class="btn btn-login hidden sm:inline-flex">
+                    @svg('heroicon-o-arrow-right-end-on-rectangle', 'h-4 w-4')
                     Masuk
                 </a>
 

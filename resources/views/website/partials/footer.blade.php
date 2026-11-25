@@ -11,9 +11,9 @@
         [
             'title' => 'Sertifikasi',
             'links' => [
-                ['label' => 'Skema Sertifikasi',      'href' => route('landing').'#skema',  'external' => false],
+                ['label' => 'Skema Sertifikasi',      'href' => route('skema.index'),   'external' => false],
                 ['label' => 'Alur & Persyaratan',     'href' => route('landing').'#alur',   'external' => false],
-                ['label' => 'Jadwal Uji Kompetensi',  'href' => route('landing').'#jadwal', 'external' => false],
+                ['label' => 'Jadwal Uji Kompetensi',  'href' => route('jadwal.index'), 'external' => false],
                 ['label' => 'Tempat Uji (TUK)',       'href' => route('landing').'#alur',   'external' => false],
             ],
         ],

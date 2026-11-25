@@ -42,6 +42,7 @@ app/
 │   ├── Users/         # UserIndex
 │   └── Dashboard.php
 ├── Models/            # Eloquent models (10 models)
+├── Support/           # SampleContent: data contoh skema dan jadwal (belum ada model; dipakai beranda dan halaman lengkap)
 ├── Notifications/     # Mail notifications (ResetPasswordQueued, VerifyEmailNotification)
 ├── Policies/          # Authorization policies (MenuPolicy)
 ├── Providers/         # AppServiceProvider, RepositoryServiceProvider
@@ -154,7 +155,7 @@ class UserForm
 ### 4. Actions Pattern
 
 Single-responsibility invokable classes untuk operasi yang bukan CRUD:
-- **Website Actions** (`Actions/Website/`): ShowHomePage, ShowNewsList, ShowNewsDetail, ShowAboutPage
+- **Website Actions** (`Actions/Website/`): ShowHomePage, ShowSkemaPage, ShowJadwalPage, ShowNewsList, ShowNewsDetail, ShowAboutPage
 - **Auth Actions**: LogoutAction, SwitchRoleAction
 
 ### 5. UUID & Audit Trail (HasUuid Trait)
@@ -213,8 +214,8 @@ Semua pasangan teks sudah dicek lolos WCAG AA. Jika mengganti warna, cek ulang k
 ### Elemen khas
 
 - **Latar guilloche** (`.rosette`): rosette garis halus dari `public/images/guilloche.svg`, dipakai sebagai **mask** (warna lewat `currentColor`), berputar mengikuti kursor lewat `--rot`.
-- **Navbar** (`partials/nav`): bar gelap navy setinggi 52px (sama di kedua tema). Penanda tombol `.nav-stamp` meluncur ke menu yang dihover atau difokus: timbul (tepi bawah emas) saat hover, cekung (`.is-pressed`, garis emas di dalam) di halaman aktif; margin 3px atas-bawah, sudut 5px. Sakelar tema berupa dua tombol bulat dalam track cekung (`.theme-track`). Logo = segel kompetensi, centang tergambar ulang saat hover. Tombol utama `.btn-accent` (bayangan bawah menekan saat diklik).
-- **Hero**: sertifikat spesimen berisi pengisi (diberi label "Contoh") dan stempel KOMPETEN yang mendarat sekali (`.stamp`).
+- **Navbar** (`partials/nav`): bar gelap navy setinggi 52px (sama di kedua tema). Penanda tombol `.nav-stamp` meluncur ke menu yang dihover atau difokus: timbul (tepi bawah emas) saat hover, cekung (`.is-pressed`, garis emas di dalam) di halaman aktif; margin 3px atas-bawah, sudut 5px. Sakelar tema berupa satu tombol (`role="switch"`): track cekung (`.theme-track`) berisi ikon matahari dan bulan dengan knob emas yang bergeser (`.theme-knob`). Tombol Masuk memakai `.btn-login` (emas kecil, bibir bawah tipis). Logo = segel kompetensi, centang tergambar ulang saat hover. Tombol utama `.btn-accent` (bayangan bawah menekan saat diklik).
+- **Hero**: tinggi mengikuti layar tetapi dibatasi `64rem` agar tidak meregang di monitor sangat tinggi (batas 46rem sebelumnya menyisakan sekitar 37px bagian berikutnya di layar 825px, jadi dinaikkan). Sertifikat spesimen berbentuk kertas lanskap **coklat** (perkamen, pita kisi di tepi, sudut berornamen, segel emas, tanda tangan "Ketua LSP"); hanya bentuknya yang terinspirasi sertifikat kompetensi nasional, tanpa nama, nomor, lambang, atau lembaga asli, dan diberi label ilustrasi. Centang unit dan segel berputar dalam siklus 7 detik; kertasnya diam. Kolom cari dan tag bidang di hero mengarah ke `/skema?q=` dan `/skema?bidang=`.
 - **Skema / Alur / Jadwal** (`partials/skema`, `alur`, `jadwal`): data statis berlabel "Contoh". Alur memuat langkah bernomor lalu pita Kompeten (K) / Belum Kompeten (BK).
 - **Sorotan** (`partials/sorotan`): slider CMS Carousel; tidak dirender bila tidak ada slide aktif.
 
@@ -244,8 +245,10 @@ input: [
 
 | Route | Action | Description |
 |-------|--------|-------------|
-| `GET /` | `ShowHomePage` | Beranda (hero + skema + alur + jadwal + sorotan + berita + profil + FAQ) |
-| `GET /news` | `ShowNewsList` | News listing dengan pagination & sidebar |
+| `GET /` | `ShowHomePage` | Beranda: hero, **ringkasan** skema (6) dan jadwal (5 terdekat) dengan tombol ke halaman lengkap, alur, sorotan, berita, profil, FAQ |
+| `GET /skema` | `ShowSkemaPage` | Daftar lengkap skema: pencarian, filter bidang (`?q=`, `?bidang=`), dua kolom, tampil bertahap |
+| `GET /jadwal` | `ShowJadwalPage` | Jadwal uji lengkap: pencarian, filter pendaftaran, paginasi |
+| `GET /news` | `ShowNewsList` | News listing: 8 per halaman, paginasi (`vendor/pagination/website`), sidebar. `?category=` terbawa antar halaman (`withQueryString()`). Satu halaman saja: hanya baris jumlah |
 | `GET /news/{slug}` | `ShowNewsDetail` | News detail + related news |
 | `GET /about` | `ShowAboutPage` | About us + kontak + Google Maps |
 
@@ -255,9 +258,11 @@ input: [
 |---------|-------|-----------|
 | `partials/nav` | — | Navbar gelap navy + panel mobile |
 | `partials/hero` | `$carousels`, `$aboutUs` | Judul, tombol daftar, sertifikat spesimen, tautan cepat |
-| `partials/skema` | — | Daftar skema + filter bidang (data contoh) |
+| `partials/skema` | — | Ringkasan di beranda: 6 skema, tautan per bidang, tombol "Lihat semua N skema" (data contoh) |
+| `partials/skema-list` | `$skema`, `$showHeading` | Daftar lengkap di `/skema`: cari, filter bidang, tampil bertahap |
 | `partials/alur` | — | Langkah sertifikasi + pita K / BK |
-| `partials/jadwal` | — | Jadwal uji (data contoh) |
+| `partials/jadwal` | — | Ringkasan di beranda: 5 jadwal terdekat + tombol ke `/jadwal` (data contoh) |
+| `partials/jadwal-list`, `jadwal-row` | `$jadwal`, `$showHeading` | Jadwal lengkap di `/jadwal` dan baris yang dipakai bersama ringkasan |
 | `partials/sorotan` | `$carousels` | Slider CMS Carousel |
 | `partials/faq` | — | Accordion FAQ (data statis) |
 | `partials/cta` | — | Pita penutup |

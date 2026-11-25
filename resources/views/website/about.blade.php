@@ -46,7 +46,7 @@
 {{-- ================================================================
      PROFIL
      ================================================================ --}}
-<section class="py-16 md:py-24">
+<section class="pt-8 pb-16 md:pt-10 md:pb-24">
     <div class="wrap grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] lg:gap-20">
 
         <div>

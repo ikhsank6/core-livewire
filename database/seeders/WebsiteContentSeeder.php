@@ -364,7 +364,7 @@ class WebsiteContentSeeder extends Seeder
                 'title' => 'Buktikan kompetensi Anda lewat uji bersama asesor',
                 'description' => 'Contoh sorotan. Pilih skema, kerjakan asesmen, dan terima keputusan Kompeten atau Belum Kompeten.',
                 'button_text' => 'Lihat skema',
-                'button_link' => '/#skema',
+                'button_link' => '/skema',
                 'image' => 'carousels/berkas-skema.svg',
             ],
             [
@@ -380,7 +380,7 @@ class WebsiteContentSeeder extends Seeder
                 'title' => 'Cek jadwal dan lokasi uji terdekat',
                 'description' => 'Contoh sorotan. Jadwal uji ditambahkan oleh admin lembaga dari panel.',
                 'button_text' => 'Lihat jadwal',
-                'button_link' => '/#jadwal',
+                'button_link' => '/jadwal',
                 'image' => 'carousels/berkas-jadwal.svg',
             ],
         ];
