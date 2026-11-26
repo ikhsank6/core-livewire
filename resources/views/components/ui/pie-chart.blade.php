@@ -56,15 +56,18 @@
             </div>
         </div>
 
-        {{-- Same numbers as a table for screen readers --}}
-        <table class="sr-only">
-            <caption>{{ $title }}</caption>
-            <thead><tr><th scope="col">{{ $labelHeading }}</th><th scope="col">Jumlah {{ $unit }}</th></tr></thead>
-            <tbody>
-                @foreach($rows as $row)
-                    <tr><th scope="row">{{ $row['label'] }}</th><td>{{ $row['value'] }}</td></tr>
-                @endforeach
-            </tbody>
-        </table>
+        {{-- Same numbers as a table for screen readers. The wrapper is hidden, not the table: a table
+             ignores the 1px size of sr-only and would still stretch the page. --}}
+        <div class="sr-only">
+            <table>
+                <caption>{{ $title }}</caption>
+                <thead><tr><th scope="col">{{ $labelHeading }}</th><th scope="col">Jumlah {{ $unit }}</th></tr></thead>
+                <tbody>
+                    @foreach($rows as $row)
+                        <tr><th scope="row">{{ $row['label'] }}</th><td>{{ $row['value'] }}</td></tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     @endif
 </x-ui.chart-card>

@@ -342,6 +342,8 @@ Keduanya memakai kerangka `<x-ui.chart-card>` (judul, bisa dilipat). Gambar dibu
 <x-ui.pie-chart title="Distribusi Pengguna" :items="$rows" unit="pengguna" label-heading="Status" />
 ```
 
+Tabel `sr-only` dibungkus `<div class="sr-only">`: JANGAN pasang `sr-only` langsung pada `<table>`, tabel mengabaikan ukuran 1px dan memanjangkan halaman di bawah footer.
+
 `items`: array/Collection `['label' => string, 'value' => int]`; donat juga menerima `color` per item (pakai bila warnanya bermakna, mis. status). Donat: `total` opsional, default jumlah nilai. Data diambil lewat Repository di komponen Livewire, bukan di view.
 
 #### `<x-ui.select>` — Autocomplete Select (global, reusable)
