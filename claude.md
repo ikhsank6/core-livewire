@@ -2,14 +2,14 @@
 
 > File ini adalah sumber utama konteks bagi AI assistant (Claude, Gemini, dll.) ketika bekerja dengan codebase ini.
 > Ditulis dari perspektif **Senior Fullstack Engineer** yang memahami setiap lapisan arsitektur.
-> **Versi dokumen**: v3.0.0
+> **Versi dokumen**: v3.3.0
 
 ---
 
 ## 🏗️ Project Overview
 
 **Nama**: Laravel Livewire CMS Platform
-**Versi**: 3.0.0
+**Versi**: 3.3.0
 **Stack**: Laravel 13 + Livewire 4 + Filament Forms 5 + Tailwind CSS 4 + Vite 8 + Alpine.js 3
 **Database**: SQLite (development), bisa di-swap ke MySQL/PostgreSQL
 **PHP**: >= 8.2
@@ -187,11 +187,13 @@ Menu → has parent/children (self-referencing, nested tree)
 3. **Route yang TIDAK ada di tabel menus**: Accessible oleh semua authenticated user
 4. **Switch Role**: Cache menu di-clear saat switch
 
+**Kata sandi sementara** (8 karakter huruf besar, kecil, dan angka tanpa karakter mirip; `UserRepository::temporaryPassword`): akun yang dibuatkan (impor atau tombol Tambah) punya `users.must_change_password = true`. Selama itu, halaman verifikasi email dan semua halaman admin (`partials/temporary-password-banner`) mengingatkan untuk mengganti; flag mati lewat `UserRepository::updatePassword` (Ganti kata sandi) atau reset kata sandi. Tautan verifikasi ditandatangani (relatif, tanpa host), dicek di `VerifyEmail::mount`, berlaku 3 hari (`auth.verification.expire` / `AUTH_VERIFICATION_EXPIRE`). `VerifyEmailNotification` dan `ResetPasswordQueued` dicoba ulang 3x dengan jeda 10, 30, 60 detik. Kirim ulang verifikasi WAJIB lewat `UserRepository::resendVerification` (bukan `$user->sendEmailVerificationNotification()`): akun berflag mendapat kata sandi sementara baru di email.
+
 `MenuService` meng-cache menu tree per role (`menu_tree_role_{id}`) selama 1 jam.
 
 ---
 
-## 🌐 Public Website (v3.0.0)
+## 🌐 Public Website (v3.3.0)
 
 Detail warna, huruf, dan komponen lengkap ada di **`design.md`** (sumber kebenaran desain). Ringkasannya di sini.
 
@@ -288,7 +290,7 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 - **Navigasi**: tautan di Alpine memakai `Livewire.navigate(url)` (menghormati Ctrl/Cmd/Shift-klik).
 - **Mobile**: hamburger membuka drawer vertikal (Blade loop biasa dengan `wire:navigate`).
 - **Dialog logout**: dialog ringkas khusus di `app.blade.php` (event `open-modal` dengan `name: 'logout-modal'`). Sengaja TIDAK tertutup oleh klik di luar atau Esc; hanya lewat tombol X, Batal, atau Ya, Logout.
-- **Footer** menampilkan versi `v3.0.0` (hardcode di `app.blade.php`).
+- **Footer** menampilkan versi `v3.3.0` (hardcode di `app.blade.php`).
 - Warna dan bayangan: lihat `design.md`.
 
 ### Halaman Auth (`components/layouts/auth.blade.php`)
@@ -325,7 +327,11 @@ plugins: [
 
 ### Custom UI Components (`views/components/ui/`)
 
-`modal`, `table/` (+ `table/header` dengan slot `searchAction` & `extraActions`), `card`, `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`, `select`, `chart-card`, `bar-chart`, `pie-chart`
+`modal`, `table/` (+ `table/header` dengan slot `searchAction` & `extraActions`), `card`, `button/*` (aksi: `flux:tooltip` + `flux:icon` variant `mini` `w-4 h-4`; ikuti pola ini untuk aksi baru), `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`, `select`, `chart-card`, `bar-chart`, `pie-chart`
+
+#### Impor pengguna (`App\Livewire\Users\UserImport`)
+
+Tombol Impor di halaman Pengguna membuka modal: unduh template, unggah `.xlsx`/`.csv`, **pratinjau** dengan alasan per baris, baru impor baris yang valid (maksimal 200). Baca dan validasi file ada di `App\Services\UserImportService`; pembuatan akun lewat `UserRepository::createInvited` (tanpa kolom status: akun langsung aktif, email verifikasi berisi kata sandi sementara dikirim ke semua, login terbuka setelah verifikasi). Template berisi dua baris contoh (`UserImportService::EXAMPLES`, tidak pernah diimpor bila tidak diubah) dan kolom `keterangan` (tidak dibaca) serta lembar Petunjuk. Importer hanya membaca kolom `nama`, `email`, `role`; kolom lain diabaikan. Hasil pratinjau disimpan di properti `#[Locked]` dan divalidasi ulang saat impor.
 
 #### `<x-ui.bar-chart>` dan `<x-ui.pie-chart>` — grafik reusable
 
@@ -448,7 +454,7 @@ $this->attempt(
 ### Email Templates (`views/emails/` + `components/emails/layout`)
 
 - Layout email pakai brand biru `#3a6cf4` → `#2451d6` (selaras website). Bukan hijau lagi.
-- **IP & Lokasi**: `VerifyEmailNotification` & `ResetPasswordQueued` menampilkan Alamat IP + Lokasi.
+- **IP & Lokasi**: hanya `ResetPasswordQueued` yang menampilkan Alamat IP + Lokasi. Email verifikasi sengaja tidak memuatnya.
   - IP **HARUS** di-capture di `__construct()` via `request()->ip()` — karena notification di-queue, request context hilang saat job dieksekusi worker.
   - `resolveLocation()` dipanggil di `toMail()` (saat job jalan, boleh hit API eksternal `ip-api.com`, timeout 5s, silent fail). IP lokal/private → "Lokal / Development".
 - **Logo email**: gunakan `url(\Illuminate\Support\Facades\Storage::url($logo))` — BUKAN `url('storage/' . $logo)`. Pastikan `APP_URL` benar agar logo bisa di-load email client.
@@ -530,7 +536,7 @@ Keduanya tidak boleh dicampur.
 Alpine TIDAK mendukung nested `<template x-if>`. Pecah jadi kondisi gabungan: `x-if="multiple && val.length > 0"`, `x-if="multiple && val.length === 0"`, dst. (lihat `components/ui/select.blade.php`). Untuk `x-show` di dropdown gunakan `style="display:none"` (bukan hanya `x-cloak`) agar tidak flash sebelum Alpine siap.
 
 ### 14. Capture IP Sebelum Queue
-Notification/job yang butuh data request (IP, user-agent) **HARUS** menangkapnya di `__construct()` saat masih dalam HTTP context. Saat job dieksekusi queue worker, `request()` sudah kosong. Lihat `ResetPasswordQueued` & `VerifyEmailNotification`.
+Notification/job yang butuh data request (IP, user-agent) **HARUS** menangkapnya di `__construct()` saat masih dalam HTTP context. Saat job dieksekusi queue worker, `request()` sudah kosong. Lihat `ResetPasswordQueued`.
 
 ### 15. Filter Pattern di Index Component
 Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persist ke URL) + `pendingX` (state sementara di modal). `openFilterModal()` copy `filterX→pendingX`, `applyFilters()` copy balik `pendingX→filterX` lalu `resetPage()`. Repository sediakan method `searchWithFilters(...)`. Lihat `UserIndex`.
