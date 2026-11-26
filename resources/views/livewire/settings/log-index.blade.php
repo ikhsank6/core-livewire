@@ -3,6 +3,15 @@
     <flux:breadcrumbs.item>Log Aplikasi</flux:breadcrumbs.item>
 </x-slot>
 
+@php
+    $deleteLabel = $deleteIsRemoval ? 'Hapus file log' : 'Kosongkan file log';
+    $deleteMessage = $selectedFile
+        ? ($deleteIsRemoval
+            ? "Hapus {$selectedFile->name} secara permanen?"
+            : "Kosongkan isi {$selectedFile->name}? File ini milik server, jadi filenya tidak dihapus.")
+        : '';
+@endphp
+
 <div>
     <x-ui.card title="Log Aplikasi" description="Lihat dan analisis file log aplikasi">
         <x-slot name="headerAction">
@@ -25,10 +34,39 @@
                 </flux:dropdown>
                 <flux:button wire:click="downloadLog" icon="arrow-down-tray" size="sm" tooltip="Unduh File Log"
                     class="h-10! w-10! flex items-center justify-center rounded-xl! border border-zinc-200! dark:border-zinc-700! shadow-sm!" />
+                @if($canDelete && $selectedFile)
+                    <x-ui.button.delete wire:key="delete-log-{{ $selectedFile->identifier }}"
+                        :uuid="$selectedFile->identifier" :message="$deleteMessage" :tooltip="$deleteLabel"
+                        aria-label="{{ $deleteLabel }}"
+                        class="h-10! w-10! flex items-center justify-center rounded-xl! border border-zinc-200! dark:border-zinc-700! text-red-600! dark:text-red-400! shadow-sm! cursor-pointer" />
+                @endif
             </div>
         </x-slot>
 
         <div class="space-y-4">
+            @if($tooLarge)
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100" role="alert">
+                    <flux:icon name="exclamation-triangle" variant="mini" class="w-5 h-5 shrink-0" />
+                    <p class="min-w-0 flex-1">
+                        <span class="font-semibold">{{ $selectedFile->name }} ({{ $selectedFile->sizeFormatted() }}) terlalu besar untuk ditampilkan.</span>
+                        Pilih file lain, atau unduh untuk membacanya. Kosongkan atau rotasi file ini agar tidak terus membesar.
+                    </p>
+                    <button type="button" wire:click="downloadLog"
+                            class="inline-flex h-10 items-center gap-2 rounded-full bg-amber-900 px-5 text-sm font-bold text-white transition-all hover:bg-amber-800 active:scale-95 cursor-pointer dark:bg-amber-200 dark:text-amber-950 dark:hover:bg-amber-100">
+                        <flux:icon name="arrow-down-tray" variant="mini" class="w-4 h-4" />
+                        Unduh
+                    </button>
+                    @if($canDelete)
+                        <button type="button"
+                                x-on:click="$dispatch('open-delete-confirm', { id: @js($selectedFile->identifier), componentId: @js($this->getId()), message: @js($deleteMessage) })"
+                                class="inline-flex h-10 items-center gap-2 rounded-full bg-red-600 px-5 text-sm font-bold text-white transition-all hover:bg-red-700 active:scale-95 cursor-pointer">
+                            <flux:icon name="trash" variant="mini" class="w-4 h-4" />
+                            {{ $deleteIsRemoval ? 'Hapus' : 'Kosongkan' }}
+                        </button>
+                    @endif
+                </div>
+            @endif
+
             <x-ui.table :paginator="$logs">
                 <x-slot name="header">
                     <x-ui.table.header search="search" searchPlaceholder="Cari pesan log..." :showFilters="false"
@@ -125,7 +163,7 @@
                     @else
                         <x-ui.table.tr>
                             <x-ui.table.td colspan="4">
-                                <x-ui.empty-state message="Pilih file log untuk melihat entri." />
+                                <x-ui.empty-state :message="$tooLarge ? 'Isi file tidak ditampilkan.' : 'Pilih file log untuk melihat entri.'" />
                             </x-ui.table.td>
                         </x-ui.table.tr>
                     @endif

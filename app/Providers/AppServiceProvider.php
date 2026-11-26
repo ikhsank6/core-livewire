@@ -4,13 +4,18 @@ namespace App\Providers;
 
 use App\Models\Menu;
 use App\Policies\MenuPolicy;
+use App\Services\MailFailureLogger;
 use App\Services\MenuService;
 use App\Support\CspNonce;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
+use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Vite;
@@ -37,6 +42,9 @@ class AppServiceProvider extends ServiceProvider
         // CSP nonce singleton – same nonce is shared between
         // the SecurityHeaders middleware and all Blade templates.
         $this->app->singleton(CspNonce::class);
+
+        // Keeps the message being sent until it succeeds or fails.
+        $this->app->singleton(MailFailureLogger::class);
     }
 
     /**
@@ -59,6 +67,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
         $this->registerGates();
+
+        Event::listen(MessageSending::class, [MailFailureLogger::class, 'remember']);
+        Event::listen(MessageSent::class, [MailFailureLogger::class, 'forget']);
+        Event::listen(NotificationFailed::class, [MailFailureLogger::class, 'record']);
 
         // Share cached system settings and about us with all views
         \Illuminate\Support\Facades\View::composer('*', function ($view) {

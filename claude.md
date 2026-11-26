@@ -471,6 +471,13 @@ $this->attempt(
 
 ---
 
+## 🧾 Log Error
+
+- Setiap entri level `error` ke atas diberi kode unik `[ERR-XXXXXXXX]` di awal pesan dan `kode_error` di context (`app/Logging/AddErrorCode`, dipasang sebagai `tap` di channel `config/logging.php`). Channel baru harus diberi `tap` yang sama.
+- Email gagal dicatat `app/Services/MailFailureLogger`: respons server, kode SMTP, penerima, subjek, server, parameter view, dan percakapan SMTP. Kata sandi, token, tautan bertanda tangan, dan kredensial SMTP WAJIB tetap disamarkan.
+
+---
+
 ## 🚀 Development Commands
 
 ```bash
@@ -544,8 +551,8 @@ Filter list (status, role, dll.) pakai pola: properti `filterX` (`#[Url]`, persi
 ### 16. Filament Package Upgrade — Wajib `php artisan filament:assets`
 Setelah `composer update` filament/*, JS statis di `public/js/filament/*` TIDAK ikut ter-update otomatis — jalankan `php artisan filament:assets`, kalau tidak form modal akan error di browser console (`filamentSchemaComponent is not defined`) meskipun PHP-side sudah benar. CSS tidak perlu di-republish: `@filamentStyles` v5 cuma emit CSS variables, styling komponen datang dari Tailwind `@source` scan ke `vendor/filament/**/*.blade.php` (lihat `resources/css/app.css`), bukan dari `public/css/filament/*.css` (file itu legacy/tidak dipakai lagi).
 
-### 17. `settings/logs` — Local `php-fpm.log` Bisa Bikin Memory Exhausted
-`config/log-viewer.php` meng-include path lokal `/opt/homebrew/var/log/php-fpm.log` (Homebrew). Kalau file itu tumbuh besar (ratusan MB), halaman `settings/logs` fatal error memory exhausted saat scan. Ini masalah environment lokal developer, bukan bug Laravel/opcodesio/log-viewer — rotate/hapus file tsb kalau kejadian.
+### 17. `settings/logs` — File Besar Tidak Dibaca
+`config/log-viewer.php` meng-include path lokal seperti `/opt/homebrew/var/log/php-fpm.log` (Homebrew) yang bisa tumbuh ratusan MB. Membacanya menghabiskan memori PHP dan halaman jadi kosong. `LogIndex` karena itu tidak membaca file di atas `MAX_READABLE_BYTES` (20 MB): file seperti itu hanya bisa diunduh, dan halaman otomatis membuka file terbaru yang masih bisa dibaca, dengan entri terbaru di atas. Super Admin bisa menghapus log: file di `storage/logs` dihapus, file di luar aplikasi (log server) hanya dikosongkan. Halaman bawaan paket (`/log-viewer`) tidak punya penjaga ini.
 
 ### 18. CSS Dasar Wajib di `@layer` (website.css)
 Aturan tanpa `@layer` mengalahkan SEMUA utilitas Tailwind v4. Aturan `h1 { color }` di luar layer membuat `text-white` tidak bekerja, dan `.btn { display: inline-flex }` di luar layer membuat `hidden` diabaikan. Taruh reset/heading di `@layer base` dan kelas buatan (`.btn`, `.btn-accent`, skala huruf) di `@layer components`.

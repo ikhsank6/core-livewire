@@ -57,6 +57,7 @@ class NewsForm
                 ->default(now()),
 
             ToggleButtons::make('is_featured')
+                ->boolean() // keeps "off" as 0; without it false is read back as empty
                 ->label('Featured')
                 ->options([
                     1 => 'Yes',
@@ -75,6 +76,7 @@ class NewsForm
                 ->inline(),
 
             ToggleButtons::make('is_active')
+                ->boolean() // keeps "off" as 0; without it false is read back as empty
                 ->label('Status')
                 ->options([
                     1 => 'Active',

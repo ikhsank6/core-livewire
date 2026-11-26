@@ -55,6 +55,7 @@ class UserForm
                 ->placeholder('Select a default role'),
 
             ToggleButtons::make('is_active')
+                ->boolean() // keeps "off" as 0; without it false is read back as empty
                 ->label('Account Status')
                 ->options([
                     1 => 'Active',

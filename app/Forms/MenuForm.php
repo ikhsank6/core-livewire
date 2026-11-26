@@ -48,6 +48,7 @@ class MenuForm
                 ->placeholder('e.g. dashboard'),
 
             ToggleButtons::make('is_active')
+                ->boolean() // keeps "off" as 0; without it false is read back as empty
                 ->label('Visibility')
                 ->options([
                     1 => 'Visible',

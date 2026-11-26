@@ -106,6 +106,7 @@ class AboutUsForm
                 ]),
 
             ToggleButtons::make('is_active')
+                ->boolean() // keeps "off" as 0; without it false is read back as empty
                 ->label('Status')
                 ->options([
                     1 => 'Active',

@@ -177,10 +177,9 @@ $maxWidthClass = [
     border-color: #3f3f46 !important;
 }
 
-/* Selected Success (Active/Yes) */
-.premium-toggle-group button[data-checked="true"][value="1"],
-.premium-toggle-group button.fi-active[value="1"],
-.premium-toggle-group button[aria-pressed="true"]:first-child {
+/* Selected Success (Active/Yes). Filament wraps every button in its own div, so match the
+   option by its id suffix (…-1 / …-0), not by position. */
+.premium-toggle-group button[aria-pressed="true"][id$="-1"] {
     background: #10b981 !important;
     color: white !important;
     border-color: #059669 !important;
@@ -188,9 +187,7 @@ $maxWidthClass = [
 }
 
 /* Selected Danger (Inactive/No) */
-.premium-toggle-group button[data-checked="true"][value="0"],
-.premium-toggle-group button.fi-active[value="0"],
-.premium-toggle-group button[aria-pressed="true"]:nth-child(2) {
+.premium-toggle-group button[aria-pressed="true"][id$="-0"] {
     background: #ef4444 !important;
     color: white !important;
     border-color: #dc2626 !important;
