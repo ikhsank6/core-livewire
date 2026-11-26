@@ -29,7 +29,9 @@
         [
             'title' => 'Akses & Tautan',
             'links' => [
-                ['label' => 'Portal Masuk',           'href' => route('login'),             'external' => false],
+                auth()->check()
+                    ? ['label' => 'Dashboard',        'href' => route('dashboard'),         'external' => false]
+                    : ['label' => 'Portal Masuk',     'href' => route('login'),             'external' => false],
                 ['label' => 'Website Resmi BNSP',     'href' => 'https://bnsp.go.id',       'external' => true],
                 ['label' => 'Kemnaker RI',            'href' => 'https://kemnaker.go.id',   'external' => true],
             ],

@@ -76,10 +76,18 @@
                 </button>
 
                 {{-- The one call to action in the bar: small and gold, with a thin lip that presses in on click. --}}
-                <a href="{{ route('login') }}" class="btn btn-login hidden sm:inline-flex">
-                    @svg('heroicon-o-arrow-right-end-on-rectangle', 'h-4 w-4')
-                    Masuk
-                </a>
+                {{-- Signed in visitors go back to their dashboard instead --}}
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-login hidden sm:inline-flex">
+                        @svg('heroicon-o-squares-2x2', 'h-4 w-4')
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-login hidden sm:inline-flex">
+                        @svg('heroicon-o-arrow-right-end-on-rectangle', 'h-4 w-4')
+                        Masuk
+                    </a>
+                @endauth
 
                 <button type="button" @click="open = !open"
                         :aria-expanded="open ? 'true' : 'false'"
@@ -114,7 +122,11 @@
             </ul>
 
             <div class="mt-5">
-                <a href="{{ route('login') }}" class="btn btn-lg btn-accent w-full">Masuk</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn btn-lg btn-accent w-full">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-lg btn-accent w-full">Masuk</a>
+                @endauth
             </div>
         </nav>
     </div>
