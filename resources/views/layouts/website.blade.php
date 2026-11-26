@@ -34,11 +34,13 @@
 
     @include('website.partials.nav')
 
-    <main id="main">
+    <main id="main" tabindex="-1">
         @yield('content')
     </main>
 
     @include('website.partials.footer')
+
+    @include('website.partials.to-top')
 
     @stack('scripts')
 </body>

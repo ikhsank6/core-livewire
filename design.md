@@ -146,6 +146,7 @@ Satu keluarga saja: **Inter** (400 sampai 800), sama dengan panel admin. Judul m
 - **Header halaman dalam** (`partials/page-header`) dipadatkan: sekitar 160px (breadcrumb, judul 28 sampai 40px, satu baris subjudul). Konten di bawahnya mulai dengan `pt-8 md:pt-10`.
 - **Tombol Masuk di navbar** (`.btn-login`): emas, tinggi 36px, ikon masuk 16px, bibir bawah 2px yang menekan saat diklik. Tanpa bayangan besar dan tanpa efek terangkat.
 - **Footer:** kontak di kiri, satu kolom tautan besar di kanan, lalu baris hak cipta dan media sosial.
+- **Kembali ke atas** (`partials/to-top`, `.to-top`): bulat 48px, emas dengan ikon panah navy dan bibir bawah seperti tombol lain, bayangan karena melayang. Kanan bawah (16px di ponsel, 24px dari 640px), di bawah navbar (`z-40`). Muncul dengan fade setelah scroll lebih dari 80px, hilang di puncak halaman. Ring fokus putih dan navy supaya terlihat di latar terang maupun footer. Gerak dimatikan untuk reduced motion.
 
 ## Susunan beranda
 

@@ -274,6 +274,7 @@ input: [
 | `partials/news-sidebar` | `$categories`, `$recentNews` | Sidebar halaman berita |
 | `partials/page-header` | `title`, `breadcrumb`, `subtitle` | Header halaman dalam |
 | `partials/footer` | — | Footer: kontak di kiri, satu kolom link besar di kanan, baris hak cipta + sosial. Data dari `$aboutUs` |
+| `partials/to-top` | — | Tombol bulat emas "Kembali ke atas" (ikon panah), melayang kanan bawah di semua halaman publik, muncul setelah scroll lebih dari 80px; fokus dikembalikan ke `#main`. Gaya `.to-top` di `website.css`. Baris bawah footer diberi `pr-16` (di bawah 84rem) agar tidak tertutup |
 
 ---
 

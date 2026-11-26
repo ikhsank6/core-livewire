@@ -109,7 +109,7 @@
         </div>
 
         {{-- Bottom bar: Copyright & Socials --}}
-        <div class="mt-10 sm:mt-12 flex flex-col-reverse gap-4 border-t border-white/15 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mt-10 sm:mt-12 flex flex-col-reverse gap-4 border-t border-white/15 py-5 pr-16 sm:flex-row sm:items-center sm:justify-between min-[84rem]:pr-0">
             <p class="text-sm text-white/50">&copy; {{ now()->year }} {{ $name }}. Hak cipta dilindungi.</p>
             @include('website.partials.social-links', ['dark' => true])
         </div>
