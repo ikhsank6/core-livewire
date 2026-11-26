@@ -5,6 +5,7 @@ namespace App\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Components\ViewField;
 
 class MenuForm
 {
@@ -37,11 +38,10 @@ class MenuForm
                 ->readOnly()
                 ->helperText('Order is managed via drag and drop on the list page.'),
 
-            TextInput::make('icon')
-                ->label('Icon Name')
-                ->placeholder('e.g. home')
-                ->helperText(new \Illuminate\Support\HtmlString('Get icons from <a href="https://fluxui.dev/components/icon" target="_blank" class="text-metronic-primary hover:underline">fluxui.dev/components/icon</a> or <a href="https://heroicons.com" target="_blank" class="text-metronic-primary hover:underline">heroicons.com</a>'))
-                ->prefixIcon(fn ($state) => filled($state) ? (str_contains($state, 'heroicon-') ? $state : "heroicon-o-{$state}") : 'heroicon-o-magnifying-glass'),
+            ViewField::make('icon')
+                ->label('Icon')
+                ->view('forms.components.icon-picker')
+                ->helperText('Klik kolom di atas untuk memilih icon melalui pop-up.'),
 
             TextInput::make('route')
                 ->label('Route Name')
