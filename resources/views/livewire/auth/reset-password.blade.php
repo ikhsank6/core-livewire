@@ -31,9 +31,10 @@
         </flux:field>
 
         <!-- Submit -->
-        <flux:button type="submit" class="auth-btn-primary w-full">
+        <button type="submit" wire:loading.attr="disabled"
+            class="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-[#E7BA4B] shadow-[0_3px_0_#B8901F] active:translate-y-[3px] active:shadow-none px-5 text-base font-bold text-[#14213A] transition-[filter] hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60">
             <span wire:loading.remove>Reset Password</span>
             <span wire:loading>Resetting...</span>
-        </flux:button>
+        </button>
     </form>
 </div>
