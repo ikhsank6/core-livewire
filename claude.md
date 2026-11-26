@@ -279,7 +279,7 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 
 | Baris | Isi |
 |-------|-----|
-| Header `h-16` (`bg-[#1a3e9a]`, `z-40`) | Logo, pencarian menu (Ctrl+K), tanggal, notifikasi, profil, hamburger (mobile) |
+| Header `h-16` (gradien navy `#273955` ke `#162948`, `z-40`) | Logo, pencarian menu (Ctrl+K), tanggal, notifikasi, profil, hamburger (mobile) |
 | Bar menu `h-12` (`partials/admin-topnav`, `z-30`, hanya `lg+`) | Menu dari master, dropdown grup, "More" untuk yang tidak muat |
 
 - **Sumber menu**: `MenuService::getMenuTreeForUser()` (RBAC + cache tidak berubah). Layout meratakan tree menjadi `$navItems` (url, ikon, active) untuk Alpine, dan `$flatMenu` untuk pencarian.
@@ -325,7 +325,18 @@ plugins: [
 
 ### Custom UI Components (`views/components/ui/`)
 
-`modal`, `table/` (+ `table/header` dengan slot `searchAction` & `extraActions`), `card`, `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`, `select`
+`modal`, `table/` (+ `table/header` dengan slot `searchAction` & `extraActions`), `card`, `badge`, `pagination`, `delete-confirm-modal`, `empty-state`, `avatar`, `button/`, `password-strength`, `select`, `chart-card`, `bar-chart`, `pie-chart`
+
+#### `<x-ui.bar-chart>` dan `<x-ui.pie-chart>` — grafik reusable
+
+Keduanya memakai kerangka `<x-ui.chart-card>` (judul, bisa dilipat). Gambar dibuat `window.renderBarChart` / `window.renderPieChart` di `resources/js/app.js` (jalankan `npm run build` setelah mengubahnya), dan angkanya juga ada sebagai tabel `sr-only`.
+
+```blade
+<x-ui.bar-chart title="Pengguna per Role" :items="$rows" unit="pengguna" label-heading="Role" />
+<x-ui.pie-chart title="Distribusi Pengguna" :items="$rows" unit="pengguna" label-heading="Status" />
+```
+
+`items`: array/Collection `['label' => string, 'value' => int]`; donat juga menerima `color` per item (pakai bila warnanya bermakna, mis. status). Donat: `total` opsional, default jumlah nilai. Data diambil lewat Repository di komponen Livewire, bukan di view.
 
 #### `<x-ui.select>` — Autocomplete Select (global, reusable)
 
@@ -511,8 +522,8 @@ Vite menghasilkan `type="module"` script yang dieksekusi SETELAH `DOMContentLoad
 Bar menu admin (`partials/admin-topnav`) memakai dropdown `absolute` di bawah item. Jangan beri `overflow-hidden`/`overflow-x-auto` pada baris itu atau pada leluhurnya, dropdown akan terpotong. Baris ukur tersembunyi untuk "More" memakai `invisible` + `absolute`, bukan `display:none`, agar lebar item bisa diukur.
 
 ### 12. Warna Website ≠ Admin
-Website publik dan auth: navy `#162948` + aksen emas `#E7BA4B`, biru brand `#2D68A7` (semuanya dari logo LSP, lihat `design.md`). Header admin memakai gradien biru logo yang sama.
-Admin: header `#1a3e9a`, primary Metronic `#1b84ff` via `app.css`.
+Website publik dan auth: navy `#162948` + aksen emas `#E7BA4B`, biru brand `#2D68A7` (semuanya dari logo LSP, lihat `design.md`). Header admin memakai navy yang sama dengan navbar website.
+Admin: primary Metronic `#1b84ff` via `app.css`.
 Keduanya tidak boleh dicampur.
 
 ### 13. Alpine `<template x-if>` Tidak Bisa Nested

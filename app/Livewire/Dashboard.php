@@ -28,12 +28,18 @@ class Dashboard extends Component
     {
         $stats = $this->userRepository->getDashboardStatistics();
 
+        $usersPerRole = $this->roleRepository->allWithUserCount()
+            ->sortByDesc('users_count')
+            ->map(fn ($role) => ['label' => $role->name, 'value' => (int) $role->users_count])
+            ->values();
+
         return view('livewire.dashboard', [
             'totalUsers'     => $stats['total'],
             'activeUsers'    => $stats['active'],
             'pendingUsers'   => $stats['pending'],
             'suspendedUsers' => $stats['suspended'],
             'totalRoles'     => $this->roleRepository->count(),
+            'usersPerRole'   => $usersPerRole,
         ]);
     }
 }

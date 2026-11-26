@@ -96,7 +96,7 @@
         {{-- =====================
              HEADER / NAVBAR
              ===================== --}}
-        <nav class="fixed top-0 right-0 left-0 z-40 bg-linear-to-b from-[#3A78BA] via-[#2D68A7] to-[#23558B] border-b-2 border-[#183C62] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-1px_0_rgba(255,255,255,0.08),0_6px_18px_-4px_rgba(12,38,72,0.6)] transition-all duration-300">
+        <nav class="fixed top-0 right-0 left-0 z-40 bg-linear-to-b from-[#273955] to-[#162948] border-b-2 border-[#0D192B] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_20px_-8px_rgba(4,14,28,0.55)] transition-all duration-300">
             <div class="px-4 h-16 flex items-center gap-x-3">
 
                 {{-- Mobile hamburger — opens the vertical menu drawer --}}

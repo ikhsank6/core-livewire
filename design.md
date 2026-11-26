@@ -2,7 +2,7 @@
 
 Dua design system yang terpisah dan tidak boleh dicampur:
 
-1. **Admin panel**: top navigation, header biru. Bagian pertama dokumen ini.
+1. **Admin panel**: top navigation, header navy yang sama dengan navbar website. Bagian pertama dokumen ini.
 2. **Website publik dan auth**: identitas lembaga sertifikasi profesi ("berkas asesmen"), warna dari logo LSP (biru, biru langit, satu aksen emas). Lihat bagian [Website publik](#website-publik) di bawah.
 
 ---
@@ -24,22 +24,15 @@ Konten: `pt-16` di mobile, `lg:pt-28` di desktop. Di bawah `lg`, bar menu digant
 
 ## Warna header
 
+Header admin memakai warna yang sama dengan navbar website (`partials/nav`), di light maupun dark mode.
+
 | Elemen | Nilai | Kelas |
 |--------|-------|-------|
-| Background | `#1a3e9a` | `bg-[#1a3e9a]` |
-| Border bawah | `#2450b4` | `border-[#2450b4]` |
-| Teks utama (nama app, user) | putih | `text-white` |
-| Tagline, role user | biru muda 80% | `text-blue-200/80` |
-| Tanggal | biru muda 90% | `text-blue-100/90` |
-| Ikon pencarian, tombol hapus | biru muda 70% | `text-blue-200/70` |
-| Placeholder pencarian | biru muda 60% | `placeholder-blue-200/60` |
-| Input pencarian | `white/10`, border `white/20` | `bg-white/10 border-white/20` |
-| Input pencarian (fokus) | border `white/60`, ring `white/40` | `focus:border-white/60 focus:ring-white/40` |
-| Hint `Ctrl+K` | `white/10`, border `white/20`, teks `blue-100/80` | |
-| Ikon lonceng | `blue-100/80`, hover putih | `text-blue-100/80 group-hover:text-white` |
-| Hover tombol (lonceng, profil) | `white/10` | `hover:bg-white/10` |
-
-Warna `#1a3e9a` diambil dari swatch yang dipilih (sampel piksel `#1a3e9a`, sedikit gradasi ke `#1b42a2`). Header memakai warna yang sama di light dan dark mode.
+| Background | gradien `#273955` ke `#162948` | `bg-linear-to-b from-[#273955] to-[#162948]` |
+| Border bawah | `#0D192B` | `border-b-2 border-[#0D192B]` |
+| Highlight dan bayangan | sama dengan navbar website | `shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_20px_-8px_rgba(4,14,28,0.55)]` |
+| Teks dan ikon | putih dengan transparansi | `text-white`, `text-white/85`, `text-white/90` |
+| Input pencarian, hover tombol | putih transparan | `white/10`, border `white/20` |
 
 ## Warna bar menu
 
@@ -83,9 +76,9 @@ Header dan bar menu ditumpuk dengan bayangan supaya terlihat berlapis.
 | Bar menu, dark | `dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_10px_22px_-8px_rgba(0,0,0,0.7)]` |
 | Dropdown | `shadow-[0_16px_36px_-10px_rgba(15,23,42,0.35)]`, `rounded-xl` |
 
-### Header biru (3D halus)
+### Header navy (3D halus)
 
-Header `bg-linear-to-b` dari `#2349ad` lewat `#1a3e9a` ke `#173684` (warna dasar `#1a3e9a` tetap di tengah), bibir bawah `border-b-2 #102a6e`, highlight atas `inset 0 1px 0 white/22`, dan bayangan jatuh `0_6px_18px_-4px`. Kolom pencarian dibuat masuk ke dalam (`inset_0_2px_5px` gelap, latar `#0f2a78/35`), dan hint `Ctrl+K` menjadi keycap kecil (gradien putih tipis, bayangan bawah). Teks putih di atas bagian paling terang (`#2349ad`) tetap lolos kontras.
+Gradien navy dengan bibir bawah gelap, highlight atas `inset 0 1px 0 white/10`, dan bayangan jatuh. Kolom pencarian dibuat masuk ke dalam, dan hint `Ctrl+K` menjadi keycap kecil.
 
 ### Item menu aktif: tab cekung sampai dasar bar dan garis aksen
 

@@ -33,7 +33,7 @@
             <p class="mt-1 text-sm text-[#4A5E75] dark:text-gray-400">
                 Sudah punya akun?
                 <a href="{{ route('auth.login') }}" wire:navigate
-                    class="inline-block -my-3 py-3 font-semibold text-[#2D68A7] hover:text-white dark:text-[#4BA5DA] dark:hover:text-white transition-colors">
+                    class="inline-block -my-3 py-3 font-semibold text-[#2D68A7] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-current dark:text-[#4BA5DA]">
                     Masuk di sini
                 </a>
             </p>
