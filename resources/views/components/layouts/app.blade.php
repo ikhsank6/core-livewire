@@ -213,136 +213,7 @@
                     {{-- Notification Bell --}}
                     <livewire:layout.notification-bell />
 
-                    {{-- Profile Dropdown --}}
-                    <div class="relative" x-data="{
-                        profileOpen: false,
-                        get isDark() { return $store.theme ? $store.theme.isDark : (localStorage.getItem('theme') === 'dark') },
-                        toggle() {
-                            if ($store.theme) {
-                                $store.theme.toggle();
-                            } else {
-                                const newTheme = this.isDark ? 'light' : 'dark';
-                                localStorage.setItem('theme', newTheme);
-                                document.documentElement.classList.toggle('dark', newTheme === 'dark');
-                            }
-                        }
-                    }" @click.away="profileOpen = false">
-                        <button @click="profileOpen = !profileOpen"
-                            class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
-                            @if(auth()->user()->avatar)
-                                <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar"
-                                    class="h-8 w-8 rounded-full object-cover ring-2 ring-white/20">
-                            @else
-                                <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white uppercase ring-2 ring-white/20">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                                </div>
-                            @endif
-                            <div class="hidden sm:flex flex-col text-left leading-tight">
-                                <span class="text-sm font-semibold text-white max-w-[120px] truncate">{{ auth()->user()->name }}</span>
-                                <span class="text-xs text-white/85 dark:text-gray-400 max-w-[120px] truncate">{{ auth()->user()->role?->name ?? 'No Role' }}</span>
-                            </div>
-                            <svg class="w-4 h-4 text-blue-200 dark:text-gray-400 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-
-                        {{-- Dropdown Menu --}}
-                        <div x-show="profileOpen"
-                            x-transition:enter="transition ease-out duration-150"
-                            x-transition:enter-start="opacity-0 scale-95 translate-y-1"
-                            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-100"
-                            x-transition:leave-start="opacity-100 scale-100"
-                            x-transition:leave-end="opacity-0 scale-95"
-                            x-cloak
-                            class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden"
-                            style="top: calc(100% + 4px)">
-
-                            <div class="px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center gap-3">
-                                    @if(auth()->user()->avatar)
-                                        <img src="{{ Storage::url(auth()->user()->avatar) }}" alt="Avatar"
-                                            class="h-11 w-11 rounded-xl object-cover ring-2 ring-gray-200 dark:ring-gray-600">
-                                    @else
-                                        <div class="h-11 w-11 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold text-white uppercase">
-                                            {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                                        </div>
-                                    @endif
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
-                                        <span class="inline-flex items-center gap-1 mt-0.5 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                            {{ auth()->user()->role?->name ?? 'No Role' }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="py-1">
-                                <a href="{{ route('profile') }}"
-                                    class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    Profile
-                                </a>
-                                <a href="{{ route('password.change') }}"
-                                    class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-                                    </svg>
-                                    Change Password
-                                </a>
-
-                                {{-- Theme Toggle --}}
-                                <button @click="toggle()"
-                                    class="w-full flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <svg x-show="isDark" x-cloak class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                                        </svg>
-                                        <svg x-show="!isDark" class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                                        </svg>
-                                        <span x-text="isDark ? 'Mode Terang' : 'Mode Gelap'"></span>
-                                    </div>
-                                </button>
-
-                                @if(auth()->user()->roles->count() > 1)
-                                    <div class="border-t border-gray-100 dark:border-gray-700 my-1"></div>
-                                    <div class="px-4 py-1">
-                                        <p class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">Switch Role</p>
-                                    </div>
-                                    @foreach(auth()->user()->roles as $role)
-                                        <a href="{{ route('roles.switch', $role) }}"
-                                            class="flex items-center gap-3 px-4 py-2 text-sm transition-colors
-                                                {{ auth()->user()->role_id == $role->id
-                                                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                                                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700' }}">
-                                            <svg class="w-4 h-4 {{ auth()->user()->role_id == $role->id ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                @if(auth()->user()->role_id == $role->id)
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                                @else
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                                                @endif
-                                            </svg>
-                                            {{ $role->name }}
-                                        </a>
-                                    @endforeach
-                                @endif
-
-                                <div class="border-t border-gray-100 dark:border-gray-700 my-1"></div>
-
-                                <button @click="$dispatch('open-modal', { name: 'logout-modal' }); profileOpen = false"
-                                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                                    </svg>
-                                    Logout
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    @include('partials.account-menu')
                 </div>
             </div>
         </nav>
@@ -405,7 +276,7 @@
             x-transition:leave-end="opacity-0"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm" aria-hidden="true"></div>
 
-        {{-- Clicking outside the card intentionally does nothing: close only via X, Batal, or Logout --}}
+        {{-- Clicking outside the card intentionally does nothing: close only via X, Batal, or Ya, keluar --}}
         <div class="fixed inset-0 flex items-center justify-center p-4">
             <div x-show="show"
                 x-transition:enter="ease-out duration-200"
@@ -429,8 +300,8 @@
                     </svg>
                 </div>
 
-                <h3 id="logout-title" class="mt-4 text-lg font-bold text-zinc-900 dark:text-white">Konfirmasi Logout</h3>
-                <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">Apakah Anda yakin ingin keluar dari aplikasi?</p>
+                <h3 id="logout-title" class="mt-4 text-lg font-bold text-zinc-900 dark:text-white">Keluar dari akun?</h3>
+                <p class="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">Anda perlu masuk lagi untuk melanjutkan.</p>
 
                 <div class="mt-6 flex gap-3">
                     <button type="button" @click="show = false"
@@ -442,7 +313,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                         </svg>
-                        Ya, Logout
+                        Ya, keluar
                     </a>
                 </div>
             </div>

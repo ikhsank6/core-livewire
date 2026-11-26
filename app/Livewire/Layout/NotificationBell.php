@@ -49,8 +49,14 @@ class NotificationBell extends Component
                 return redirect($redirectUrl);
             }
         } catch (\Exception $e) {
-            // Silent fail for notification bell
+            report($e);
+            $this->dispatch('notify', text: 'Notifikasi tidak bisa diperbarui.', variant: 'danger');
         }
+    }
+
+    public function markAllAsRead(): void
+    {
+        $this->notificationRepository->markAllAsReadForRole(Auth::user()->role_id);
     }
 
     public function render()

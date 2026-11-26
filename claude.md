@@ -189,6 +189,8 @@ Menu → has parent/children (self-referencing, nested tree)
 
 **Kata sandi sementara** (8 karakter huruf besar, kecil, dan angka tanpa karakter mirip; `UserRepository::temporaryPassword`): akun yang dibuatkan (impor atau tombol Tambah) punya `users.must_change_password = true`. Selama itu, halaman verifikasi email dan semua halaman admin (`partials/temporary-password-banner`) mengingatkan untuk mengganti; flag mati lewat `UserRepository::updatePassword` (Ganti kata sandi) atau reset kata sandi. Tautan verifikasi ditandatangani (relatif, tanpa host), dicek di `VerifyEmail::mount`, berlaku 3 hari (`auth.verification.expire` / `AUTH_VERIFICATION_EXPIRE`). `VerifyEmailNotification` dan `ResetPasswordQueued` dicoba ulang 3x dengan jeda 10, 30, 60 detik. Kirim ulang verifikasi WAJIB lewat `UserRepository::resendVerification` (bukan `$user->sendEmailVerificationNotification()`): akun berflag mendapat kata sandi sementara baru di email.
 
+**Centang berjenjang** (halaman Menu Access, `RoleMenuAccess::updatedSelectedMenus`): mencentang parent mencentang semua turunan yang aktif, melepas parent melepas semua turunannya, mencentang anak ikut mencentang parent-nya. Melepas anak (termasuk anak terakhir) tidak melepas parent. Baru tersimpan setelah Save Changes.
+
 `MenuService` meng-cache menu tree per role (`menu_tree_role_{id}`) selama 1 jam.
 
 ---
@@ -289,7 +291,9 @@ Layout admin (`components/layouts/app.blade.php`) **tidak lagi memakai sidebar**
 - **"More"**: Alpine mengukur lebar tiap item (baris ukur tersembunyi) dan memindahkan yang tidak muat ke dropdown. Bar menu TIDAK boleh `overflow-hidden`, kalau tidak dropdown terpotong.
 - **Navigasi**: tautan di Alpine memakai `Livewire.navigate(url)` (menghormati Ctrl/Cmd/Shift-klik).
 - **Mobile**: hamburger membuka drawer vertikal (Blade loop biasa dengan `wire:navigate`).
-- **Dialog logout**: dialog ringkas khusus di `app.blade.php` (event `open-modal` dengan `name: 'logout-modal'`). Sengaja TIDAK tertutup oleh klik di luar atau Esc; hanya lewat tombol X, Batal, atau Ya, Logout.
+- **Dialog logout**: dialog ringkas khusus di `app.blade.php` (event `open-modal` dengan `name: 'logout-modal'`). Sengaja TIDAK tertutup oleh klik di luar atau Esc; hanya lewat tombol X, Batal, atau Ya, keluar.
+- **Lonceng notifikasi** (`livewire/layout/notification-bell`): anatomi sama dengan menu akun. Lima notifikasi belum dibaca milik role aktif, tiap baris tombol (ikon panah bila ada `url`, centang bila hanya menandai dibaca), "Tandai semua dibaca", tautan ke halaman lengkap. Hanya angka di lonceng sebagai penanda: tanpa animasi berulang, titik, atau pill role.
+- **Menu akun** (`partials/account-menu`): disclosure biasa (bukan `role="menu"`), Esc menutup dan mengembalikan fokus. Isinya nama dan email, Profil, Ganti kata sandi, sakelar Mode gelap (`role="switch"`), daftar Ganti role (role aktif bertanda "Dipakai" dan tidak bisa diklik; hanya muncul bila role lebih dari satu), lalu Keluar. Baris 44px, teks Indonesia, ikon `flux:icon` mini.
 - **Footer** menampilkan versi `v3.3.0` (hardcode di `app.blade.php`).
 - Warna dan bayangan: lihat `design.md`.
 

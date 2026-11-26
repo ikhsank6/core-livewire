@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Menus;
 
-use App\Models\Menu;
 use App\Repositories\Contracts\MenuRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Services\MenuService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -49,35 +49,52 @@ class RoleMenuAccess extends Component
         $this->oldSelectedMenus = $this->selectedMenus;
     }
 
-    public function updatedSelectedMenus()
+    /**
+     * Keep the tree consistent after a click: a menu carries everything under it (checking checks
+     * the children, unchecking unchecks them), and a checked child also needs its parent.
+     */
+    public function updatedSelectedMenus(): void
     {
-        // Detect what was added or removed
-        $added = array_diff($this->selectedMenus, $this->oldSelectedMenus);
-        $removed = array_diff($this->oldSelectedMenus, $this->selectedMenus);
+        $selected = array_map('intval', $this->selectedMenus);
+        $previous = array_map('intval', $this->oldSelectedMenus);
 
-        if (! empty($added)) {
-            foreach ($added as $menuId) {
-                // If a child is checked, check the parent
-                $menu = $this->menuRepository->find($menuId);
-                if ($menu && $menu->parent_id && ! in_array($menu->parent_id, $this->selectedMenus)) {
-                    $this->selectedMenus[] = $menu->parent_id;
-                }
+        // Only what the user clicked cascades downwards. A parent added because one child was
+        // checked must not pull in that child's siblings.
+        $added = array_diff($selected, $previous);
+        $removed = array_diff($previous, $selected);
+
+        $menus = $this->menuRepository->all();
+        $parentOf = $menus->pluck('parent_id', 'id');
+        $childrenOf = $menus->groupBy('parent_id');
+        // Inactive menus are not shown in the tree, so checking a parent must not grant them.
+        $visibleChildrenOf = $menus->where('is_active', true)->groupBy('parent_id');
+
+        foreach ($added as $menuId) {
+            $selected = array_merge($selected, $this->descendantsOf($menuId, $visibleChildrenOf));
+
+            for ($parent = $parentOf->get($menuId); $parent; $parent = $parentOf->get($parent)) {
+                $selected[] = (int) $parent;
             }
         }
 
-        if (! empty($removed)) {
-            foreach ($removed as $menuId) {
-                // If a parent is unchecked, uncheck all children
-                $childrenIds = Menu::where('parent_id', $menuId)->pluck('id')->toArray();
-                if (! empty($childrenIds)) {
-                    $this->selectedMenus = array_values(array_diff($this->selectedMenus, $childrenIds));
-                }
-            }
+        foreach ($removed as $menuId) {
+            $selected = array_diff($selected, $this->descendantsOf($menuId, $childrenOf));
         }
 
-        // Update old state
-        $this->selectedMenus = array_values(array_unique($this->selectedMenus));
+        $this->selectedMenus = array_values(array_unique($selected));
         $this->oldSelectedMenus = $this->selectedMenus;
+    }
+
+    /** @return list<int> ids of every menu below this one */
+    private function descendantsOf(int $menuId, Collection $childrenOf): array
+    {
+        $ids = [];
+
+        foreach ($childrenOf->get($menuId, []) as $child) {
+            $ids = [...$ids, $child->id, ...$this->descendantsOf($child->id, $childrenOf)];
+        }
+
+        return $ids;
     }
 
     public function saveMenuAccess(): void

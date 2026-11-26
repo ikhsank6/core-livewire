@@ -160,7 +160,7 @@ class UserIndex extends Component implements HasForms
                         Notification::create([
                             'from_role_id' => Auth::user()->role_id,
                             'to_role_id' => $superAdminRole->id,
-                            'message' => 'New user "'.$user->name.'" has been created by '.Auth::user()->name.'.',
+                            'message' => 'Pengguna baru "'.$user->name.'" dibuat oleh '.Auth::user()->name.'.',
                             'url' => null,
                             'id_reference' => $user->id,
                             'read' => false,

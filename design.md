@@ -45,6 +45,14 @@ Header admin memakai warna yang sama dengan navbar website (`partials/nav`), di 
 | Garis bawah item aktif | `blue-600` (`h-0.5`, rounded) | sama |
 | Ikon | mengikuti warna teks (`currentColor`) | sama |
 
+## Menu akun
+
+Panel 18rem di bawah foto profil, tiga atau empat kelompok dipisah garis: identitas (foto bulat sama dengan tombol, nama, email), aksi akun, ganti role, keluar. Satu bayangan (panel melayang), radius `xl` pada panel dan `lg` pada baris, tanpa badge dan tanpa label huruf kapital. Aksen hanya pada role yang dipakai dan sakelar yang menyala; merah hanya untuk Keluar.
+
+## Lonceng notifikasi
+
+Panel 22rem (di ponsel menempel ke kedua tepi layar). Judul dengan jumlah belum dibaca, daftar pesan dan waktu berbahasa Indonesia, tautan ke semua notifikasi. Angka merah di lonceng satu-satunya penanda; tidak ada dering, denyut, glow, titik per baris, atau pill role pengirim.
+
 ## Warna dropdown ("grup" dan "More")
 
 | Elemen | Light | Dark |
