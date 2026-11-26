@@ -64,7 +64,7 @@ $maxWidthClass = [
         >
             {{-- Header --}}
             @if($title)
-                <div class="h-16 min-h-[64px] max-h-[64px] px-6 flex items-center justify-between border-b border-zinc-200 dark:border-[#2d2d3a] bg-white dark:bg-[#1e1e2d] shrink-0">
+                <div class="h-16 min-h-[64px] max-h-[64px] px-6 flex items-center justify-between border-b border-zinc-200 dark:border-[#2d2d3a] bg-white dark:bg-[#1e1e2d] shrink-0 rounded-t-xl">
                     <h3 class="text-lg font-bold text-zinc-900 dark:text-white truncate">
                         {{ $title }}
                     </h3>
@@ -82,7 +82,7 @@ $maxWidthClass = [
             </div>
 
             {{-- Footer --}}
-            <div class="h-16 min-h-[64px] max-h-[64px] px-6 flex items-center justify-end gap-3 border-t border-zinc-200 dark:border-[#2d2d3a] shrink-0 bg-white dark:bg-[#1e1e2d]">
+            <div class="h-16 min-h-[64px] max-h-[64px] px-6 flex items-center justify-end gap-3 border-t border-zinc-200 dark:border-[#2d2d3a] shrink-0 bg-white dark:bg-[#1e1e2d] rounded-b-xl">
                 @if(isset($footer))
                     {{ $footer }}
                 @else

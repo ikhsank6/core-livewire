@@ -112,4 +112,18 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email Verification Link
+    |--------------------------------------------------------------------------
+    |
+    | Minutes a verification link stays valid. Three days by default, because
+    | accounts created by an administrator may not be opened straight away.
+    |
+    */
+
+    'verification' => [
+        'expire' => (int) env('AUTH_VERIFICATION_EXPIRE', 4320),
+    ],
+
 ];

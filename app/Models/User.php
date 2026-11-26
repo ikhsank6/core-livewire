@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'must_change_password',
         'role_id', // Active role
         'is_active',
         'avatar',
@@ -78,6 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'must_change_password' => 'boolean',
             'is_active' => 'boolean',
         ];
     }

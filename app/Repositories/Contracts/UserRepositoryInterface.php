@@ -25,6 +25,25 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function searchWithFilters(?string $term, int $perPage = 10, string $status = '', array $roleIds = []): LengthAwarePaginator;
 
     /**
+     * Which of these emails are already used (soft deleted users included). Returned in lowercase.
+     *
+     * @return list<string>
+     */
+    public function existingEmails(array $emails): array;
+
+    /**
+     * Create an active account that still has to verify its email: a random password is set and
+     * mailed together with the verification link.
+     */
+    public function createInvited(array $userData, array $roleIds, ?int $defaultRoleId = null): User;
+
+    /**
+     * Send the verification email again. An account still on a generated password gets a new one,
+     * included in the email (the old one cannot be read back).
+     */
+    public function resendVerification(User $user): void;
+
+    /**
      * Create user with roles.
      */
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User;

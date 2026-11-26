@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
 class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
@@ -17,25 +16,45 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
 
     public ?string $password;
 
-    public string $ipAddress;
+    /** One attempt plus three retries, for example when the mail server rate limits a burst. */
+    public int $tries = 4;
 
     public function __construct(?string $password = null)
     {
-        $this->password  = $password;
-        $this->ipAddress = request()->ip() ?? 'Unknown';
+        $this->password = $password;
         $this->onQueue('default');
+    }
+
+    /** Seconds to wait before each retry. */
+    public function backoff(): array
+    {
+        return [10, 30, 60];
+    }
+
+    /** The lifetime of a verification link in words, for the email and the import preview. */
+    public static function lifetimeLabel(): string
+    {
+        $minutes = (int) Config::get('auth.verification.expire');
+
+        return match (true) {
+            $minutes >= 1440 && $minutes % 1440 === 0 => ($minutes / 1440).' hari',
+            $minutes >= 60 && $minutes % 60 === 0 => ($minutes / 60).' jam',
+            default => $minutes.' menit',
+        };
     }
 
     protected function verificationUrl($notifiable): string
     {
-        return URL::temporarySignedRoute(
+        // Signed without the host, so the link survives being opened under another name of the same app.
+        return url(URL::temporarySignedRoute(
             'auth.verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire')),
             [
                 'id'   => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),
-            ]
-        );
+            ],
+            absolute: false
+        ));
     }
 
     public function toMail($notifiable): MailMessage
@@ -49,40 +68,13 @@ class VerifyEmailNotification extends VerifyEmail implements ShouldQueue
                 'userEmail'       => $notifiable->email,
                 'password'        => $this->password,
                 'verificationUrl' => $verificationUrl,
+                'lifetime'        => self::lifetimeLabel(),
                 'subject'         => 'Verifikasi Alamat Email',
                 'title'           => 'Verifikasi Alamat Email Anda',
-                'emailContent'    => 'Terima kasih telah mendaftar. Silakan klik tombol di bawah untuk memverifikasi alamat email Anda.',
-                'ipAddress'       => $this->ipAddress,
-                'location'        => $this->resolveLocation($this->ipAddress),
+                // A password is only sent when someone else created the account.
+                'emailContent'    => $this->password
+                    ? 'Akun Anda sudah dibuatkan oleh pengelola. Klik tombol di bawah untuk memverifikasi email, masuk dengan kata sandi sementara di bawah, lalu segera ubah kata sandi Anda.'
+                    : 'Terima kasih telah mendaftar. Silakan klik tombol di bawah untuk memverifikasi alamat email Anda.',
             ]);
-    }
-
-    private function resolveLocation(string $ip): string
-    {
-        if (in_array($ip, ['127.0.0.1', '::1', 'localhost']) || str_starts_with($ip, '192.168.') || str_starts_with($ip, '10.')) {
-            return 'Lokal / Development';
-        }
-
-        try {
-            $response = Http::timeout(5)->get("http://ip-api.com/json/{$ip}", [
-                'fields' => 'status,country,regionName,city',
-                'lang'   => 'id',
-            ]);
-
-            if ($response->ok()) {
-                $data = $response->json();
-                if (($data['status'] ?? '') === 'success') {
-                    return implode(', ', array_filter([
-                        $data['city']       ?? null,
-                        $data['regionName'] ?? null,
-                        $data['country']    ?? null,
-                    ]));
-                }
-            }
-        } catch (\Exception) {
-            // Silent fail
-        }
-
-        return 'Tidak diketahui';
     }
 }

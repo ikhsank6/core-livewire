@@ -10,7 +10,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -92,6 +91,68 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
+     * Which of these emails are already used (soft deleted users included, they still hold the
+     * unique index). Returned in lowercase.
+     */
+    public function existingEmails(array $emails): array
+    {
+        $emails = array_values(array_unique(array_filter(array_map('mb_strtolower', $emails))));
+
+        if ($emails === []) {
+            return [];
+        }
+
+        return $this->model->withTrashed()
+            ->whereIn(DB::raw('lower(email)'), $emails)
+            ->pluck('email')
+            ->map(fn ($email) => mb_strtolower($email))
+            ->all();
+    }
+
+    /**
+     * Create an active account that still has to verify its email: a random password is set and
+     * mailed together with the verification link. Login stays closed until the link is used.
+     */
+    public function createInvited(array $userData, array $roleIds, ?int $defaultRoleId = null): User
+    {
+        return DB::transaction(function () use ($userData, $roleIds, $defaultRoleId) {
+            $password = $this->temporaryPassword();
+
+            $user = $this->model->create([
+                ...$userData,
+                'password' => Hash::make($password),
+                'must_change_password' => true,
+                'is_active' => true,
+            ]);
+            $user->syncRoles($roleIds, $defaultRoleId);
+            $user->sendEmailVerificationNotification($password);
+
+            return $user->fresh(['role', 'roles']);
+        });
+    }
+
+    /**
+     * Send the verification email again. An account still on a generated password gets a new one,
+     * included in the email: only its hash is stored, so the old one cannot be repeated. A password
+     * the user chose is never replaced.
+     */
+    public function resendVerification(User $user): void
+    {
+        if (! $user->must_change_password) {
+            $user->sendEmailVerificationNotification();
+
+            return;
+        }
+
+        DB::transaction(function () use ($user) {
+            $password = $this->temporaryPassword();
+
+            $user->update(['password' => Hash::make($password)]);
+            $user->sendEmailVerificationNotification($password);
+        });
+    }
+
+    /**
      * Create user with roles.
      */
     public function createWithRoles(array $userData, array $roleIds, ?int $defaultRoleId = null): User
@@ -101,8 +162,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
             $password = null;
             if (! isset($userData['password'])) {
-                $password = Str::password(16);
+                $password = $this->temporaryPassword();
                 $userData['password'] = Hash::make($password);
+                $userData['must_change_password'] = true;
             }
 
             $user = $this->model->create($userData);
@@ -139,6 +201,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->update($userId, [
             'password' => Hash::make($newPassword),
+            'must_change_password' => false,
         ]);
     }
 
@@ -244,6 +307,26 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     // ==================== PRIVATE HELPERS ====================
 
     /**
+     * Password mailed to a new account: 8 characters with upper case, lower case and digits, without
+     * look-alikes (0 O o 1 l I) so it can be retyped. Short on purpose: the user is asked to replace it
+     * at first sign in, and the login form limits attempts.
+     */
+    private function temporaryPassword(): string
+    {
+        $sets = ['ABCDEFGHJKLMNPQRSTUVWXYZ', 'abcdefghijkmnpqrstuvwxyz', '23456789'];
+        $all = implode('', $sets);
+        $pick = fn (string $from): string => $from[random_int(0, strlen($from) - 1)];
+
+        // One of each kind first, then fill up and mix with a cryptographically secure shuffle.
+        $characters = array_map($pick, $sets);
+        while (count($characters) < 8) {
+            $characters[] = $pick($all);
+        }
+
+        return (new \Random\Randomizer)->shuffleBytes(implode('', $characters));
+    }
+
+    /**
      * Handle email_verified_at logic when creating a user.
      */
     private function handleEmailVerificationOnCreate(array $userData): array
@@ -285,7 +368,9 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     private function sendVerificationIfInactive(User|\Illuminate\Database\Eloquent\Model $user, bool $isActive, ?string $password = null): void
     {
         if (! $isActive && ! $user->email_verified_at) {
-            $user->sendEmailVerificationNotification($password);
+            $password === null
+                ? $this->resendVerification($user)
+                : $user->sendEmailVerificationNotification($password);
         }
     }
 

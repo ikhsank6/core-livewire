@@ -54,6 +54,9 @@ class ChangePassword extends Component
 
             $this->reset(['current_password', 'password', 'password_confirmation']);
 
+            // Hides the temporary password reminder without a page reload.
+            $this->dispatch('password-changed');
+
             $this->notifySuccess('Password changed successfully.');
         } catch (ValidationException $e) {
             $this->hitRateLimit();

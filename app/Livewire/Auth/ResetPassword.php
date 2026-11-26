@@ -55,6 +55,7 @@ class ResetPassword extends Component
             function ($user) {
                 $user->forceFill([
                     'password' => Hash::make($this->password),
+                    'must_change_password' => false,
                     'remember_token' => Str::random(60),
                 ])->save();
 

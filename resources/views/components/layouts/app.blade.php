@@ -355,6 +355,8 @@
              ===================== --}}
         <main class="pt-16 lg:pt-28 min-h-screen flex flex-col">
             <div class="flex-1">
+                @include('partials.temporary-password-banner')
+
                 {{-- Breadcrumbs --}}
                 @isset($breadcrumbs)
                     <div id="breadcrumb-wrapper" class="px-6 lg:px-8 pt-6 pb-3 max-w-7xl mx-auto breadcrumb-animate">
@@ -377,7 +379,7 @@
                     <p>&copy; {{ date('Y') }} <span class="font-semibold text-gray-700 dark:text-gray-300">{{ $aboutUs->company_name ?? 'Laravel Admin' }}</span>. All Rights Reserved.</p>
                     <div class="flex items-center gap-x-4">
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 font-semibold tracking-wide uppercase scale-90">
-                            v3.0.0
+                            v3.3.0
                         </span>
                     </div>
                 </div>

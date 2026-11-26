@@ -6,7 +6,10 @@
     <x-ui.card title="Pengguna" description="Kelola semua pengguna dan hak akses">
 
         <x-slot name="headerAction">
-            <x-ui.button.add label="Tambah" tooltip="Tambah User Baru" />
+            <div class="flex flex-wrap items-center gap-2">
+                <x-ui.button.import tooltip="Impor pengguna dari file" wire:click="$dispatch('open-user-import')" />
+                <x-ui.button.add label="Tambah" tooltip="Tambah User Baru" />
+            </div>
         </x-slot>
 
         <x-ui.table :paginator="$users" :view="$view">
@@ -23,14 +26,13 @@
 
                     <x-slot name="searchAction">
                         {{-- Filter button --}}
-                        <button wire:click="openFilterModal"
-                                class="relative inline-flex items-center gap-2 h-10 px-3 text-sm font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/>
-                            </svg>
+                        {{-- Orange sets filtering apart from the blue create action; dark text because white fails contrast on it --}}
+                        <button type="button" wire:click="openFilterModal"
+                                class="relative inline-flex items-center gap-2 h-10 px-3 text-sm font-semibold rounded-xl border border-orange-500 bg-orange-500 text-zinc-950 shadow-sm hover:bg-orange-400 hover:border-orange-400 active:scale-95 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">
+                            <flux:icon name="funnel" variant="mini" class="w-4 h-4" />
                             Filter
                             @if($this->activeFilterCount > 0)
-                                <span class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-5 h-5 rounded-full bg-indigo-600 text-white text-[10px] font-bold">
+                                <span class="absolute -top-1.5 -right-1.5 flex items-center justify-center w-5 h-5 rounded-full bg-zinc-900 text-white text-[10px] font-bold">
                                     {{ $this->activeFilterCount }}
                                 </span>
                             @endif
@@ -323,4 +325,6 @@
             <x-ui.modal-skeleton :rows="5" />
         @endif
     </x-ui.modal>
+
+    <livewire:users.user-import />
 </div>

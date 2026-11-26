@@ -14,6 +14,15 @@ class ResetPasswordQueued extends ResetPasswordNotification implements ShouldQue
 
     public string $ipAddress;
 
+    /** One attempt plus three retries, for example when the mail server rate limits a burst. */
+    public int $tries = 4;
+
+    /** Seconds to wait before each retry. */
+    public function backoff(): array
+    {
+        return [10, 30, 60];
+    }
+
     public function __construct(#[\SensitiveParameter] $token)
     {
         parent::__construct($token);

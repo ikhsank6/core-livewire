@@ -18,8 +18,18 @@ class VerifyEmail extends Component
 
     public bool $invalidLink = false;
 
+    /** The account was created with a generated password that was emailed to the user. */
+    public bool $mustChangePassword = false;
+
     public function mount(Request $request, $id, $hash): void
     {
+        // Only links this app signed, and only until they expire.
+        if (! $request->hasValidRelativeSignature()) {
+            $this->invalidLink = true;
+
+            return;
+        }
+
         $user = \App\Models\User::find($id);
 
         if (! $user) {
@@ -34,6 +44,8 @@ class VerifyEmail extends Component
 
             return;
         }
+
+        $this->mustChangePassword = (bool) $user->must_change_password;
 
         // Check if already verified
         if ($user->hasVerifiedEmail()) {

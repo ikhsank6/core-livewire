@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -200,8 +201,8 @@ class UserIndex extends Component implements HasForms
                 return;
             }
 
-            // Send verification email
-            $user->sendEmailVerificationNotification();
+            // Send verification email (with a new temporary password when the account still uses one)
+            $this->userRepository->resendVerification($user);
 
             $this->dispatch('notify', text: 'Activation email has been sent to '.$user->email, variant: 'success');
         } catch (\Exception $e) {
@@ -247,7 +248,7 @@ class UserIndex extends Component implements HasForms
         foreach ($this->selectedUsers as $uuid) {
             $user = User::where('uuid', $uuid)->whereNull('email_verified_at')->first();
             if ($user) {
-                $user->sendEmailVerificationNotification();
+                $this->userRepository->resendVerification($user);
                 $sent++;
             }
         }
@@ -303,6 +304,13 @@ class UserIndex extends Component implements HasForms
     public function getActiveFilterCountProperty(): int
     {
         return (int) (!empty($this->filterStatus)) + (\count($this->filterRoles) > 0 ? 1 : 0);
+    }
+
+    /** The import modal (App\Livewire\Users\UserImport) created users: show the newest first. */
+    #[On('users-imported')]
+    public function refreshAfterImport(): void
+    {
+        $this->resetPage();
     }
 
     public function updatedSearch(): void
